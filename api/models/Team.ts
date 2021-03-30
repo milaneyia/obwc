@@ -24,7 +24,7 @@ export class Team extends BaseEntity {
     @ManyToOne(() => User, { nullable: false })
     captain!: User;
 
-    @OneToMany(() => User, (user) => user.country)
+    @OneToMany(() => User, (user) => user.team)
     users!: User[];
 
     @OneToMany(() => Submission, (submissions) => submissions.team)

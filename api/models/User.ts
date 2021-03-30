@@ -1,6 +1,7 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad } from 'typeorm';
 import { Country } from './Country';
 import { Role, ROLE } from './Role';
+import { Team } from './Team';
 
 @Entity()
 export class User extends BaseEntity {
@@ -20,8 +21,19 @@ export class User extends BaseEntity {
     @ManyToOne(() => Role, { nullable: false })
     role!: Role;
 
+    @Column()
+    countryId!: number;
+
     @ManyToOne(() => Country, (country) => country.users, { nullable: false, eager: true })
     country!: Country;
+
+    @Column({ nullable: true })
+    teamId?: number;
+
+    @ManyToOne(() => Team, (team) => team.users, {
+        onDelete: 'CASCADE',
+    })
+    team?: Team;
 
     @CreateDateColumn()
     createdAt!: Date;
