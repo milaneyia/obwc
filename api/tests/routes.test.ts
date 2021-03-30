@@ -1,25 +1,39 @@
 import request from 'supertest';
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection, getConnection, getConnectionOptions } from 'typeorm';
+import Router from '@koa/router';
+import { Server } from 'node:http';
 import app from '../app';
 import { Round, CreateTeam } from '../interfaces';
 
+let server: Server;
+
 beforeAll(async () => {
-    const connection = await createConnection();
-    const entities = connection.entityMetadatas;
-    const deletes = entities.map(e =>
-        connection.getRepository(e.name).query(`DELETE FROM ${e.tableName}`)
+    let connectionOptions = await getConnectionOptions();
+    connectionOptions = {
+        ...connectionOptions,
+        dropSchema: true,
+        migrationsRun: true,
+        synchronize: true,
+    };
+    await createConnection(connectionOptions);
+
+    app.use(
+        new Router().all('(.*)', async (ctx, next) => {
+        ctx.session!.userId = 1;
+        await next();
+        }).routes()
     );
-    await Promise.all(deletes);
+    server = app.listen();
 });
 
 afterAll(() => {
-    app.close();
     getConnection().close();
+    server.close();
 });
 
 describe('rounds endpoints', () => {
     it('should list all created rounds', async () => {
-        const res = await request(app)
+        const res = await request(app.callback())
             .get('/api/rounds');
 
         expect(res.status).toEqual(200);
@@ -40,7 +54,7 @@ describe('rounds endpoints', () => {
             }],
         };
 
-        const res = await request(app)
+        const res = await request(server)
             .post('/api/rounds')
             .send(round);
 
@@ -50,16 +64,27 @@ describe('rounds endpoints', () => {
 });
 
 describe('teams endpoints', () => {
-    it('should insert a new team', async () => {
-        const team: CreateTeam = {
-            name: 'My Team',
-            users: [{
-                id: 1,
-                username: 'someone',
-            }],
-        };
+    const team: CreateTeam = {
+        name: 'My Team',
+        users: [{
+            id: 1,
+            username: 'someone',
+        }],
+    };
 
-        const res = await request(app)
+    it('should not accept long team name', async () => {
+        const invalidTeam = { ...team };
+        invalidTeam.name = 'Very long team name';
+        const res = await request(server)
+            .post('/api/teams')
+            .send(invalidTeam);
+
+        expect(res.status).toEqual(400);
+        expect(res.body).toHaveProperty('error');
+    });
+
+    it('should insert a new team', async () => {
+        const res = await request(server)
             .post('/api/teams')
             .send(team);
 

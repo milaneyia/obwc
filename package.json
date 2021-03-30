@@ -7,7 +7,8 @@
     "serve": "vite preview",
     "watch-api": "ts-node-dev --respawn --project api/tsconfig.json api/main.ts",
     "watch-src": "vite",
-    "test": "jest"
+    "test": "jest",
+    "typeorm": "ts-node --project api/tsconfig.json ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@koa/router": "^10.0.0",
@@ -21,6 +22,7 @@
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.31",
+    "validator": "^13.5.2",
     "vue": "^3.0.5",
     "vue-router": "^4.0.5",
     "vuex": "^4.0.0"
@@ -33,6 +35,7 @@
     "@types/koa-session": "^5.10.3",
     "@types/koa__router": "^8.0.4",
     "@types/supertest": "^2.0.10",
+    "@types/validator": "^13.1.3",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "@vitejs/plugin-vue": "^1.1.5",

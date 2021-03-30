@@ -44,4 +44,4 @@ app.on('error', (err, ctx) => {
     console.log(err);
 });
 
-export default app.listen(config.KOA.PORT);
+export default app;
