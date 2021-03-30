@@ -3,13 +3,14 @@ import helmet from 'koa-helmet';
 import session from 'koa-session';
 import bodyParser from 'koa-bodyparser';
 import logger from 'koa-logger';
+import config from '../config.json';
 
-import indexRouter from './routes/index';
+import authRouter from './routes/auth';
 import roundsRouter from './routes/rounds';
 import teamsRouter from './routes/teams';
 
 const app = new Koa();
-app.keys = process.env.KOA_SESSION_KEYS as any;
+app.keys = config.KOA.SESSION_KEYS;
 
 // Middlewares
 if (app.env === 'development') {
@@ -17,7 +18,11 @@ if (app.env === 'development') {
 }
 
 app.use(helmet());
-app.use(session({ key: 'obwc:sess' }, app));
+app.use(session({
+    key: 'obwc:sess',
+    renew: true,
+    sameSite: 'lax',
+}, app));
 app.use(bodyParser());
 
 // Error handler
@@ -31,7 +36,7 @@ app.use(async (ctx, next) => {
 });
 
 // Public routes
-app.use(indexRouter.routes());
+app.use(authRouter.routes());
 app.use(roundsRouter.routes());
 app.use(teamsRouter.routes());
 
@@ -39,4 +44,4 @@ app.on('error', (err, ctx) => {
     console.log(err);
 });
 
-export default app.listen(process.env.KOA_SERVER_PORT);
+export default app.listen(config.KOA.PORT);

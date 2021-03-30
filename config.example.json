@@ -1,0 +1,12 @@
+{
+    "KOA": {
+        "PORT": 3000,
+        "SESSION_KEYS": []
+    },
+
+    "OAUTH": {
+        "ID": 0,
+        "SECRET": "",
+        "REDIRECT": "http://localhost:3000/api/callback"
+    }
+}
