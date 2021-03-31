@@ -8,6 +8,7 @@ import config from '../config.json';
 import authRouter from './routes/auth';
 import roundsRouter from './routes/rounds';
 import teamsRouter from './routes/teams';
+import usersRouter from './routes/users';
 
 const app = new Koa();
 app.keys = config.KOA.SESSION_KEYS;
@@ -37,6 +38,7 @@ app.use(async (ctx, next) => {
 
 // Public routes
 app.use(authRouter.routes());
+app.use(usersRouter.routes());
 app.use(roundsRouter.routes());
 app.use(teamsRouter.routes());
 

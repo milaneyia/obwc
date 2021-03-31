@@ -8,7 +8,7 @@ export class Seed1617071084227 implements MigrationInterface {
         await queryRunner.query(`INSERT INTO country VALUES (1,'Chile','CL'), (2,'France','FR'), (3,'United States','US'), (4,'China','CN'), (5,'Poland','PL'), (6,'Sweden','SE'), (7,'South Korea','KR'), (8,'Australia','AU');`);
         await queryRunner.query(
             `INSERT INTO user (id, osuId, username, roleId, countryId) VALUES ` +
-                `(1,1052994,'Milan-', 1, 1),` +
+                `(1,1052994,'Milan-', 3, 1),` +
                 `(2,6100837,'Imakuri', 1, 1),` +
                 `(3,3178418,'pishifat', 1, 1),` +
                 `(4,6399568,'YokesPai', 1, 2),` +

@@ -8,6 +8,7 @@ import { Team } from '../models/Team';
 import { Round } from '../models/Round';
 import { User } from '../models/User';
 import { Country } from '../models/Country';
+import { ROLE } from '../models/Role';
 
 let server: Server;
 let user: User;
@@ -179,5 +180,46 @@ describe('teams endpoints', () => {
         const res = await executeRequest(team);
         expect(res.status).toEqual(400);
         expect(await Team.count()).toBe(1);
+    });
+});
+
+describe('users endpoints', () => {
+    it('should query by username', async () => {
+        const res = await request(server)
+            .get('/api/users?user=milan');
+
+        expect(res.status).toEqual(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].username).toBe('Milan-');
+    });
+
+    it('should query by osu ID', async () => {
+        const res = await request(server)
+            .get('/api/users?user=1052994');
+
+        expect(res.status).toEqual(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].osuId).toBe(1052994);
+    });
+
+    it('should update user role', async () => {
+        const updatedUser = await User.findOneOrFail({
+            id: Not(user.id),
+            roleId: ROLE.User,
+        });
+
+        const res = await request(server)
+            .put('/api/users/' + updatedUser.id)
+            .send({
+                roleId: ROLE.Restricted,
+            });
+
+        await updatedUser.reload();
+
+        expect(res.status).toEqual(200);
+        expect(res.body).toHaveProperty('roleId', ROLE.Restricted);
+        expect(updatedUser.roleId).toBe(ROLE.Restricted);
     });
 });
