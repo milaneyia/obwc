@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { Not } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import validator from 'validator';
 import { Team } from '../models/Team';
 import { authenticate } from '../middlewares/authentication';
@@ -16,6 +16,7 @@ teamsRouter.post('/', async (ctx) => {
     const [users, currentTeam] = await Promise.all([
         User.findByIds(input.users, {
             countryId: user.country.id,
+            teamId: IsNull(),
             id: Not(user.id),
         }),
         Team.findOne({
