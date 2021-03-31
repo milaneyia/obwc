@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Country } from './Country';
 import { Submission } from './Submission';
 import { User } from './User';
@@ -21,7 +21,8 @@ export class Team extends BaseEntity {
     @Column()
     captainId!: number;
 
-    @ManyToOne(() => User, { nullable: false })
+    @OneToOne(() => User, { nullable: false })
+    @JoinColumn()
     captain!: User;
 
     @OneToMany(() => User, (user) => user.team)

@@ -172,4 +172,12 @@ describe('teams endpoints', () => {
         expect(Array.isArray(res.body.users)).toBe(true);
         expect(res.body.users).toHaveLength(3);
     });
+
+    it('should not be able to create two teams', async () => {
+        team.users = await getUsers(3);
+        await executeRequest(team);
+        const res = await executeRequest(team);
+        expect(res.status).toEqual(400);
+        expect(await Team.count()).toBe(1);
+    });
 });

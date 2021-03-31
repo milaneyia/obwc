@@ -13,10 +13,15 @@ teamsRouter.post('/', async (ctx) => {
     const user: User = ctx.state.user;
     const input = ctx.request.body;
     const name = validator.trim(input.name);
-    const users = await User.findByIds(input.users, {
-        countryId: user.country.id,
-        id: Not(user.id),
-    });
+    const [users, currentTeam] = await Promise.all([
+        User.findByIds(input.users, {
+            countryId: user.country.id,
+            id: Not(user.id),
+        }),
+        Team.findOne({
+            captain: user,
+        }),
+    ]);
 
     if (
         !validator.isLength(name, {
@@ -24,7 +29,8 @@ teamsRouter.post('/', async (ctx) => {
             max: 16,
         }) ||
         users.length < 2 ||
-        users.length > 5
+        users.length > 5 ||
+        currentTeam
     ) {
         ctx.status = 400;
 
