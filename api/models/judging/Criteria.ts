@@ -1,10 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { JudgingToCriteria } from './JudgingToCriteria';
-
-export enum JudgingType {
-    Mappers = 1,
-    Playes = 2,
-}
+import { JudgingType } from './JudgingType';
 
 @Entity()
 export class Criteria extends BaseEntity {
@@ -18,8 +14,8 @@ export class Criteria extends BaseEntity {
     @Column()
     maxScore!: number;
 
-    @Column()
-    type!: number;
+    @ManyToOne(() => JudgingType, { nullable: false })
+    judgingType!: JudgingType;
 
     @OneToMany(() => JudgingToCriteria, judgingToCriteria => judgingToCriteria.criteria)
     judgingToCriterias!: JudgingToCriteria[];

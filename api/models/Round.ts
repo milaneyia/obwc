@@ -1,7 +1,7 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { JudgeToRound } from './judging/JudgeToRound';
 import { Song } from './Song';
 import { Submission } from './Submission';
-import { User } from './User';
 
 @Entity()
 export class Round extends BaseEntity {
@@ -24,9 +24,8 @@ export class Round extends BaseEntity {
     @Column('datetime')
     resultsAt!: Date;
 
-    @ManyToMany(() => User)
-    @JoinTable()
-    judges!: User[];
+    @OneToMany(() => JudgeToRound, judgeToRound => judgeToRound.round)
+    judgeToRounds!: JudgeToRound[];
 
     @OneToMany(() => Song, (song) => song.round, {
         cascade: true,

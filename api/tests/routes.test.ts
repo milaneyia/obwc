@@ -3,14 +3,16 @@ import { createConnection, FindOperator, getConnection, getConnectionOptions, No
 import Router from '@koa/router';
 import { Server } from 'node:http';
 import app from '../app';
-import { Round as IRound, CreateTeam } from '../interfaces';
+import { CreateTeam, CreateRound } from '../interfaces';
 import { Team } from '../models/Team';
 import { Round } from '../models/Round';
 import { User } from '../models/User';
 import { Country } from '../models/Country';
 import { ROLE } from '../models/Role';
+import { JudgeToRound } from '../models/judging/JudgeToRound';
+import { JUDGING_TYPE } from '../models/judging/JudgingType';
 
-let server: Server;
+let server: Server | undefined;
 let user: User;
 
 beforeAll(async () => {
@@ -36,7 +38,7 @@ beforeAll(async () => {
 
 afterAll(() => {
     getConnection().close();
-    server.close();
+    server?.close();
 });
 
 describe('rounds endpoints', () => {
@@ -49,13 +51,28 @@ describe('rounds endpoints', () => {
     });
 
     it('should insert a new round', async () => {
-        const round: IRound = {
+        const users = await User.find({
+            take: 3,
+        });
+        const mappersJudges: Partial<JudgeToRound>[] = users.map(user => ({
+            user,
+            judgingTypeId: JUDGING_TYPE.Mappers,
+        }));
+        const playersJudges: Partial<JudgeToRound>[] = users.map(user => ({
+            user,
+            judgingTypeId: JUDGING_TYPE.Players,
+        }));
+
+        const round: CreateRound = {
             submissionsStartedAt: new Date(),
             submissionsEndedAt: new Date(),
             judgingStartedAt: new Date(),
             judgingEndedAt: new Date(),
             resultsAt: new Date(),
-            judges: [],
+            judgeToRounds: [
+                ...mappersJudges,
+                ...playersJudges,
+            ],
             songs: [{
                 title: 'new song',
                 link: 'https://osu.ppy.sh/beatmaps/artists',

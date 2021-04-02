@@ -9,6 +9,9 @@ export class Judging extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @Column({ type: 'text' })
+    comment!: string;
+
     @Column()
     judgeId!: number;
 
@@ -29,4 +32,5 @@ export class Judging extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt!: Date;
+
 }

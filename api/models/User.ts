@@ -1,5 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad, OneToMany } from 'typeorm';
 import { Country } from './Country';
+import { JudgeToRound } from './judging/JudgeToRound';
 import { Role, ROLE } from './Role';
 import { Team } from './Team';
 
@@ -34,6 +35,9 @@ export class User extends BaseEntity {
         onDelete: 'CASCADE',
     })
     team?: Team;
+
+    @OneToMany(() => JudgeToRound, judgeToRound => judgeToRound.user)
+    judgeToRounds!: JudgeToRound[];
 
     @CreateDateColumn()
     createdAt!: Date;

@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import { authenticate, isStaff } from '../middlewares/authentication';
 import { Round } from '../models/Round';
 
 const roundsRouter = new Router();
@@ -10,15 +11,15 @@ roundsRouter.get('/', async (ctx) => {
     ctx.body = rounds;
 });
 
-roundsRouter.post('/', async (ctx) => {
-    const input = ctx.request.body;
+roundsRouter.post('/', authenticate, isStaff, async (ctx) => {
+    const input: Round = ctx.request.body;
     const round = new Round();
     round.submissionsStartedAt = input.submissionsStartedAt;
     round.submissionsEndedAt = input.submissionsEndedAt;
     round.judgingStartedAt = input.judgingStartedAt;
     round.judgingEndedAt = input.judgingEndedAt;
     round.resultsAt = input.resultsAt;
-    round.judges = input.judges;
+    round.judgeToRounds = input.judgeToRounds;
     round.songs = input.songs;
     await round.save();
 
