@@ -1,4 +1,5 @@
 export interface Song {
+    round: Round;
     title: string;
     link: string;
 }
@@ -40,8 +41,14 @@ export interface Team {
     users: User[];
 }
 
-export interface CreateRound extends Omit<Round, 'judgeToRounds'> {
-    judgeToRounds: Partial<JudgeToRound>[]
+export interface CreateJudgeToRound {
+    user: User;
+    judgingTypeId: number;
+}
+
+export interface CreateRound extends Omit<Round, 'judgeToRounds' | 'songs'> {
+    judgeToRounds: CreateJudgeToRound[];
+    songs: Partial<Song>[];
 }
 
 export interface CreateTeam {

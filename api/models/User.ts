@@ -32,11 +32,11 @@ export class User extends BaseEntity {
     teamId?: number;
 
     @ManyToOne(() => Team, (team) => team.users, {
-        onDelete: 'CASCADE',
+        onDelete: 'SET NULL',
     })
     team?: Team;
 
-    @OneToMany(() => JudgeToRound, judgeToRound => judgeToRound.user)
+    @OneToMany(() => JudgeToRound, (judgeToRound) => judgeToRound.user)
     judgeToRounds!: JudgeToRound[];
 
     @CreateDateColumn()

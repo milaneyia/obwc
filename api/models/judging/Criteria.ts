@@ -14,6 +14,9 @@ export class Criteria extends BaseEntity {
     @Column()
     maxScore!: number;
 
+    @Column()
+    judgingTypeId!: number;
+
     @ManyToOne(() => JudgingType, { nullable: false })
     judgingType!: JudgingType;
 

@@ -3,14 +3,16 @@ import { createConnection, FindOperator, getConnection, getConnectionOptions, No
 import Router from '@koa/router';
 import { Server } from 'node:http';
 import app from '../app';
-import { CreateTeam, CreateRound } from '../interfaces';
+import { CreateTeam, CreateRound, CreateJudgeToRound } from '../interfaces';
 import { Team } from '../models/Team';
-import { Round } from '../models/Round';
+import { Round, RoundScope } from '../models/Round';
 import { User } from '../models/User';
 import { Country } from '../models/Country';
 import { ROLE } from '../models/Role';
 import { JudgeToRound } from '../models/judging/JudgeToRound';
 import { JUDGING_TYPE } from '../models/judging/JudgingType';
+import { Submission } from '../models/Submission';
+import { Criteria } from '../models/judging/Criteria';
 
 let server: Server | undefined;
 let user: User;
@@ -52,23 +54,30 @@ describe('rounds endpoints', () => {
 
     it('should insert a new round', async () => {
         const users = await User.find({
+            where: {
+                id: Not(user.id),
+            },
             take: 3,
         });
-        const mappersJudges: Partial<JudgeToRound>[] = users.map(user => ({
+        const mappersJudges: CreateJudgeToRound[] = users.map(user => ({
             user,
             judgingTypeId: JUDGING_TYPE.Mappers,
         }));
-        const playersJudges: Partial<JudgeToRound>[] = users.map(user => ({
+        const playersJudges: CreateJudgeToRound[] = users.map(user => ({
             user,
             judgingTypeId: JUDGING_TYPE.Players,
         }));
 
+        const now = new Date();
+        const later = new Date();
+        later.setDate(later.getDate() + 1);
+
         const round: CreateRound = {
-            submissionsStartedAt: new Date(),
-            submissionsEndedAt: new Date(),
-            judgingStartedAt: new Date(),
-            judgingEndedAt: new Date(),
-            resultsAt: new Date(),
+            submissionsStartedAt: now,
+            submissionsEndedAt: later,
+            judgingStartedAt: now,
+            judgingEndedAt: later,
+            resultsAt: later,
             judgeToRounds: [
                 ...mappersJudges,
                 ...playersJudges,
@@ -86,6 +95,7 @@ describe('rounds endpoints', () => {
         expect(res.status).toEqual(201);
         expect(res.body).toBeTruthy();
         expect(await Round.count()).toBe(1);
+        expect(await JudgeToRound.count()).toBe(6);
     });
 });
 
@@ -239,4 +249,73 @@ describe('users endpoints', () => {
         expect(res.body).toHaveProperty('roleId', ROLE.Restricted);
         expect(updatedUser.roleId).toBe(ROLE.Restricted);
     });
+});
+
+describe('judging endpoints', () => {
+    let round: Round;
+    let submission: Submission;
+
+    beforeEach(async () => {
+        round = await Round.currentRound(RoundScope.Judging).getOneOrFail();
+    });
+
+    it('should not query for normal users', async () => {
+        expect(round.getJudgeType(user.id)).toBeUndefined();
+
+        const res = await request(server)
+            .get('/api/judging');
+
+        expect(res.status).toEqual(401);
+        expect(res.body).toMatchObject({});
+    });
+
+    it('should insert a new submission', async () => {
+        const res = await request(server)
+            .post('/api/submissions');
+
+        expect(res.status).toEqual(201);
+        expect(res.body).toBeTruthy();
+        submission = res.body;
+    });
+
+    it('should insert a new judging', async () => {
+        expect(round.getJudgeType(user.id)).toBeUndefined();
+        round.judgeToRounds.push({
+            roundId: round.id,
+            userId: user.id,
+            judgingTypeId: JUDGING_TYPE.Mappers,
+        } as JudgeToRound);
+        await round.save();
+        expect(round.getJudgeType(user.id)).toBe(JUDGING_TYPE.Mappers);
+
+        const criteria = await Criteria.findOneOrFail({
+            judgingTypeId: JUDGING_TYPE.Mappers,
+        });
+        const res = await request(server)
+            .post('/api/judging')
+            .send({
+                judging: {
+                    submissionId: submission.id,
+                    comment: 'some general comment',
+                },
+                judgingToCriteria: {
+                    criteriaId: criteria.id,
+                    comment: 'specific criteria comment',
+                    score: 1,
+                },
+            });
+
+        expect(res.status).toEqual(200);
+        expect(res.body).toHaveProperty('success');
+    });
+
+    it('should get all judging done by the user', async () => {
+        const res = await request(server)
+            .get('/api/judging');
+
+        expect(res.status).toEqual(200);
+        expect(res.body).toHaveProperty('judgingDone');
+        expect(res.body.judgingDone).toHaveLength(1);
+    });
+
 });

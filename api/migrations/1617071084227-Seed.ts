@@ -5,7 +5,17 @@ export class Seed1617071084227 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`INSERT INTO role (id, name) VALUES (1, 'User'), (2, 'Restricted'), (3, 'Staff');`);
         await queryRunner.query(`INSERT INTO judging_type (id, name) VALUES (1, 'Mappers'), (2, 'Players');`);
-        await queryRunner.query(`INSERT INTO criteria (name, maxScore, judgingTypeId) VALUES ('Expertise', 30, 1), ('Cohesion', 30, 1), ('Creativity', 30, 1), ('Judge Impression', 10, 1);`);
+        await queryRunner.query(
+            `INSERT INTO criteria (name, maxScore, judgingTypeId) VALUES ` +
+            `('Expertise', 30, 1),` +
+            `('Cohesion', 30, 1),` +
+            `('Creativity', 30, 1),` +
+            `('Judge Impression', 10, 1),` +
+            `('Players Expertise', 30, 2),` +
+            `('Players Cohesion', 30, 2),` +
+            `('Players Creativity', 30, 2),` +
+            `('Players Judge Impression', 10, 2);`
+        );
         await queryRunner.query(`INSERT INTO country VALUES (1,'Chile','CL'), (2,'France','FR'), (3,'United States','US'), (4,'China','CN'), (5,'Poland','PL'), (6,'Sweden','SE'), (7,'South Korea','KR'), (8,'Australia','AU');`);
         await queryRunner.query(
             `INSERT INTO user (id, osuId, username, roleId, countryId) VALUES ` +
@@ -51,10 +61,7 @@ export class Seed1617071084227 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DELETE FROM user;`);
-        await queryRunner.query(`DELETE FROM country;`);
-        await queryRunner.query(`DELETE FROM role;`);
-        await queryRunner.query(`DELETE FROM criteria;`);
+        await queryRunner.dropSchema('obwc2021');
     }
 
 }

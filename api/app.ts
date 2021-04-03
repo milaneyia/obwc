@@ -9,6 +9,8 @@ import authRouter from './routes/auth';
 import roundsRouter from './routes/rounds';
 import teamsRouter from './routes/teams';
 import usersRouter from './routes/users';
+import judgingRouter from './routes/judging';
+import submissionsRouter from './routes/submissions';
 
 const app = new Koa();
 app.keys = config.KOA.SESSION_KEYS;
@@ -41,9 +43,13 @@ app.use(authRouter.routes());
 app.use(usersRouter.routes());
 app.use(roundsRouter.routes());
 app.use(teamsRouter.routes());
+app.use(judgingRouter.routes());
+app.use(submissionsRouter.routes());
 
 app.on('error', (err, ctx) => {
-    console.log(err);
+    if (app.env === 'development') {
+        console.log('Error caught', err);
+    }
 });
 
 export default app;
