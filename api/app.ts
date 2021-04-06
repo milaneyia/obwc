@@ -22,7 +22,7 @@ if (app.env === 'development') {
 
 app.use(helmet());
 app.use(session({
-    key: 'obwc:sess',
+    key: 'obwc.sess',
     renew: true,
     sameSite: 'lax',
 }, app));

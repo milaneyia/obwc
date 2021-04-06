@@ -12,7 +12,9 @@ export class JudgeToRound extends BaseEntity {
     @Column()
     roundId!: number;
 
-    @ManyToOne(() => Round, round => round.judgeToRounds)
+    @ManyToOne(() => Round, round => round.judgeToRounds, {
+        orphanedRowAction: 'delete',
+    })
     round!: Round;
 
     @Column()

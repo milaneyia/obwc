@@ -4,6 +4,7 @@ import validator from 'validator';
 import { Team } from '../models/Team';
 import { authenticate } from '../middlewares/authentication';
 import { User } from '../models/User';
+import { CreateTeam } from '../interfaces';
 
 const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
@@ -11,7 +12,7 @@ teamsRouter.use(authenticate);
 
 teamsRouter.post('/', async (ctx) => {
     const user: User = ctx.state.user;
-    const input = ctx.request.body;
+    const input: CreateTeam = ctx.request.body;
     const name = validator.trim(input.name);
     const [users, currentTeam] = await Promise.all([
         User.findByIds(input.users, {

@@ -55,3 +55,15 @@ export interface CreateTeam {
     name: string;
     users: User[];
 }
+
+export interface CreateJudging {
+    judging: {
+        submissionId: number;
+        comment: string;
+    };
+    judgingToCriteria: {
+        criteriaId: number;
+        comment: string;
+        score: number;
+    };
+}

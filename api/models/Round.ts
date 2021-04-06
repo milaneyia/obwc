@@ -1,4 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, SelectQueryBuilder } from 'typeorm';
+import { CreateRound } from '../interfaces';
 import { JudgeToRound } from './judging/JudgeToRound';
 import { JUDGING_TYPE } from './judging/JudgingType';
 import { Song } from './Song';
@@ -36,6 +37,22 @@ export class Round extends BaseEntity {
                 'judgeToRounds',
             ])
             .orderBy('submissions.anonymisedAs');
+    }
+
+    static fillAndSave (input: CreateRound, round?: Round): Promise<Round> {
+        if (!round) {
+            round = new Round();
+        }
+
+        round.submissionsStartedAt = input.submissionsStartedAt;
+        round.submissionsEndedAt = input.submissionsEndedAt;
+        round.judgingStartedAt = input.judgingStartedAt;
+        round.judgingEndedAt = input.judgingEndedAt;
+        round.resultsAt = input.resultsAt;
+        round.judgeToRounds = input.judgeToRounds as JudgeToRound[];
+        round.songs = input.songs as Song[];
+
+        return round.save();
     }
 
     getJudgeType (userId: number): JUDGING_TYPE | undefined {

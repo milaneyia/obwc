@@ -17,7 +17,9 @@ export class Song extends BaseEntity {
     @Column()
     roundId!: number;
 
-    @ManyToOne(() => Round, (round) => round.songs, { nullable: false })
+    @ManyToOne(() => Round, (round) => round.songs, {
+        orphanedRowAction: 'delete',
+    })
     round!: Round;
 
 }

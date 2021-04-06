@@ -37,13 +37,9 @@ submissionsRouter.post('/', async (ctx) => {
     if (!submission) {
         ctx.status = 201;
         submission = new Submission();
-        submission.round = currentRound;
-        submission.team = team;
     }
 
-    submission.originalPath = '//path';
-    submission.anonymisedAs = 'Sub 1';
-    await submission.save();
+    submission = await Submission.fillAndSave(currentRound, team, submission);
 
     ctx.body = submission;
 });
