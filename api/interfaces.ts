@@ -53,7 +53,7 @@ export interface CreateRound extends Omit<Round, 'judgeToRounds' | 'songs'> {
 
 export interface CreateTeam {
     name: string;
-    users: User[];
+    invitations: User[];
 }
 
 export interface CreateJudging {

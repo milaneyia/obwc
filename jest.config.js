@@ -7,4 +7,5 @@ module.exports = {
             tsconfig: './api/tsconfig.json',
         },
     },
+    testTimeout: 10000,
 };

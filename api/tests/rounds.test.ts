@@ -55,7 +55,7 @@ describe('rounds endpoints', () => {
 
         const res = await request(server)
             .post('/api/rounds')
-            .set(fakeSession(staff.id))
+            .set('Cookie', fakeSession(staff.id))
             .send({
                 submissionsStartedAt: now,
                 submissionsEndedAt: tomorrow,
@@ -101,7 +101,7 @@ describe('rounds endpoints', () => {
 
         const res = await request(server)
             .put('/api/rounds/' + round.id)
-            .set(fakeSession(staff.id))
+            .set('Cookie', fakeSession(staff.id))
             .send({
                 submissionsStartedAt: now,
                 submissionsEndedAt: now,

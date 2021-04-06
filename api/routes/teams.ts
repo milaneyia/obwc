@@ -15,7 +15,7 @@ teamsRouter.post('/', async (ctx) => {
     const input: CreateTeam = ctx.request.body;
     const name = validator.trim(input.name);
     const [users, currentTeam] = await Promise.all([
-        User.findByIds(input.users, {
+        User.findByIds(input.invitations, {
             countryId: user.country.id,
             teamId: IsNull(),
             id: Not(user.id),
@@ -45,10 +45,39 @@ teamsRouter.post('/', async (ctx) => {
     team.country = user.country;
     team.captain = user;
     team.name = name;
-    team.users = users;
+    team.invitations = users;
     await team.save();
 
     ctx.status = 201;
+    ctx.body = team;
+});
+
+teamsRouter.post('/:id/acceptInvitation', async (ctx) => {
+    const team = await Team.findOneOrFail(ctx.params.id, {
+        relations: [
+            'invitations',
+            'users',
+        ],
+    });
+
+    const user: User = ctx.state.user;
+    const invitation = team.invitations.find(i => i.id === user.id);
+    const isCaptain = await Team.findOne({
+        captainId: user.id,
+    });
+    const hasTeam = user.teamId;
+
+    if (!invitation || isCaptain || hasTeam) {
+        ctx.status = 400;
+
+        return ctx.body = {
+            error: `Invalid invitation`,
+        };
+    }
+
+    team.users.push(user);
+    await team.save();
+
     ctx.body = team;
 });
 

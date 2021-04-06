@@ -19,7 +19,7 @@ export async function clearDB (): Promise<void> {
 }
 
 /**
- * Use in requests like `.set(fakeSession(user.id))`
+ * Use in requests like `.set('Cookie', fakeSession(user.id))`
  * @param userId
  */
 export function fakeSession (userId: number): string[] {

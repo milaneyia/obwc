@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Country } from './Country';
 import { Submission } from './Submission';
 import { User } from './User';
@@ -27,6 +27,10 @@ export class Team extends BaseEntity {
 
     @OneToMany(() => User, (user) => user.team)
     users!: User[];
+
+    @ManyToMany(() => User)
+    @JoinTable()
+    invitations!: User[];
 
     @OneToMany(() => Submission, (submissions) => submissions.team)
     submissions!: Submission[];

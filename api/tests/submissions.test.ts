@@ -30,7 +30,7 @@ describe('submissions endpoints', () => {
 
         const res = await request(server)
             .post('/api/submissions')
-            .set(fakeSession(user.id));
+            .set('Cookie', fakeSession(user.id));
 
         expect(res.status).toEqual(201);
         expect(res.body).toBeTruthy();

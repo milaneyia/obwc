@@ -35,7 +35,7 @@ describe('judging endpoints', () => {
 
         const res = await request(server)
             .get('/api/judging')
-            .set(fakeSession(user.id));
+            .set('Cookie', fakeSession(user.id));
 
         expect(res.status).toEqual(401);
         expect(res.body).toMatchObject({});
@@ -58,7 +58,7 @@ describe('judging endpoints', () => {
 
         let res = await request(server)
             .post('/api/judging')
-            .set(fakeSession(user.id))
+            .set('Cookie', fakeSession(user.id))
             .send({
                 judging: {
                     submissionId: submission.id,
@@ -76,7 +76,7 @@ describe('judging endpoints', () => {
 
         res = await request(server)
             .get('/api/judging')
-            .set(fakeSession(user.id));
+            .set('Cookie', fakeSession(user.id));
 
         expect(res.status).toEqual(200);
         expect(res.body).toHaveProperty('judgingDone');

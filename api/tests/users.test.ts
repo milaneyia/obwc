@@ -57,7 +57,7 @@ describe('update users', () => {
 
         const res = await request(server)
             .put(`/api/users/${user.id}`)
-            .set(fakeSession(user.id))
+            .set('Cookie', fakeSession(user.id))
             .send({
                 roleId: ROLE.Restricted,
             });
@@ -70,7 +70,7 @@ describe('update users', () => {
 
         const res = await request(server)
             .put(`/api/users/${user.id}`)
-            .set(fakeSession(user.id))
+            .set('Cookie', fakeSession(user.id))
             .send({
                 roleId: ROLE.Restricted,
             });
