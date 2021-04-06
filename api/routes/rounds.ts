@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { CreateRound } from '../interfaces';
+import { CreateRound } from '../../shared/interfaces';
 import { authenticate, isStaff } from '../middlewares/authentication';
 import { Round } from '../models/Round';
 

@@ -1,5 +1,5 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, SelectQueryBuilder } from 'typeorm';
-import { CreateRound } from '../interfaces';
+import { CreateRound } from '../../shared/interfaces';
 import { JudgeToRound } from './judging/JudgeToRound';
 import { JUDGING_TYPE } from './judging/JudgingType';
 import { Song } from './Song';
