@@ -1,0 +1,15 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+[v-cloak] * {
+    display: none;
+}
+
+.component-fade-enter-active,
+.component-fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.component-fade-enter-from,
+.component-fade-leave-to {
+    opacity: 0;
+}

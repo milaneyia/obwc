@@ -1,30 +1,30 @@
-<template>
-    <a href="/api/login">
-        Log In
-    </a>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+<template v-cloak>
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+            <img
+                src="./assets/logo.png"
+                width="50"
+                height="50"
+                alt=""
+            >
+            <span class="fs-4">obwc</span>
+        </a>
+        <a href="/api/login">
+            login
+        </a>
+    </header>
+
+    <router-view v-slot="{ Component }">
+        <transition name="component-fade" mode="out-in">
+            <component :is="Component" />
+        </transition>
+    </router-view>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
 
 export default defineComponent({
     name: 'App',
-    components: {
-        HelloWorld,
-    },
 });
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
