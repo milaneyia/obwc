@@ -4,6 +4,17 @@
         <p class="fs-5 col-md-8">
             something something
         </p>
+
+        <a
+            class="twitter-timeline"
+            data-width="500"
+            data-height="500"
+            data-dnt="true"
+            data-theme="dark"
+            href="https://twitter.com/osubwc?ref_src=twsrc%5Etfw"
+        >
+            Tweets by osubwc
+        </a>
     </div>
 </template>
 
