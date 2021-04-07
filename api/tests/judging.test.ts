@@ -1,13 +1,14 @@
 import { Server } from 'node:http';
 import request from 'supertest';
 import { getConnection } from 'typeorm';
-import { Submission } from '../models/Submission';
+import app from '../app';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import { createRound, createTeam, createUser } from './factory';
+import { Submission } from '../models/Submission';
 import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import { JudgeToRound } from '../models/judging/JudgeToRound';
 import { Criteria } from '../models/judging/Criteria';
-import app from '../app';
+import { CreateJudging } from '../../shared/interfaces';
 
 let server: Server;
 
@@ -61,15 +62,15 @@ describe('judging endpoints', () => {
             .set('Cookie', fakeSession(user.id))
             .send({
                 judging: {
-                    submissionId: submission.id,
+                    submission,
                     comment: 'some general comment',
                 },
                 judgingToCriteria: {
-                    criteriaId: criteria.id,
+                    criteria,
                     comment: 'specific criteria comment',
                     score: 1,
                 },
-            });
+            } as CreateJudging);
 
         expect(res.status).toEqual(200);
         expect(res.body).toHaveProperty('success');

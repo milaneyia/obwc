@@ -3,18 +3,21 @@ import { User } from '../models/User';
 
 function sendResponse(ctx: ParameterizedContext, status?: number) {
     ctx.status = status || 401;
-    ctx.body = { error: 'Unauthorized' };
 }
 
 export async function simpleAuthenticate(ctx: ParameterizedContext, next: Next): Promise<any> {
-    const user = await User.findOne(ctx.session!.userId);
+    const user = await User.findOne({
+        id: ctx.session!.userId,
+    });
     ctx.state.user = user;
 
     return await next();
 }
 
 export async function authenticate(ctx: ParameterizedContext, next: Next): Promise<any> {
-    const user = await User.findOne(ctx.session!.userId);
+    const user = await User.findOne({
+        id: ctx.session!.userId,
+    });
 
     if (!user || user.isRestricted) {
         return sendResponse(ctx);

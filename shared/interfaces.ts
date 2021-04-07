@@ -4,6 +4,34 @@ export interface Song {
     link: string;
 }
 
+export interface Judging {
+    judgeId: number;
+    submissionId: number;
+    submission: Submission;
+    criteria: Criteria;
+    judgingToCriterias: JudgingToCriteria[];
+    comment: string;
+}
+
+export interface JudgingToCriteria {
+    judgingId: number;
+    criteriaId: number;
+    score: number;
+    comment: string;
+}
+
+export interface Submission {
+    id: number;
+    anonymisedAs: string;
+}
+
+export interface Criteria {
+    id: number;
+    name: string;
+    maxScore: number;
+    judgingTypeId: number;
+}
+
 export interface JudgingType {
     name: string;
 }
@@ -21,8 +49,9 @@ export interface Round {
     judgingStartedAt: Date;
     judgingEndedAt: Date;
     resultsAt: Date;
-    judgeToRounds: JudgeToRound[],
-    songs: Song[],
+    judgeToRounds: JudgeToRound[];
+    songs: Song[];
+    submissions: Submission[];
 }
 
 export interface Country {
@@ -58,12 +87,20 @@ export interface CreateTeam {
 
 export interface CreateJudging {
     judging: {
-        submissionId: number;
+        submission: Submission;
         comment: string;
     };
     judgingToCriteria: {
-        criteriaId: number;
+        criteria: Criteria;
         comment: string;
         score: number;
     };
+}
+
+export type ErrorResponse = { error: string };
+
+export function isError<T>(error: T | ErrorResponse): error is ErrorResponse {
+    if (!error) return false;
+
+    return (error as ErrorResponse).error !== undefined;
 }

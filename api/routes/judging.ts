@@ -1,5 +1,6 @@
 import Router from '@koa/router';
 import validator from 'validator';
+import { CreateJudging } from '../../shared/interfaces';
 import { authenticate } from '../middlewares/authentication';
 import { getCurrentRound } from '../middlewares/rounds';
 import { Criteria } from '../models/judging/Criteria';
@@ -52,34 +53,35 @@ judgingRouter.post('/', async (ctx) => {
     const currentRound: Round = ctx.state.currentRound;
     const judgingType: JUDGING_TYPE = ctx.state.judgingType;
 
-    const judgingInput: Judging = ctx.request.body.judging;
-    const judgingToCriteriaInput: JudgingToCriteria = ctx.request.body.judgingToCriteria;
+    const judgingInput: CreateJudging = ctx.request.body;
+    const score = judgingInput.judgingToCriteria.score;
+    const submissionId = judgingInput.judging.submission.id;
+    const criteriaId = judgingInput.judgingToCriteria.criteria.id;
+    const comment = validator.trim(judgingInput.judging.comment);
+    const criteriaComment = validator.trim(judgingInput.judgingToCriteria.comment);
 
     if (
-        !validator.isNumeric(judgingInput.submissionId + '') ||
-        !validator.isNumeric(judgingToCriteriaInput.criteriaId + '') ||
-        !validator.isNumeric(judgingToCriteriaInput.score + '')
+        !validator.isNumeric(submissionId + '') ||
+        !validator.isNumeric(criteriaId + '') ||
+        !validator.isNumeric(score + '')
     ) {
         ctx.status = 400;
 
         return ctx.body = { error: 'Invalid submission' };
     }
 
-    const comment = validator.trim(judgingInput.comment);
-    const criteriaComment = validator.trim(judgingToCriteriaInput.comment);
-
     const [criteria, submission] = await Promise.all([
         Criteria.findOneOrFail({
-            id: judgingToCriteriaInput.criteriaId,
+            id: criteriaId,
             judgingTypeId: judgingType,
         }),
         Submission.findOneOrFail({
-            id: judgingInput.submissionId,
+            id: submissionId,
             round: currentRound,
         }),
     ]);
 
-    if (judgingToCriteriaInput.score < 1 || judgingToCriteriaInput.score > criteria.maxScore) {
+    if (score < 1 || score > criteria.maxScore) {
         ctx.status = 400;
 
         return ctx.body = { error: 'Invalid score' };
@@ -110,7 +112,7 @@ judgingRouter.post('/', async (ctx) => {
         judgingToCriteria.judgingId = judging.id;
     }
 
-    judgingToCriteria.score = judgingToCriteriaInput.score;
+    judgingToCriteria.score = score;
     judgingToCriteria.comment = criteriaComment;
     await judgingToCriteria.save();
 

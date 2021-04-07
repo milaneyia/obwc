@@ -5,6 +5,7 @@ module.exports = {
     globals: {
         'ts-jest': {
             tsconfig: './api/tsconfig.json',
+            isolatedModules: true,
         },
     },
     testTimeout: 10000,

@@ -24,11 +24,23 @@ beforeEach(async () => {
 
 describe('query users', () => {
 
+    it('should query themselves', async () => {
+        const user = await createUser();
+
+        const res = await request(server)
+            .get(`/api/users/me`)
+            .set('Cookie', fakeSession(user.id));
+
+        expect(res.status).toEqual(200);
+        expect(res.body.id).toBe(user.id);
+    });
+
     it('should query by username', async () => {
         const user = await createUser();
 
         const res = await request(server)
-            .get(`/api/users?user=${user.username}`);
+            .get(`/api/users?user=${user.username}`)
+            .set('Cookie', fakeSession(user.id));
 
         expect(res.status).toEqual(200);
         expect(Array.isArray(res.body)).toBe(true);
@@ -40,7 +52,8 @@ describe('query users', () => {
         const user = await createUser();
 
         const res = await request(server)
-            .get(`/api/users?user=${user.osuId}`);
+            .get(`/api/users?user=${user.osuId}`)
+            .set('Cookie', fakeSession(user.id));
 
         expect(res.status).toEqual(200);
         expect(Array.isArray(res.body)).toBe(true);
