@@ -25,6 +25,13 @@ submissionsRouter.use(async (ctx, next) => {
     await next();
 });
 
+submissionsRouter.get('/', (ctx) => {
+    ctx.body = {
+        submissions: [],
+        currentRound: ctx.state.currentRound,
+    };
+});
+
 submissionsRouter.post('/', async (ctx) => {
     const team: Team = ctx.state.team;
     const currentRound: Round = ctx.state.currentRound;

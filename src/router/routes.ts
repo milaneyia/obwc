@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Home from '../pages/Home.vue';
 const Judging = () => import('../pages/Judging.vue');
+const Submissions = () => import('../pages/Submissions.vue');
 const NotFound = () => import('../pages/NotFound.vue');
 
 const routes = [
@@ -19,6 +20,17 @@ const routes = [
         name: 'judging',
         meta: {
             title: 'Judging',
+            requiresAuth: true,
+        },
+    },
+
+    // Submissions
+    {
+        path: '/submissions',
+        component: Submissions,
+        name: 'submissions',
+        meta: {
+            title: 'Submissinos',
             requiresAuth: true,
         },
     },
