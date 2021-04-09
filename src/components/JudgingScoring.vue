@@ -3,8 +3,8 @@
         <textarea
             id="comment"
             v-model="newGeneralComment"
-            maxlength="3000"
-            rows="5"
+            :maxlength="3000"
+            :rows="5"
             class="form-control"
             placeholder="General comment"
         />
@@ -39,8 +39,8 @@
                 <textarea
                     id="comment"
                     v-model="newComment"
-                    maxlength="3000"
-                    rows="5"
+                    :maxlength="3000"
+                    :rows="5"
                     class="form-control"
                     placeholder="Criteria specific"
                 />
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { CreateJudging, Criteria, Submission } from '../../shared/interfaces';
+import { CreateJudging, Criteria, ScopedSubmission } from '../../shared/interfaces';
 import { SAVE, SET_NEW_JUDGING } from '../store/judging-types';
 
 export default defineComponent({
@@ -79,7 +79,7 @@ export default defineComponent({
             return this.originalJudging?.judgingToCriteria?.criteria;
         },
 
-        submission (): Submission | undefined {
+        submission (): ScopedSubmission | undefined {
             return this.originalJudging?.judging?.submission;
         },
 

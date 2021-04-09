@@ -57,7 +57,7 @@
                                 id="oszFile"
                                 type="file"
                                 class="form-control"
-                                @change="oszFile = $event.target.files[0]"
+                                @change="uploadFile($event)"
                             >
                         </div>
                     </div>
@@ -143,6 +143,10 @@ export default defineComponent({
 
             this.isSaving = false;
             (e?.target as HTMLInputElement).disabled = false;
+        },
+
+        uploadFile (e: any) {
+            this.oszFile = e.target?.files?.[0];
         },
     },
 
