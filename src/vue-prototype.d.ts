@@ -1,4 +1,5 @@
 import { Store } from 'vuex';
+import MarkdownIt from 'markdown-it';
 import http from './http';
 import { JudgingState } from './store/judging';
 import { MainState } from './store/main';
@@ -10,6 +11,7 @@ declare module '@vue/runtime-core' {
 
     interface ComponentCustomProperties {
         $http: typeof http;
+        $md: MarkdownIt;
         $store: Store<State>;
     }
 }
