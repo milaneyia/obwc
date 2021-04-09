@@ -22,8 +22,13 @@ export interface JudgingToCriteria {
 
 export interface Submission {
     id: number;
+    originalPath: string;
     anonymisedAs: string;
+    round: Round;
+    updatedAt: Date;
 }
+
+export type ScopedSubmission = Pick<Submission, 'id' | 'anonymisedAs'>;
 
 export interface Criteria {
     id: number;
@@ -44,6 +49,7 @@ export interface JudgeToRound {
 }
 
 export interface Round {
+    id: number;
     submissionsStartedAt: Date;
     submissionsEndedAt: Date;
     judgingStartedAt: Date;
@@ -75,7 +81,7 @@ export interface CreateJudgeToRound {
     judgingTypeId: number;
 }
 
-export interface CreateRound extends Omit<Round, 'judgeToRounds' | 'songs'> {
+export interface CreateRound extends Omit<Round, 'id' | 'submissions' | 'judgeToRounds' | 'songs'> {
     judgeToRounds: CreateJudgeToRound[];
     songs: Partial<Song>[];
 }
@@ -87,7 +93,7 @@ export interface CreateTeam {
 
 export interface CreateJudging {
     judging: {
-        submission: Submission;
+        submission: ScopedSubmission;
         comment: string;
     };
     judgingToCriteria: {

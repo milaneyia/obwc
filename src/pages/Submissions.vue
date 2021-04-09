@@ -17,7 +17,7 @@
                                     v-for="submission in submissions"
                                     :key="submission.id"
                                 >
-                                    <td> {{ submission.match.round.title }}</td>
+                                    <td> {{ submission.round.id }}</td>
                                     <td>
                                         {{ submission.updatedAt }}
                                     </td>
@@ -41,10 +41,6 @@
             <div class="row">
                 <div class="col-sm">
                     <div class="card">
-                        <h5 class="card-header">
-                            {{ currentRound.title }}
-                        </h5>
-
                         <div class="card-body">
                             <p>
                                 You have from <b>{{ currentRound.submissionsStartedAt }}</b> to
@@ -102,6 +98,8 @@ export default defineComponent({
         return {
             submissions: [] as Submission[],
             currentRound: null as Round | null,
+            oszFile: null as File | null,
+            isSaving: false,
         };
     },
 
