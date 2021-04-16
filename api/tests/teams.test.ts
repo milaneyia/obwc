@@ -126,17 +126,19 @@ describe('teams creation', () => {
             countryId: captain.countryId,
         });
 
-        await executeRequest(captain.id, {
+        let res = await executeRequest(captain.id, {
             name: 'First team',
             invitations: users,
         });
 
-        const res = await executeRequest(captain.id, {
+        expect(res.status).toEqual(201);
+
+        res = await executeRequest(captain.id, {
             name: 'Second team',
             invitations: users,
         });
 
-        expect(res.status).toEqual(400);
+        expect(res.status).toEqual(200);
         expect(await Team.count()).toBe(1);
     });
 
@@ -157,6 +159,26 @@ describe('teams creation', () => {
         expect(res.body).toHaveProperty('invitations');
         expect(Array.isArray(res.body.invitations)).toBe(true);
         expect(res.body.invitations).toHaveLength(3);
+    });
+
+    it('should return its own team', async () => {
+        const captain = await createUser();
+        const users = await createUsers(2, {
+            countryId: captain.countryId,
+        });
+
+        const { body: team } = await executeRequest(captain.id, {
+            name: 'First team',
+            invitations: users,
+        });
+
+        const res = await request(server)
+            .get(`/api/teams/mine`)
+            .set('Cookie', fakeSession(captain.id));
+
+        expect(res.status).toEqual(200);
+        expect(res.body).toBeTruthy();
+        expect(res.body.id).toBe(team.id);
     });
 
 });

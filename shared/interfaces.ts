@@ -61,12 +61,15 @@ export interface Round {
 }
 
 export interface Country {
+    id: number;
     name: string;
 }
 
 export interface User {
     id: number;
     username: string;
+    osuId: number;
+    country: Country;
 }
 
 export interface Team {
@@ -74,6 +77,7 @@ export interface Team {
     captain: User;
     name: string;
     users: User[];
+    invitations: User[];
 }
 
 export interface CreateJudgeToRound {

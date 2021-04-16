@@ -4,7 +4,7 @@ import { getConnection } from 'typeorm';
 import { ROLE } from '../models/Role';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import app from '../app';
-import { createUser } from './factory';
+import { createUser, createUsers } from './factory';
 
 let server: Server;
 
@@ -59,6 +59,19 @@ describe('query users', () => {
         expect(Array.isArray(res.body)).toBe(true);
         expect(res.body.length).toBe(1);
         expect(res.body[0].osuId).toBe(user.osuId);
+    });
+
+    it('should query rest of users from a country', async () => {
+        const user = await createUser();
+        await createUsers(3, { countryId: user.countryId });
+
+        const res = await request(server)
+            .get(`/api/users?country=${user.countryId}`)
+            .set('Cookie', fakeSession(user.id));
+
+        expect(res.status).toEqual(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBe(3);
     });
 
 });

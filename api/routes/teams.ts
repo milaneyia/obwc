@@ -10,6 +10,20 @@ const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
 teamsRouter.use(authenticate);
 
+teamsRouter.get('/mine', async (ctx) => {
+    const user: User = ctx.state.user;
+
+    ctx.body = await Team.findOne({
+        where: {
+            captain: user,
+        },
+        relations: [
+            'users',
+            'invitations',
+        ],
+    });
+});
+
 teamsRouter.post('/', async (ctx) => {
     const user: User = ctx.state.user;
     const input: CreateTeam = ctx.request.body;
@@ -32,7 +46,7 @@ teamsRouter.post('/', async (ctx) => {
         }) ||
         users.length < 2 ||
         users.length > 5 ||
-        currentTeam
+        user.teamId
     ) {
         ctx.status = 400;
 
@@ -41,14 +55,19 @@ teamsRouter.post('/', async (ctx) => {
         };
     }
 
-    const team = new Team();
+    let team = currentTeam;
+
+    if (!team) {
+        ctx.status = 201;
+        team = new Team();
+    }
+
     team.country = user.country;
     team.captain = user;
     team.name = name;
     team.invitations = users;
     await team.save();
 
-    ctx.status = 201;
     ctx.body = team;
 });
 

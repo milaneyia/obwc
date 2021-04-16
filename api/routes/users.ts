@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { Like } from 'typeorm';
+import { IsNull, Like, Not } from 'typeorm';
 import validator from 'validator';
 import { authenticate, isStaff, simpleAuthenticate } from '../middlewares/authentication';
 import { User } from '../models/User';
@@ -12,15 +12,26 @@ usersRouter.get('/me', simpleAuthenticate, (ctx) => {
 });
 
 usersRouter.get('/', authenticate, async (ctx) => {
+    const user: User = ctx.state.user;
     const query = validator.trim(ctx.query.user?.toString() || '');
+    const countryId = validator.toInt(ctx.query.country?.toString() || '');
+    let users: User[] = [];
 
-    const users = await User.find({
-        where: [
-            { username: Like(`%${query}%`) },
-            { osuId: query },
-        ],
-        take: 50,
-    });
+    if (query) {
+        users = await User.find({
+            where: [
+                { username: Like(`%${query}%`) },
+                { osuId: query },
+            ],
+            take: 50,
+        });
+    } else if (countryId) {
+        users = await User.find({
+            countryId,
+            teamId: IsNull(),
+            id: Not(user.id),
+        });
+    }
 
     ctx.body = users;
 });

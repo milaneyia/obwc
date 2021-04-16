@@ -2,7 +2,13 @@ import Axios, { AxiosError } from 'axios';
 
 const http = Axios.create();
 
-http.interceptors.response.use((response) => response, (error: AxiosError) => {
+http.interceptors.response.use((response) => {
+    if (response.config.method !== 'get' && response.config.method !== 'GET') {
+        alert(response.data.success || response.statusText);
+    }
+
+    return response;
+}, (error: AxiosError) => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     let message = 'Something went wrong!';
 

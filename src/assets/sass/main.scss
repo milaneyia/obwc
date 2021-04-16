@@ -97,3 +97,12 @@ ul.timeline {
         }
     }
 }
+
+.avatar {
+    border-radius: 8px;
+    height: 60px;
+    width: 60px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+}
