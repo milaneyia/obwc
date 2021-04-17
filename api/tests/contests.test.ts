@@ -5,7 +5,7 @@ import { clearDB, fakeSession, setupDB } from './helpers';
 import { createContest, createUser } from './factory';
 import { ROLE } from '../models/Role';
 import { Contest } from '../models/Contest';
-import { CreateContest } from '../../shared/interfaces';
+import { CreateContest } from '../../shared/integration';
 import app from '../app';
 
 let server: Server;

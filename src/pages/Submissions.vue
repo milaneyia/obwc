@@ -85,7 +85,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Round, Submission, User } from '../../shared/interfaces';
+import { Round, Submission, User } from '../../shared/models';
 
 interface ApiResponse {
     submissions: Submission[];

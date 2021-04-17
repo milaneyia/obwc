@@ -6,7 +6,7 @@ import { Round } from '../models/Round';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import { ROLE } from '../models/Role';
 import { createContest, createRound, createUser, createUsers } from './factory';
-import { CreateJudgeToRound, CreateRound } from '../../shared/interfaces';
+import { CreateJudgeToRound, CreateRound } from '../../shared/integration';
 import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import app from '../app';
 

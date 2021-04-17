@@ -84,7 +84,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Contest, CreateTeam, Team, User } from '../../shared/interfaces';
+import { CreateTeam } from '../../shared/integration';
+import { Contest, Team, User } from '../../shared/models';
 
 export default defineComponent({
     data () {

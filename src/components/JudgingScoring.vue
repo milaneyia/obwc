@@ -64,7 +64,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { CreateJudging, Criteria, ScopedSubmission } from '../../shared/interfaces';
+import { Criteria } from '../../shared/models';
+import { CreateJudging, ScopedSubmission } from '../../shared/integration';
 import { SAVE, SET_NEW_JUDGING } from '../store/judging-types';
 
 export default defineComponent({

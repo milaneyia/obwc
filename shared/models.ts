@@ -28,8 +28,6 @@ export interface Submission {
     updatedAt: Date;
 }
 
-export type ScopedSubmission = Pick<Submission, 'id' | 'anonymisedAs'>;
-
 export interface Criteria {
     id: number;
     name: string;
@@ -83,46 +81,4 @@ export interface Team {
 export interface Contest {
     id: number;
     name: string;
-}
-
-export interface CreateJudgeToRound {
-    user: User;
-    judgingTypeId: number;
-}
-
-export interface CreateRound extends Omit<Round, 'id' | 'submissions' | 'judgeToRounds' | 'songs'> {
-    judgeToRounds: CreateJudgeToRound[];
-    songs: Partial<Song>[];
-    contest: Contest;
-}
-
-export interface CreateTeam {
-    name: string;
-    invitations: User[];
-    contest: Contest;
-}
-
-export interface CreateJudging {
-    judging: {
-        submission: ScopedSubmission;
-        comment: string;
-    };
-    judgingToCriteria: {
-        criteria: Criteria;
-        comment: string;
-        score: number;
-    };
-}
-
-export interface CreateContest {
-    name: string;
-    isOpen: boolean;
-}
-
-export type ErrorResponse = { error: string };
-
-export function isError<T>(error: T | ErrorResponse): error is ErrorResponse {
-    if (!error) return false;
-
-    return (error as ErrorResponse).error !== undefined;
 }

@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import validator from 'validator';
-import { CreateContest } from '../../shared/interfaces';
+import { CreateContest } from '../../shared/integration';
 import { authenticate, isStaff } from '../middlewares/authentication';
 import { Contest } from '../models/Contest';
 

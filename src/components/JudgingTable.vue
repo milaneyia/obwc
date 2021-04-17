@@ -79,7 +79,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Submission, Round, Criteria, Judging, CreateJudging } from '../../shared/interfaces';
+import { CreateJudging } from '../../shared/integration';
+import { Submission, Round, Criteria, Judging } from '../../shared/models';
 import { SELECT_FOR_EDITING } from '../store/judging-types';
 
 export default defineComponent({

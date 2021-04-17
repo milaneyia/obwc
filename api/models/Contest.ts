@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CreateContest } from '../../shared/interfaces';
+import { CreateContest } from '../../shared/integration';
 import { Round } from './Round';
 
 @Entity()

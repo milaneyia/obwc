@@ -1,5 +1,5 @@
 import { createStore } from 'vuex';
-import { User } from '../../shared/interfaces';
+import { User } from '../../shared/models';
 import judgingModule from './judging';
 import { SET_INITIAL_DATA, UPDATE_LOADING_STATE } from './main-types';
 

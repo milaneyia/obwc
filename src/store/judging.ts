@@ -1,5 +1,6 @@
 import { Module } from 'vuex';
-import { Criteria, Judging, JudgingToCriteria, Round, Submission, CreateJudging } from '../../shared/interfaces';
+import { CreateJudging } from '../../shared/integration';
+import { Criteria, Judging, JudgingToCriteria, Round, Submission } from '../../shared/models';
 import { MainState } from './main';
 import http from '../http';
 import { INIT_DATA, SET_ORIGINAL_JUDGING, SET_NEW_JUDGING, SELECT_FOR_EDITING, SAVE } from './judging-types';

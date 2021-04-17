@@ -8,7 +8,7 @@ import { Submission } from '../models/Submission';
 import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import { JudgeToRound } from '../models/judging/JudgeToRound';
 import { Criteria } from '../models/judging/Criteria';
-import { CreateJudging } from '../../shared/interfaces';
+import { CreateJudging } from '../../shared/integration';
 
 let server: Server;
 

@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes';
 import { store } from '../store/main';
-import { ErrorResponse, User } from '../../shared/interfaces';
+import { ErrorResponse } from '../../shared/extras';
+import { User } from '../../shared/models';
 import http from '../http';
 import { SET_INITIAL_DATA } from '../store/main-types';
 

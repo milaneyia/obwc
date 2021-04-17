@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Round, User } from '../../shared/interfaces';
+import { Round, User } from '../../shared/models';
 import JudgingScoring from '../components/JudgingScoring.vue';
 import JudgingTable from '../components/JudgingTable.vue';
 import { INIT_DATA } from '../store/judging-types';

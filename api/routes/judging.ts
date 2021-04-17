@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import validator from 'validator';
-import { CreateJudging } from '../../shared/interfaces';
+import { CreateJudging } from '../../shared/integration';
 import { authenticate } from '../middlewares/authentication';
 import { getCurrentRound } from '../middlewares/rounds';
 import { Criteria } from '../models/judging/Criteria';

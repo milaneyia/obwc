@@ -4,7 +4,7 @@ import validator from 'validator';
 import { Team } from '../models/Team';
 import { authenticate } from '../middlewares/authentication';
 import { User } from '../models/User';
-import { CreateTeam } from '../../shared/interfaces';
+import { CreateTeam } from '../../shared/integration';
 import { Contest } from '../models/Contest';
 
 const teamsRouter = new Router();

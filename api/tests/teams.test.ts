@@ -2,7 +2,7 @@ import { Server } from 'node:http';
 import request from 'supertest';
 import { getConnection } from 'typeorm';
 import { Team } from '../models/Team';
-import { CreateTeam } from '../../shared/interfaces';
+import { CreateTeam } from '../../shared/integration';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import app from '../app';
 import { createUser, createUsers, createCountries, createTeam, createContest } from './factory';
