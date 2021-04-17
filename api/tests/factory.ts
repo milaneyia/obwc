@@ -117,12 +117,16 @@ export async function createJudging (judgeToRound: JudgeToRound, submission: Sub
     return await judging.save();
 }
 
-export async function createTeam (captain: User, contest: Contest): Promise<Team> {
+export async function createTeam (captain: User, contest: Contest, wasConfirmed?: boolean): Promise<Team> {
     const team = new Team();
     team.name = faker.company.companyName();
     team.countryId = captain.countryId;
     team.captainId = captain.id;
     team.contest = contest;
+
+    if (wasConfirmed) {
+        team.wasConfirmed = true;
+    }
 
     return await team.save();
 }

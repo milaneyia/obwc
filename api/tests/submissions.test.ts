@@ -23,13 +23,28 @@ beforeEach(async () => {
 
 describe('submissions endpoints', () => {
 
-    it('should insert a new submission', async () => {
+    it('should stop an unconfirmed team', async () => {
         const [user, contest] = await Promise.all([
             createUser(),
             createContest(),
         ]);
         await createRound(contest);
         await createTeam(user, contest);
+
+        const res = await request(server)
+            .post('/api/submissions')
+            .set('Cookie', fakeSession(user.id));
+
+        expect(res.status).toEqual(401);
+    });
+
+    it('should insert a new submission', async () => {
+        const [user, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        await createRound(contest);
+        await createTeam(user, contest, true);
 
         const res = await request(server)
             .post('/api/submissions')

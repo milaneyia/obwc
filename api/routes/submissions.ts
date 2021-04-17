@@ -15,6 +15,7 @@ submissionsRouter.use(async (ctx, next) => {
     const user: User = ctx.state.user;
     const team = await Team.findOne({
         captain: user,
+        wasConfirmed: true,
     });
 
     if (!team) {
