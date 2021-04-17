@@ -13,6 +13,9 @@ export class Team extends BaseEntity {
     @Column({ unique: true })
     name!: string;
 
+    @Column({ default: false })
+    wasConfirmed!: boolean;
+
     @ManyToOne(() => Contest, { nullable: false })
     contest!: Contest;
 
