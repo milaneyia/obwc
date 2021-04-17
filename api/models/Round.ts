@@ -1,5 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, SelectQueryBuilder } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, SelectQueryBuilder, ManyToOne } from 'typeorm';
 import { CreateRound } from '../../shared/interfaces';
+import { Contest } from './Contest';
 import { JudgeToRound } from './judging/JudgeToRound';
 import { JUDGING_TYPE } from './judging/JudgingType';
 import { Song } from './Song';
@@ -51,6 +52,7 @@ export class Round extends BaseEntity {
         round.resultsAt = input.resultsAt;
         round.judgeToRounds = input.judgeToRounds as JudgeToRound[];
         round.songs = input.songs as Song[];
+        round.contest = input.contest as Contest;
 
         return round.save();
     }
@@ -76,6 +78,9 @@ export class Round extends BaseEntity {
 
     @Column('datetime')
     resultsAt!: Date;
+
+    @ManyToOne(() => Contest, (contest) => contest.rounds, { nullable: false })
+    contest!: Contest;
 
     @OneToMany(() => JudgeToRound, (judgeToRound) => judgeToRound.round, {
         cascade: true,

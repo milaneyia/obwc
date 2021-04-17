@@ -3,7 +3,7 @@ import request from 'supertest';
 import { getConnection } from 'typeorm';
 import app from '../app';
 import { clearDB, fakeSession, setupDB } from './helpers';
-import { createRound, createTeam, createUser } from './factory';
+import { createContest, createRound, createTeam, createUser } from './factory';
 import { Submission } from '../models/Submission';
 import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import { JudgeToRound } from '../models/judging/JudgeToRound';
@@ -29,8 +29,11 @@ beforeEach(async () => {
 describe('judging endpoints', () => {
 
     it('should not query for normal users', async () => {
-        const user = await createUser();
-        const round = await createRound();
+        const [user, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        const round = await createRound(contest);
 
         expect(round.getJudgeType(user.id)).toBeUndefined();
 
@@ -43,9 +46,12 @@ describe('judging endpoints', () => {
     });
 
     it('should insert a new judging and be able to get them back', async () => {
-        const user = await createUser();
-        const round = await createRound();
-        const team = await createTeam(user);
+        const [user, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        const round = await createRound(contest);
+        const team = await createTeam(user, contest);
         round.judgeToRounds.push({
             user,
             judgingTypeId: JUDGING_TYPE.Mappers,

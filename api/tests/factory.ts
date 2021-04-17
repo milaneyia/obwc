@@ -8,6 +8,7 @@ import { JudgeToRound } from '../models/judging/JudgeToRound';
 import faker from 'faker';
 import { Judging } from '../models/judging/Judging';
 import { Team } from '../models/Team';
+import { Contest } from '../models/Contest';
 
 export async function createCountries (count: number): Promise<Country[]> {
     const countries: Partial<Country>[] = [];
@@ -74,7 +75,19 @@ export async function createUser (options?: CreateUsersOptions): Promise<User> {
     return users[0];
 }
 
-export async function createRound (): Promise<Round> {
+interface CreateContestOptions {
+    isOpen?: boolean;
+}
+
+export function createContest (options?: CreateContestOptions): Promise<Contest> {
+    const contest = new Contest();
+    contest.name = faker.name.jobDescriptor();
+    contest.isOpen = options?.isOpen !== undefined ? options.isOpen : true;
+
+    return contest.save();
+}
+
+export async function createRound (contest: Contest): Promise<Round> {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const tomorrow = new Date();
@@ -91,6 +104,7 @@ export async function createRound (): Promise<Round> {
             link: 'https://osu.ppy.sh/beatmaps/artists',
         }],
         judgeToRounds: [],
+        contest,
     });
 }
 
@@ -103,11 +117,12 @@ export async function createJudging (judgeToRound: JudgeToRound, submission: Sub
     return await judging.save();
 }
 
-export async function createTeam (captain: User): Promise<Team> {
+export async function createTeam (captain: User, contest: Contest): Promise<Team> {
     const team = new Team();
     team.name = faker.company.companyName();
     team.countryId = captain.countryId;
     team.captainId = captain.id;
+    team.contest = contest;
 
     return await team.save();
 }

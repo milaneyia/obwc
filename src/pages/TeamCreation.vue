@@ -45,6 +45,22 @@
 
         <div class="row">
             <div class="col-sm">
+                <select
+                    v-model="selectedContest"
+                    class="form-control mb-2"
+                >
+                    <option :value="null" disabled>
+                        Select a contest
+                    </option>
+                    <option
+                        v-for="contest in contests"
+                        :key="contest.id"
+                        :value="contest"
+                    >
+                        {{ contest.name }}
+                    </option>
+                </select>
+
                 <input
                     v-model="name"
                     type="text"
@@ -68,14 +84,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { CreateTeam, Team, User } from '../../shared/interfaces';
+import { Contest, CreateTeam, Team, User } from '../../shared/interfaces';
 
 export default defineComponent({
     data () {
         return {
             name: '',
+            contests: [] as Contest[],
             users: [] as User[],
             selectedUsers: [] as User[],
+            selectedContest: null as Contest | null,
             loading: false,
         };
     },
@@ -85,12 +103,14 @@ export default defineComponent({
     }),
 
     async created () {
-        const [{ data: users }, { data: team }] = await Promise.all([
+        const [{ data: contests }, { data: users }, { data: team }] = await Promise.all([
+            this.$http.get<Contest[]>('/api/contests'),
             this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
             this.$http.get<Team | undefined>('/api/teams/mine'),
         ]);
 
         this.users = users;
+        this.contests = contests;
 
         if (team) {
             this.name = team.name;
@@ -125,10 +145,15 @@ export default defineComponent({
                 return alert('Number of members needs to be between 2 and 5');
             }
 
+            if (!this.selectedContest) {
+                return alert('Select a contest to participate on');
+            }
+
             this.loading = true;
             const team: CreateTeam = {
                 name: this.name,
                 invitations: this.selectedUsers,
+                contest: this.selectedContest,
             };
             this.$http.post('/api/teams', team)
                 .finally(() => this.loading = false);

@@ -5,6 +5,7 @@ import { Team } from '../models/Team';
 import { authenticate } from '../middlewares/authentication';
 import { User } from '../models/User';
 import { CreateTeam } from '../../shared/interfaces';
+import { Contest } from '../models/Contest';
 
 const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
@@ -28,7 +29,7 @@ teamsRouter.post('/', async (ctx) => {
     const user: User = ctx.state.user;
     const input: CreateTeam = ctx.request.body;
     const name = validator.trim(input.name);
-    const [users, currentTeam] = await Promise.all([
+    const [users, currentTeam, contest] = await Promise.all([
         User.findByIds(input.invitations, {
             countryId: user.country.id,
             teamId: IsNull(),
@@ -36,6 +37,10 @@ teamsRouter.post('/', async (ctx) => {
         }),
         Team.findOne({
             captain: user,
+        }),
+        Contest.findOne({
+            id: input.contest.id,
+            isOpen: true,
         }),
     ]);
 
@@ -46,7 +51,8 @@ teamsRouter.post('/', async (ctx) => {
         }) ||
         users.length < 2 ||
         users.length > 5 ||
-        user.teamId
+        user.teamId ||
+        !contest
     ) {
         ctx.status = 400;
 
@@ -62,6 +68,7 @@ teamsRouter.post('/', async (ctx) => {
         team = new Team();
     }
 
+    team.contest = contest;
     team.country = user.country;
     team.captain = user;
     team.name = name;

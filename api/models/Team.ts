@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Contest } from './Contest';
 import { Country } from './Country';
 import { Submission } from './Submission';
 import { User } from './User';
@@ -11,6 +12,9 @@ export class Team extends BaseEntity {
 
     @Column({ unique: true })
     name!: string;
+
+    @ManyToOne(() => Contest, { nullable: false })
+    contest!: Contest;
 
     @Column()
     countryId!: number;

@@ -5,16 +5,17 @@ export class Seed1617071084227 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`INSERT INTO role (id, name) VALUES (1, 'User'), (2, 'Restricted'), (3, 'Staff');`);
         await queryRunner.query(`INSERT INTO judging_type (id, name) VALUES (1, 'Mappers'), (2, 'Players');`);
+        await queryRunner.query(`INSERT INTO contest (id, name, isOpen) VALUES (1, 'osu mode contest', 1);`);
         await queryRunner.query(
-            `INSERT INTO criteria (name, maxScore, judgingTypeId) VALUES ` +
-            `('Expertise', 30, 1),` +
-            `('Cohesion', 30, 1),` +
-            `('Creativity', 30, 1),` +
-            `('Judge Impression', 10, 1),` +
-            `('Players Expertise', 30, 2),` +
-            `('Players Cohesion', 30, 2),` +
-            `('Players Creativity', 30, 2),` +
-            `('Players Judge Impression', 10, 2);`
+            `INSERT INTO criteria (name, maxScore, judgingTypeId, contestId) VALUES ` +
+            `('Expertise', 30, 1, 1),` +
+            `('Cohesion', 30, 1, 1),` +
+            `('Creativity', 30, 1, 1),` +
+            `('Judge Impression', 10, 1, 1),` +
+            `('Players Expertise', 30, 2, 1),` +
+            `('Players Cohesion', 30, 2, 1),` +
+            `('Players Creativity', 30, 2, 1),` +
+            `('Players Judge Impression', 10, 2, 1);`
         );
     }
 
@@ -22,6 +23,7 @@ export class Seed1617071084227 implements MigrationInterface {
         await Promise.all([
             queryRunner.query(`DELETE FROM role;`),
             queryRunner.query(`DELETE FROM judging_type;`),
+            queryRunner.query(`DELETE FROM contest;`),
             queryRunner.query(`DELETE FROM criteria;`),
         ]);
     }

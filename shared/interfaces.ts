@@ -80,6 +80,11 @@ export interface Team {
     invitations: User[];
 }
 
+export interface Contest {
+    id: number;
+    name: string;
+}
+
 export interface CreateJudgeToRound {
     user: User;
     judgingTypeId: number;
@@ -88,11 +93,13 @@ export interface CreateJudgeToRound {
 export interface CreateRound extends Omit<Round, 'id' | 'submissions' | 'judgeToRounds' | 'songs'> {
     judgeToRounds: CreateJudgeToRound[];
     songs: Partial<Song>[];
+    contest: Contest;
 }
 
 export interface CreateTeam {
     name: string;
     invitations: User[];
+    contest: Contest;
 }
 
 export interface CreateJudging {
@@ -105,6 +112,11 @@ export interface CreateJudging {
         comment: string;
         score: number;
     };
+}
+
+export interface CreateContest {
+    name: string;
+    isOpen: boolean;
 }
 
 export type ErrorResponse = { error: string };

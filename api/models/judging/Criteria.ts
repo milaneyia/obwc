@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Contest } from '../Contest';
 import { JudgingToCriteria } from './JudgingToCriteria';
 import { JudgingType } from './JudgingType';
 
@@ -13,6 +14,9 @@ export class Criteria extends BaseEntity {
 
     @Column()
     maxScore!: number;
+
+    @ManyToOne(() => Contest, (contest) => contest.rounds, { nullable: false })
+    contest!: Contest;
 
     @Column()
     judgingTypeId!: number;

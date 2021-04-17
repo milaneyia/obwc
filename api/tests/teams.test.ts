@@ -5,7 +5,7 @@ import { Team } from '../models/Team';
 import { CreateTeam } from '../../shared/interfaces';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import app from '../app';
-import { createUser, createUsers, createCountries, createTeam } from './factory';
+import { createUser, createUsers, createCountries, createTeam, createContest } from './factory';
 
 let server: Server;
 
@@ -33,7 +33,10 @@ describe('teams creation', () => {
     }
 
     it('should not accept long team name', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(3, {
             countryId: captain.countryId,
         });
@@ -41,6 +44,7 @@ describe('teams creation', () => {
         const res = await executeRequest(captain.id, {
             name: 'Very long team name',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(400);
@@ -49,7 +53,10 @@ describe('teams creation', () => {
     });
 
     it('should not accept less than 2 members', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(1, {
             countryId: captain.countryId,
         });
@@ -57,6 +64,7 @@ describe('teams creation', () => {
         const res = await executeRequest(captain.id, {
             name: 'A team',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(400);
@@ -65,7 +73,10 @@ describe('teams creation', () => {
     });
 
     it('should not accept more than 5 members', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(6, {
             countryId: captain.countryId,
         });
@@ -73,6 +84,7 @@ describe('teams creation', () => {
         const res = await executeRequest(captain.id, {
             name: 'A team',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(400);
@@ -82,9 +94,12 @@ describe('teams creation', () => {
 
     it('should not accept members from another country', async () => {
         const countries = await createCountries(2);
-        const captain = await createUser({
-            countryId: countries[0].id,
-        });
+        const [captain, contest] = await Promise.all([
+            createUser({
+                countryId: countries[0].id,
+            }),
+            createContest(),
+        ]);
         const users = await createUsers(3, {
             countryId: countries[1].id,
         });
@@ -92,6 +107,7 @@ describe('teams creation', () => {
         const res = await executeRequest(captain.id, {
             name: 'A team',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(400);
@@ -100,7 +116,10 @@ describe('teams creation', () => {
     });
 
     it('should not accept themselves as member', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(3, {
             countryId: captain.countryId,
         });
@@ -111,6 +130,7 @@ describe('teams creation', () => {
                 ...users,
                 captain,
             ],
+            contest,
         });
 
         expect(res.status).toEqual(201);
@@ -121,7 +141,10 @@ describe('teams creation', () => {
     });
 
     it('should not be able to create two teams', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(2, {
             countryId: captain.countryId,
         });
@@ -129,6 +152,7 @@ describe('teams creation', () => {
         let res = await executeRequest(captain.id, {
             name: 'First team',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(201);
@@ -136,14 +160,39 @@ describe('teams creation', () => {
         res = await executeRequest(captain.id, {
             name: 'Second team',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(200);
         expect(await Team.count()).toBe(1);
     });
 
+    it('should not be able to create on a closed contest', async () => {
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest({
+                isOpen: false,
+            }),
+        ]);
+        const users = await createUsers(2, {
+            countryId: captain.countryId,
+        });
+
+        const res = await executeRequest(captain.id, {
+            name: 'A team',
+            invitations: users,
+            contest,
+        });
+
+        expect(res.status).toEqual(400);
+        expect(await Team.count()).toBe(0);
+    });
+
     it('should insert a new team and trim its name', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(3, {
             countryId: captain.countryId,
         });
@@ -151,6 +200,7 @@ describe('teams creation', () => {
         const res = await executeRequest(captain.id, {
             name: '   My Team   ',
             invitations: users,
+            contest,
         });
 
         expect(res.status).toEqual(201);
@@ -162,7 +212,10 @@ describe('teams creation', () => {
     });
 
     it('should return its own team', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(2, {
             countryId: captain.countryId,
         });
@@ -170,6 +223,7 @@ describe('teams creation', () => {
         const { body: team } = await executeRequest(captain.id, {
             name: 'First team',
             invitations: users,
+            contest,
         });
 
         const res = await request(server)
@@ -186,8 +240,11 @@ describe('teams creation', () => {
 describe('teams invitations', () => {
 
     it('should fail when user is captain', async () => {
-        const captain = await createUser();
-        const team = await createTeam(captain);
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        const team = await createTeam(captain, contest);
         team.invitations = [captain];
         await team.save();
 
@@ -202,18 +259,21 @@ describe('teams invitations', () => {
     });
 
     it('should fail when user has a team', async () => {
-        const captain = await createUser();
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
         const users = await createUsers(2, {
             countryId: captain.countryId,
         });
         const user = users[0];
 
-        let team = await createTeam(captain);
+        let team = await createTeam(captain, contest);
         team.invitations = [user];
         await team.save();
 
         const captain2 = users[1];
-        const team2 = await createTeam(captain2);
+        const team2 = await createTeam(captain2, contest);
         team2.users = [user];
         await team2.save();
 
@@ -232,8 +292,11 @@ describe('teams invitations', () => {
     });
 
     it('should fail when invitation doesnt exist', async () => {
-        const captain = await createUser();
-        const team = await createTeam(captain);
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        const team = await createTeam(captain, contest);
         const user = await createUser({
             countryId: captain.countryId,
         });
@@ -249,8 +312,11 @@ describe('teams invitations', () => {
     });
 
     it('should accept an invitation', async () => {
-        const captain = await createUser();
-        const team = await createTeam(captain);
+        const [captain, contest] = await Promise.all([
+            createUser(),
+            createContest(),
+        ]);
+        const team = await createTeam(captain, contest);
         const user = await createUser({
             countryId: captain.countryId,
         });

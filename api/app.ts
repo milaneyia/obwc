@@ -6,6 +6,7 @@ import logger from 'koa-logger';
 import config from '../config.json';
 
 import authRouter from './routes/auth';
+import contestsRouter from './routes/contests';
 import roundsRouter from './routes/rounds';
 import teamsRouter from './routes/teams';
 import usersRouter from './routes/users';
@@ -41,6 +42,7 @@ app.use(async (ctx, next) => {
 // Public routes
 app.use(authRouter.routes());
 app.use(usersRouter.routes());
+app.use(contestsRouter.routes());
 app.use(roundsRouter.routes());
 app.use(teamsRouter.routes());
 app.use(judgingRouter.routes());
