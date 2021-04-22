@@ -1,8 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+@font-face {
+    font-family: 'klonar';
+    src: url('../fonts/BCSklonar-Light.otf');
+    font-style: normal;
+    font-weight: normal;
+}
 
-$font-family-base: 'Poppins', sans-serif;
+@font-face {
+    font-family: 'klonar';
+    src: url('../fonts/BCSklonar-Medium.otf');
+    font-weight: bold;
+}
 
-$blue:    #5195dd !default;
+@font-face {
+    font-family: 'klonar';
+    src: url('../fonts/BCSklonar-Bold.otf');
+    font-weight: 900;
+}
+
+$font-family-base: 'klonar', sans-serif;
+
+$blue:    #3bbce1 !default;
 $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
@@ -12,8 +29,8 @@ $yellow:  #F39C12 !default;
 $green:   #00bc8c !default;
 $teal:    #20c997 !default;
 $cyan:    #3498DB !default;
-
-$font-size-base: 0.95rem !default;
+$dark:    #121212 !default;
+$white:   #fff !default;
 
 $body-bg: hsl(255, 10%, 10%) !default;
 $body-color: #fff;
@@ -30,3 +47,6 @@ $input-bg: #24232b;
 $input-border-color:  #24232b;
 $input-color: #fff;
 $input-group-addon-bg: #293033;
+
+$navbar-nav-link-padding-x: 1rem;
+$navbar-dark-color: $white;

@@ -13,8 +13,17 @@ const routes = [
     {
         path: '/',
         component: Home,
-        alias: '/home',
+        alias: '/main',
         name: 'home',
+    },
+    {
+        path: '/dashboard',
+        component: Home,
+        name: 'dashboard',
+        meta: {
+            title: 'Dashboard',
+            requiresAuth: true,
+        },
     },
     {
         path: '/teams/create',

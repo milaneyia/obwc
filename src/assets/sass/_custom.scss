@@ -1,5 +1,8 @@
-.navbar-nav {
-    margin: auto;
+.nav-link {
+    &:hover, &.active {
+        border-bottom: 1px solid $blue;
+        transition: border-bottom ease-in-out .25s;
+    }
 }
 
 .card {
