@@ -68,6 +68,7 @@ export interface User {
     username: string;
     osuId: number;
     country: Country;
+    isStaff: boolean;
 }
 
 export interface Team {

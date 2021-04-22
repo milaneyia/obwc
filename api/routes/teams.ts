@@ -9,9 +9,19 @@ import { Contest } from '../models/Contest';
 
 const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
-teamsRouter.use(authenticate);
 
-teamsRouter.get('/mine', async (ctx) => {
+teamsRouter.get('/', async (ctx) => {
+    ctx.body = await Team.find({
+        where: {
+            wasConfirmed: true,
+        },
+        relations: [
+            'users',
+        ],
+    });
+});
+
+teamsRouter.get('/mine', authenticate, async (ctx) => {
     const user: User = ctx.state.user;
 
     ctx.body = await Team.findOne({
@@ -25,7 +35,7 @@ teamsRouter.get('/mine', async (ctx) => {
     });
 });
 
-teamsRouter.post('/', async (ctx) => {
+teamsRouter.post('/', authenticate, async (ctx) => {
     const user: User = ctx.state.user;
     const input: CreateTeam = ctx.request.body;
     const name = validator.trim(input.name);
@@ -78,7 +88,7 @@ teamsRouter.post('/', async (ctx) => {
     ctx.body = team;
 });
 
-teamsRouter.post('/:id/acceptInvitation', async (ctx) => {
+teamsRouter.post('/:id/acceptInvitation', authenticate, async (ctx) => {
     const team = await Team.findOneOrFail(ctx.params.id, {
         relations: [
             'invitations',

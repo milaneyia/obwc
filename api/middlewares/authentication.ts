@@ -31,7 +31,6 @@ export async function authenticate(ctx: ParameterizedContext, next: Next): Promi
 export async function isStaff(ctx: ParameterizedContext, next: Next): Promise<any> {
     if (!ctx.state.user.isStaff) {
         return sendResponse(ctx, 403);
-
     }
 
     await next();

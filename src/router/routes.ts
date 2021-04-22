@@ -3,6 +3,9 @@ import Home from '../pages/Home.vue';
 const TeamCreation = () => import('../pages/TeamCreation.vue');
 const Judging = () => import('../pages/Judging.vue');
 const Submissions = () => import('../pages/Submissions.vue');
+
+const StaffTeams = () => import('../pages/staff/StaffTeams.vue');
+
 const NotFound = () => import('../pages/NotFound.vue');
 
 const routes = [
@@ -40,8 +43,19 @@ const routes = [
         component: Submissions,
         name: 'submissions',
         meta: {
-            title: 'Submissinos',
+            title: 'Submissions',
             requiresAuth: true,
+        },
+    },
+
+    // Staff
+    {
+        path: '/staff/teams',
+        component: StaffTeams,
+        name: 'staff-teams',
+        meta: {
+            title: 'Teams - Staff',
+            requiresStaff: true,
         },
     },
 
