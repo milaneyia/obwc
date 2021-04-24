@@ -1,13 +1,13 @@
 <template>
-    <div class="card-body p-0">
+    <div class="card-body p-0 table-responsive">
         <table
             class="table table-hover"
             :class="customClass"
         >
             <thead>
                 <tr>
-                    <th v-for="header in formattedHeaders" :key="header">
-                        {{ header }}
+                    <th v-for="header in formattedHeaders" :key="header.key">
+                        {{ header.label }}
                     </th>
                     <th v-if="$slots.actions">
                         Actions
@@ -20,10 +20,15 @@
                     :key="'item-' + i"
                 >
                     <td
-                        v-for="(value, k, j) in formatItem(item)"
+                        v-for="(formattedValues, j) in formatItem(item)"
                         :key="'value-' + j"
                     >
-                        {{ value }}
+                        <slot
+                            v-if="$slots['cell-' + formattedValues.header]"
+                            :name="'cell-' + formattedValues.header"
+                            :value="formattedValues.value"
+                        />
+                        <span v-else>{{ formattedValues.value }}</span>
                     </td>
 
                     <td v-if="$slots.actions">
@@ -38,6 +43,12 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
+export interface Field {
+    key: string;
+    label: string;
+    formatter?: (value: any) => string;
+}
+
 export default defineComponent({
     name: 'DataTable',
 
@@ -48,7 +59,11 @@ export default defineComponent({
         },
         customClass: {
             type: String,
-            default: 'table-responsive-lg',
+            default: 'table-bordered',
+        },
+        fields: {
+            type: Array as PropType<(Field | string)[]>,
+            default: () => [],
         },
         items: {
             type: Array as PropType<any[]>,
@@ -57,13 +72,36 @@ export default defineComponent({
     },
 
     computed: {
-        formattedHeaders (): string[] {
+        formattedHeaders (): Field[] {
             if (this.headers) {
-                return this.headers;
+                return this.headers.map(h => ({
+                    key: h,
+                    label: h,
+                }));
+            }
+
+            if (this.fields.length) {
+                return this.fields.map(f => {
+                    if (typeof f === 'string') {
+                        return {
+                            key: f,
+                            label: f,
+                        };
+                    }
+
+                    return {
+                        key: f.key,
+                        label: f.label || f.key,
+                        formatter: f.formatter,
+                    };
+                });
             }
 
             if (this.items.length) {
-                return Object.keys(this.items[0]);
+                return Object.keys(this.items[0]).map(k => ({
+                    key: k,
+                    label: k,
+                }));
             }
 
             return [];
@@ -72,7 +110,18 @@ export default defineComponent({
 
     methods: {
         formatItem (item: any) {
-            return this.formattedHeaders.map(h => item[h]);
+            return this.formattedHeaders.map(h => {
+                let value = item[h.key];
+
+                if (h.formatter) {
+                    value = h.formatter(value);
+                }
+
+                return {
+                    header: h,
+                    value,
+                };
+            });
         },
     },
 });

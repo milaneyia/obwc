@@ -5,10 +5,10 @@ import app from '../app';
 import { clearDB, fakeSession, setupDB } from './helpers';
 import { createContest, createRound, createTeam, createUser } from './factory';
 import { Submission } from '../models/Submission';
-import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import { JudgeToRound } from '../models/judging/JudgeToRound';
 import { Criteria } from '../models/judging/Criteria';
 import { CreateJudging } from '../../shared/integration';
+import { JUDGING_TYPE } from '../../shared/models';
 
 let server: Server;
 

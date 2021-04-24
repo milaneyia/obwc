@@ -15,6 +15,9 @@
                         >
                             Edit
                         </button>
+                        <router-link :to="{ name: 'staff-rounds', params: { id: contest.id } }">
+                            View Rounds
+                        </router-link>
                     </template>
                 </data-table>
             </div>
@@ -35,6 +38,8 @@ import DataTable from '../../components/DataTable.vue';
 import StaffContestUpdate from '../../components/StaffContestUpdate.vue';
 
 export default defineComponent({
+    name: 'StaffContests',
+
     components: {
         DataTable,
         StaffContestUpdate,

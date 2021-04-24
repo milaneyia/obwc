@@ -92,6 +92,8 @@ export async function createRound (contest: Contest): Promise<Round> {
     yesterday.setDate(yesterday.getDate() - 1);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const round = new Round();
+    round.contest = contest;
 
     return await Round.fillAndSave({
         submissionsStartedAt: yesterday,
@@ -104,8 +106,7 @@ export async function createRound (contest: Contest): Promise<Round> {
             link: 'https://osu.ppy.sh/beatmaps/artists',
         }],
         judgeToRounds: [],
-        contest,
-    });
+    }, round);
 }
 
 export async function createJudging (judgeToRound: JudgeToRound, submission: Submission): Promise<Judging> {

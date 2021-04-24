@@ -1,12 +1,12 @@
 import Router from '@koa/router';
 import validator from 'validator';
 import { CreateJudging } from '../../shared/integration';
+import { JUDGING_TYPE } from '../../shared/models';
 import { authenticate } from '../middlewares/authentication';
 import { getCurrentRound } from '../middlewares/rounds';
 import { Criteria } from '../models/judging/Criteria';
 import { Judging } from '../models/judging/Judging';
 import { JudgingToCriteria } from '../models/judging/JudgingToCriteria';
-import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import { Round, RoundScope } from '../models/Round';
 import { Submission } from '../models/Submission';
 import { User } from '../models/User';

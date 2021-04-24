@@ -1,4 +1,4 @@
-import { Contest, Criteria, Round, Song, Submission, User } from './models';
+import { Contest, Criteria, Round, Submission, User } from './models';
 
 export type ScopedSubmission = Pick<Submission, 'id' | 'anonymisedAs'>;
 
@@ -7,10 +7,15 @@ export interface CreateJudgeToRound {
     judgingTypeId: number;
 }
 
+export interface CreateSong {
+    title: string;
+    link: string;
+}
+
 export interface CreateRound extends Omit<Round, 'id' | 'submissions' | 'judgeToRounds' | 'songs'> {
     judgeToRounds: CreateJudgeToRound[];
-    songs: Partial<Song>[];
-    contest: Contest;
+    songs: CreateSong[];
+    contest?: Contest;
 }
 
 export interface CreateTeam {

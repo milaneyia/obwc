@@ -1,8 +1,8 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, SelectQueryBuilder, ManyToOne } from 'typeorm';
 import { CreateRound } from '../../shared/integration';
+import { JUDGING_TYPE } from '../../shared/models';
 import { Contest } from './Contest';
 import { JudgeToRound } from './judging/JudgeToRound';
-import { JUDGING_TYPE } from './judging/JudgingType';
 import { Song } from './Song';
 import { Submission } from './Submission';
 
@@ -40,11 +40,7 @@ export class Round extends BaseEntity {
             .orderBy('submissions.anonymisedAs');
     }
 
-    static fillAndSave (input: CreateRound, round?: Round): Promise<Round> {
-        if (!round) {
-            round = new Round();
-        }
-
+    static fillAndSave (input: CreateRound, round: Round): Promise<Round> {
         round.submissionsStartedAt = input.submissionsStartedAt;
         round.submissionsEndedAt = input.submissionsEndedAt;
         round.judgingStartedAt = input.judgingStartedAt;
@@ -52,7 +48,6 @@ export class Round extends BaseEntity {
         round.resultsAt = input.resultsAt;
         round.judgeToRounds = input.judgeToRounds as JudgeToRound[];
         round.songs = input.songs as Song[];
-        round.contest = input.contest as Contest;
 
         return round.save();
     }

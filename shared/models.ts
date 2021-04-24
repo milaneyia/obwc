@@ -35,6 +35,11 @@ export interface Criteria {
     judgingTypeId: number;
 }
 
+export enum JUDGING_TYPE {
+    Mappers = 1,
+    Players = 2,
+}
+
 export interface JudgingType {
     name: string;
 }

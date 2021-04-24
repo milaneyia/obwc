@@ -7,8 +7,8 @@ import { clearDB, fakeSession, setupDB } from './helpers';
 import { ROLE } from '../models/Role';
 import { createContest, createRound, createUser, createUsers } from './factory';
 import { CreateJudgeToRound, CreateRound } from '../../shared/integration';
-import { JUDGING_TYPE } from '../models/judging/JudgingType';
 import app from '../app';
+import { JUDGING_TYPE } from '../../shared/models';
 
 let server: Server;
 
@@ -34,53 +34,6 @@ describe('rounds endpoints', () => {
 
         expect(res.status).toEqual(200);
         expect(Array.isArray(res.body)).toBe(true);
-    });
-
-    it('should insert a new round', async () => {
-        const [staff, contest] = await Promise.all([
-            createUser({
-                roleId: ROLE.Staff,
-            }),
-            createContest(),
-        ]);
-        const users = await createUsers(3);
-        const mappersJudges: CreateJudgeToRound[] = users.map(user => ({
-            user,
-            judgingTypeId: JUDGING_TYPE.Mappers,
-        }));
-        const playersJudges: CreateJudgeToRound[] = users.map(user => ({
-            user,
-            judgingTypeId: JUDGING_TYPE.Players,
-        }));
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const data: CreateRound = {
-            submissionsStartedAt: now,
-            submissionsEndedAt: tomorrow,
-            judgingStartedAt: now,
-            judgingEndedAt: tomorrow,
-            resultsAt: tomorrow,
-            judgeToRounds: [
-                ...mappersJudges,
-                ...playersJudges,
-            ],
-            songs: [{
-                title: 'new song',
-                link: 'https://osu.ppy.sh/beatmaps/artists',
-            }],
-            contest,
-        };
-
-        const res = await request(server)
-            .post('/api/rounds')
-            .set('Cookie', fakeSession(staff.id))
-            .send(data);
-
-        expect(res.status).toEqual(201);
-        expect(res.body).toBeTruthy();
-        expect(await Round.count()).toBe(1);
-        expect(await JudgeToRound.count()).toBe(6);
     });
 
     it('should update a created round', async () => {
@@ -121,7 +74,7 @@ describe('rounds endpoints', () => {
         };
 
         const res = await request(server)
-            .put('/api/rounds/' + round.id)
+            .put('/api/staff/rounds/' + round.id)
             .set('Cookie', fakeSession(staff.id))
             .send(data);
 
