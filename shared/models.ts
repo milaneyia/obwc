@@ -84,4 +84,5 @@ export interface Team {
 export interface Contest {
     id: number;
     name: string;
+    isOpen: boolean;
 }

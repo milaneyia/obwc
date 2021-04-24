@@ -13,6 +13,7 @@ import usersRouter from './routes/users';
 import judgingRouter from './routes/judging';
 import submissionsRouter from './routes/submissions';
 import staffTeamsRouter from './routes/staff/teams';
+import staffContestsRouter from './routes/staff/contests';
 
 const app = new Koa();
 app.keys = config.KOA.SESSION_KEYS;
@@ -53,6 +54,7 @@ app.use(submissionsRouter.routes());
 
 // Staff routes
 app.use(staffTeamsRouter.routes());
+app.use(staffContestsRouter.routes());
 
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {
