@@ -1,5 +1,6 @@
 import Router from '@koa/router';
 import validator from 'validator';
+import { CreateContest } from '../../../shared/integration';
 import { authenticate, isStaff } from '../../middlewares/authentication';
 import { Contest } from '../../models/Contest';
 
@@ -14,11 +15,12 @@ staffContestsRouter.get('/', async (ctx) => {
 
 staffContestsRouter.put('/:id', async (ctx) => {
     const contestId = validator.toInt(ctx.params.id);
-    const name = validator.trim(ctx.request.body.name);
-    const isOpen = ctx.request.body.isOpen;
+    const body: CreateContest = ctx.request.body;
+    body.name = validator.trim(body.name);
+
     const contest = await Contest.findOneOrFail({ id: contestId });
-    contest.name = name;
-    contest.isOpen = isOpen;
+    contest.name = body.name;
+    contest.isOpen = body.isOpen;
     await contest.save();
 
     ctx.body = contest;

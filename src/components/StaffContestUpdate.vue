@@ -56,6 +56,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
+import { CreateContest } from '../../shared/integration';
 import { Contest } from '../../shared/models';
 
 export default defineComponent({
@@ -91,7 +92,7 @@ export default defineComponent({
             const { data } = await this.$http.put<Contest>(`/api/staff/contests/${this.contest.id}`, {
                 name: this.name,
                 isOpen: this.isOpen,
-            });
+            } as CreateContest);
             this.$emit('update:contest', data);
         },
     },

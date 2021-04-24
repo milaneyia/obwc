@@ -34,25 +34,6 @@ describe('contests endpoints', () => {
         expect(Array.isArray(res.body)).toBe(true);
     });
 
-    it('should insert a new contest', async () => {
-        const staff = await createUser({
-            roleId: ROLE.Staff,
-        });
-        const data: CreateContest = {
-            name: 'A Contest',
-            isOpen: true,
-        };
-
-        const res = await request(server)
-            .post('/api/contests')
-            .set('Cookie', fakeSession(staff.id))
-            .send(data);
-
-        expect(res.status).toEqual(201);
-        expect(res.body).toBeTruthy();
-        expect(await Contest.count()).toBe(2); // +1 from the seed
-    });
-
     it('should update a created contest', async () => {
         const [staff, contest] = await Promise.all([
             createUser({
@@ -66,7 +47,7 @@ describe('contests endpoints', () => {
         };
 
         const res = await request(server)
-            .put('/api/contests/' + contest.id)
+            .put('/api/staff/contests/' + contest.id)
             .set('Cookie', fakeSession(staff.id))
             .send(data);
 
