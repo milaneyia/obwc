@@ -9,6 +9,9 @@
                     <th v-for="header in formattedHeaders" :key="header">
                         {{ header }}
                     </th>
+                    <th v-if="$slots.actions">
+                        Actions
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -17,10 +20,14 @@
                     :key="'item-' + i"
                 >
                     <td
-                        v-for="(value, k, j) in item"
+                        v-for="(value, k, j) in formatItem(item)"
                         :key="'value-' + j"
                     >
                         {{ value }}
+                    </td>
+
+                    <td v-if="$slots.actions">
+                        <slot name="actions" :item="item" />
                     </td>
                 </tr>
             </tbody>
@@ -60,6 +67,12 @@ export default defineComponent({
             }
 
             return [];
+        },
+    },
+
+    methods: {
+        formatItem (item: any) {
+            return this.formattedHeaders.map(h => item[h]);
         },
     },
 });

@@ -72,11 +72,13 @@ export interface User {
 }
 
 export interface Team {
+    id: number;
     country: Country;
     captain: User;
     name: string;
     users: User[];
     invitations: User[];
+    wasConfirmed: boolean;
 }
 
 export interface Contest {

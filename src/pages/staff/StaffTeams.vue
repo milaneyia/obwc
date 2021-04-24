@@ -2,7 +2,27 @@
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                <data-table :items="formattedTeams" />
+                <data-table
+                    :items="formattedTeams"
+                    :headers="['name', 'country', 'captain', 'users', 'invitations']"
+                >
+                    <template #actions="{ item: team }">
+                        <button
+                            v-if="!team.wasConfirmed"
+                            class="btn btn-sm btn-success"
+                            @click="confirm(team.id)"
+                        >
+                            Confirm
+                        </button>
+                        <button
+                            v-else
+                            class="btn btn-sm btn-danger"
+                            @click="deny(team.id)"
+                        >
+                            Deny
+                        </button>
+                    </template>
+                </data-table>
             </div>
         </div>
     </div>
@@ -25,8 +45,9 @@ export default defineComponent({
     },
 
     computed: {
-        formattedTeams (): Record<string, string>[] {
+        formattedTeams (): Record<string, any>[] {
             return this.teams.map(t => ({
+                ...t,
                 name: t.name,
                 country: t.country.name,
                 captain: t.captain.username,
@@ -39,6 +60,26 @@ export default defineComponent({
     async created () {
         const { data } = await this.$http.get('/api/staff/teams');
         this.teams = data;
+    },
+
+    methods: {
+        async confirm (id: number) {
+            await this.$http.put(`/api/staff/teams/${id}/confirm`);
+            const i = this.teams.findIndex(t => t.id === id);
+
+            if (i !== -1) {
+                this.teams[i].wasConfirmed =  true;
+            }
+        },
+
+        async deny (id: number) {
+            await this.$http.put(`/api/staff/teams/${id}/deny`);
+            const i = this.teams.findIndex(t => t.id === id);
+
+            if (i !== -1) {
+                this.teams[i].wasConfirmed =  false;
+            }
+        },
     },
 });
 </script>

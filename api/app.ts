@@ -26,6 +26,8 @@ app.use(helmet());
 app.use(session({
     key: 'obwc.sess',
     renew: true,
+    signed: true,
+    maxAge: 86400000 * 5, // 5 days
     sameSite: 'lax',
 }, app));
 app.use(bodyParser());
