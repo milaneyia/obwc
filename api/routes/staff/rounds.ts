@@ -1,7 +1,9 @@
 import Router from '@koa/router';
+import validator from 'validator';
 import { CreateRound } from '../../../shared/integration';
 import { authenticate, isStaff } from '../../middlewares/authentication';
 import { Round } from '../../models/Round';
+import { Submission } from '../../models/Submission';
 
 const staffRoundsRouter = new Router();
 staffRoundsRouter.prefix('/api/staff/rounds');
@@ -22,6 +24,22 @@ staffRoundsRouter.put('/:id', async (ctx) => {
     round = await Round.fillAndSave(input, round);
 
     ctx.body = round;
+});
+
+staffRoundsRouter.get('/:id/submissions', async (ctx) => {
+    const roundId = validator.toInt(ctx.params.id);
+
+    const round = await Round.findOneOrFail({ id: roundId });
+    const submissions = await Submission.find({
+        where: {
+            round,
+        },
+        relations: [
+            'team',
+        ],
+    });
+
+    ctx.body = submissions;
 });
 
 export default staffRoundsRouter;

@@ -15,6 +15,9 @@
                         >
                             Edit
                         </button>
+                        <router-link :to="{ name: 'staff-submissions', params: { id: round.id } }">
+                            View Submissions
+                        </router-link>
                     </template>
                 </data-table>
             </div>
@@ -32,7 +35,7 @@
 import { defineComponent } from 'vue';
 import { CreateJudgeToRound, CreateSong } from '../../../shared/integration';
 import { Round } from '../../../shared/models';
-import DataTable, { Field } from '../../components/DataTable.vue';
+import DataTable, { Field, Format } from '../../components/DataTable.vue';
 import StaffRoundUpdate from '../../components/StaffRoundUpdate.vue';
 
 export default defineComponent({
@@ -47,11 +50,11 @@ export default defineComponent({
         return {
             fields: [
                 'id',
-                { key: 'submissionsStartedAt', label: 'Submissions Start', formatter: this.shortDateTimeString },
-                { key: 'submissionsEndedAt', label: 'Submissions End', formatter: this.shortDateTimeString },
-                { key: 'judgingStartedAt', label: 'Judging Start', formatter: this.shortDateTimeString },
-                { key: 'judgingEndedAt', label: 'Judging End', formatter: this.shortDateTimeString },
-                { key: 'resultsAt', label: 'Results', formatter: this.shortDateTimeString },
+                { key: 'submissionsStartedAt', label: 'Submissions Start', formatter: Format.DateTimeString },
+                { key: 'submissionsEndedAt', label: 'Submissions End', formatter: Format.DateTimeString },
+                { key: 'judgingStartedAt', label: 'Judging Start', formatter: Format.DateTimeString },
+                { key: 'judgingEndedAt', label: 'Judging End', formatter: Format.DateTimeString },
+                { key: 'resultsAt', label: 'Results', formatter: Format.DateTimeString },
                 { key: 'judgeToRounds', label: 'Judges', formatter: this.formatJudges },
                 { key: 'songs', label: 'Songs', formatter: this.formatSongs },
             ] as Field[],
@@ -72,12 +75,6 @@ export default defineComponent({
 
         formatSongs (songs: CreateSong[]): string {
             return songs.map(s => s.title).join(', ');
-        },
-
-        shortDateTimeString (value: string) {
-            if (!value) return '';
-
-            return new Date(value).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric' });
         },
 
         update (round: Round) {

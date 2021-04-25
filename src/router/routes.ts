@@ -7,6 +7,7 @@ const Submissions = () => import('../pages/Submissions.vue');
 const StaffTeams = () => import('../pages/staff/StaffTeams.vue');
 const StaffContests = () => import('../pages/staff/StaffContests.vue');
 const StaffRounds = () => import('../pages/staff/StaffRounds.vue');
+const StaffSubmissions = () => import('../pages/staff/StaffSubmissions.vue');
 
 const NotFound = () => import('../pages/NotFound.vue');
 
@@ -82,6 +83,15 @@ const routes = [
         path: '/staff/contests/:id/rounds',
         component: StaffRounds,
         name: 'staff-rounds',
+        meta: {
+            title: 'Rounds - Staff',
+            requiresStaff: true,
+        },
+    },
+    {
+        path: '/staff/rounds/:id/submissions',
+        component: StaffSubmissions,
+        name: 'staff-submissions',
         meta: {
             title: 'Rounds - Staff',
             requiresStaff: true,

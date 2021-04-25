@@ -1,7 +1,7 @@
 <template>
-    <div class="card-body p-0 table-responsive">
+    <div class="table-responsive">
         <table
-            class="table table-hover"
+            class="table table-hover mb-0"
             :class="customClass"
         >
             <thead>
@@ -27,6 +27,7 @@
                             v-if="$slots['cell-' + formattedValues.header]"
                             :name="'cell-' + formattedValues.header"
                             :value="formattedValues.value"
+                            :item="item"
                         />
                         <span v-else>{{ formattedValues.value }}</span>
                     </td>
@@ -43,10 +44,14 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 
+export enum Format {
+    DateTimeString
+}
+
 export interface Field {
     key: string;
     label: string;
-    formatter?: (value: any) => string;
+    formatter?: ((value: any) => string) | Format;
 }
 
 export default defineComponent({
@@ -89,10 +94,20 @@ export default defineComponent({
                         };
                     }
 
+                    let formatter = f.formatter;
+
+                    if (formatter === Format.DateTimeString) {
+                        formatter = (value) => {
+                            if (!value) return '';
+
+                            return  new Date(value).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric' });
+                        };
+                    }
+
                     return {
                         key: f.key,
                         label: f.label || f.key,
-                        formatter: f.formatter,
+                        formatter,
                     };
                 });
             }
@@ -118,7 +133,7 @@ export default defineComponent({
                 }
 
                 return {
-                    header: h,
+                    header: h.key,
                     value,
                 };
             });

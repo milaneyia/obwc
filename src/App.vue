@@ -38,6 +38,23 @@
                         STAFF
                     </router-link>
                 </li>
+                <li class="nav-item dropdown">
+                    <a
+                        id="navbarDropdown"
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        data-bs-toggle="dropdown"
+                    >
+                        MANAGEMENT
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'staff-contests' }">
+                                Contests
+                            </router-link>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li v-if="!user" class="nav-item">
