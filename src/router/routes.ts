@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Home from '../pages/Home.vue';
-const TeamCreation = () => import('../pages/TeamCreation.vue');
-const Judging = () => import('../pages/Judging.vue');
-const Submissions = () => import('../pages/Submissions.vue');
+const Info = () => import('../pages/Info.vue');
 const Results = () => import('../pages/Results.vue');
+
+const TeamCreation = () => import('../pages/TeamCreation.vue');
+const Submissions = () => import('../pages/Submissions.vue');
+const Judging = () => import('../pages/Judging.vue');
 
 const StaffTeams = () => import('../pages/staff/StaffTeams.vue');
 const StaffContests = () => import('../pages/staff/StaffContests.vue');
@@ -20,6 +22,14 @@ const routes = [
         component: Home,
         alias: '/main',
         name: 'home',
+    },
+    {
+        path: '/info',
+        component: Info,
+        name: 'info',
+        meta: {
+            title: 'Info',
+        },
     },
     {
         path: '/results/:id',
