@@ -5,11 +5,42 @@
     }
 }
 
-.card {
-    transition: box-shadow 0.2s ease-in-out;
+.card.card-section {
+    border: 2px dotted $white;
+    padding: 5px;
 
-    &:hover {
-        box-shadow: 0px 10px 30px 0px rgba(133,66,189,0.1);
+    & > .card-header {
+        position: relative;
+        margin-bottom: 60px;
+        padding: 0;
+
+        & > .card-header-back {
+            border-radius: 0.25rem;
+            background: rgb(145,136,194);
+            background: linear-gradient(120deg, rgba(145,136,194,1) 49%, rgba(106,182,229,1) 50%);
+            width: 100%;
+            height: 80px;
+
+            & > img {
+                filter: invert(1);
+                max-width: 100%;
+                height: 100%;
+            }
+        }
+        
+        & > .card-header-sub {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            bottom: -70%;
+            color: $white;
+
+            & > .card-header-title {
+                font-size: $h1-font-size;
+                line-height: 1;
+                border-bottom: 2px solid $white;
+            }
+        }
     }
 }
 

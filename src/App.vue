@@ -1,7 +1,5 @@
 <template v-cloak>
-    <nav
-        class="nav navbar navbar-expand-md navbar-dark bg-dark navbar-custom"
-    >
+    <nav class="nav navbar navbar-expand-md navbar-dark bg-dark navbar-custom justify-content-end text-end">
         <button
             class="navbar-toggler"
             type="button"
@@ -90,17 +88,51 @@
 
     <router-view v-slot="{ Component }">
         <transition name="component-fade" mode="out-in">
-            <component :is="Component" />
+            <component
+                :is="Component"
+                class="pt-4"
+                style="padding-bottom: calc(1.5rem + 40px)"
+            />
         </transition>
     </router-view>
 
-    <footer class="footer mt-auto py-2 bg-dark">
-        <div class="d-flex justify-content-between align-items-center px-3">
+    <footer class="footer mt-auto bg-dark">
+        <div class="d-flex justify-content-between align-items-center pe-3">
             <div>
-                <i class="fab fa-discord fa-2x me-4" />
-                <i class="fab fa-twitter fa-2x" />
+                <a
+                    href="https://2020.obwc.net"
+                    target="_blank"
+                    class="me-4 d-none d-sm-inline-block"
+                >
+                    <img
+                        src="./assets/2020_link.png"
+                        class="img-fluid"
+                        style="max-height: 56px"
+                    >
+                </a>
+                <a
+                    href="https://discord.gg/CZp4bNx"
+                    target="_blank"
+                    class="footer__link"
+                >
+                    <i class="fab fa-discord fa-2x me-4" />
+                </a>
+                <a
+                    href="https://twitter.com/osubwc"
+                    target="_blank"
+                    class="footer__link"
+                >
+                    <i class="fab fa-twitter fa-2x me-4" />
+                </a>
+                <a
+                    href="https://www.twitch.tv/osubwc"
+                    target="_blank"
+                    class="footer__link"
+                >
+                    <i class="fab fa-twitch fa-2x" />
+                </a>
             </div>
-            <div>
+            <div class="d-none d-sm-block">
                 osu! Beatmapping World Championship
             </div>
         </div>

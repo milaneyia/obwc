@@ -1,3 +1,5 @@
+@import "../../../node_modules/bootstrap/scss/functions";
+
 @font-face {
     font-family: 'klonar';
     src: url('../fonts/BCSklonar-Light.otf');
@@ -18,37 +20,38 @@
 }
 
 $font-family-base: 'klonar', sans-serif;
+$font-weight-normal: 500;
+$font-size-base:    1.1rem;
+
+$h1-font-size:      $font-size-base * 3;
+$h2-font-size:      $font-size-base * 2.5;
+$h3-font-size:      $font-size-base * 2;
+$h4-font-size:      $font-size-base * 1.5;
+$h5-font-size:      $font-size-base * 1.25;
+$h6-font-size:      $font-size-base;
 
 $blue:    #3bbce1 !default;
-$indigo:  #6610f2 !default;
-$purple:  #6f42c1 !default;
-$pink:    #e83e8c !default;
-$red:     #E74C3C !default;
-$orange:  #fd7e14 !default;
-$yellow:  #F39C12 !default;
-$green:   #00bc8c !default;
-$teal:    #20c997 !default;
-$cyan:    #3498DB !default;
+$yellow:  #facb5b !default;
 $dark:    #121212 !default;
 $white:   #fff !default;
 
 $body-bg: hsl(255, 10%, 10%) !default;
 $body-color: #fff;
 
-$component-active-bg: rgba(36, 35, 43, 0.7);
-$border-color: #34383e;
-$hr-border-color: #5e6061;
+$card-bg: transparent;
+$border-radius-lg: 0.5rem;
 
-$card-cap-bg: #833f5c;
-$card-bg: #302e38;
-$link-color: hsl(200, 40%, 75%) !default;
-
-$input-bg: #24232b;
-$input-border-color:  #24232b;
-$input-color: #fff;
-$input-group-addon-bg: #293033;
-
+$navbar-padding-y: 1.25rem;
 $navbar-nav-link-padding-x: 1rem;
 $navbar-dark-color: $white;
 
 $modal-content-bg: $dark;
+
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/mixins";
+
+$custom-colors: (
+  "yellow": $yellow
+);
+
+$theme-colors: map-merge($theme-colors, $custom-colors);

@@ -1,6 +1,7 @@
 import './assets/sass/main.scss';
 import 'bootstrap/js/dist/modal';
 import 'bootstrap/js/dist/dropdown';
+import 'bootstrap/js/dist/collapse';
 import { createApp } from 'vue';
 import App from './App.vue';
 import { tooltip } from './directives';

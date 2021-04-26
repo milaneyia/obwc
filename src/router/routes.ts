@@ -28,7 +28,7 @@ const routes = [
         component: Info,
         name: 'info',
         meta: {
-            title: 'Info',
+            title: 'Info | o!bwc',
         },
     },
     {
@@ -36,7 +36,7 @@ const routes = [
         component: Results,
         name: 'results',
         meta: {
-            title: 'Results',
+            title: 'Results | o!bwc',
         },
     },
 
@@ -46,7 +46,7 @@ const routes = [
         component: Home,
         name: 'dashboard',
         meta: {
-            title: 'Dashboard',
+            title: 'Dashboard | o!bwc',
             requiresAuth: true,
         },
     },
@@ -55,7 +55,7 @@ const routes = [
         component: TeamCreation,
         name: 'team-creation',
         meta: {
-            title: 'Team Creation',
+            title: 'Team Creation | o!bwc',
             requiresAuth: true,
         },
     },
@@ -66,7 +66,7 @@ const routes = [
         component: Judging,
         name: 'judging',
         meta: {
-            title: 'Judging',
+            title: 'Judging | o!bwc',
             requiresAuth: true,
         },
     },
@@ -77,7 +77,7 @@ const routes = [
         component: Submissions,
         name: 'submissions',
         meta: {
-            title: 'Submissions',
+            title: 'Submissions | o!bwc',
             requiresAuth: true,
         },
     },

@@ -5,14 +5,14 @@
 
 body::before {
     content: " ";
-    background-image: url('../triangles.png');
-    background-size: 500px 500px;
+    background-image: url('../bg_tile.png');
+    background-size: 366px 366px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: .2;
+    opacity: .4;
     z-index: -1;
 }
 
@@ -30,4 +30,17 @@ body::before {
     width: 100%;
     left: 0;
     bottom: 0;
+    border-top: 2px solid $blue;
+
+    &__link {
+        vertical-align: middle;
+        color: $white;
+    }
+}
+
+.navbar-custom {
+    border-bottom: 2px solid $blue;
+    background-image: url('../heading_logo.png');
+    background-repeat: no-repeat;
+    background-size: 120px;
 }

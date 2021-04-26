@@ -13,7 +13,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    document.title = to.meta.title as string || `o!bwc`;
+    document.title = to.meta.title as string || `osu! Beatmapping World Championship`;
 
     if (!store.state.initialized) {
         const { data } = await http.get<User | ErrorResponse>('/api/users/me');

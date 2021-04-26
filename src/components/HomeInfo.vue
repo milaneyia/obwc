@@ -1,0 +1,48 @@
+<template>
+    <div class="card card-section h-100">
+        <div class="card-body">
+            <div class="home-logo" />
+
+            <div class="px-2">
+                <div class="bg-white text-dark rounded-pill p-1 text-center fw-bold my-2">
+                    MAY 02 - NOV 15
+                </div>
+
+                <div class="box-link" />
+                <div class="box-link" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+    name: 'HomeInfo',
+});
+</script>
+
+<style lang="scss">
+
+.home-logo {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('../assets/home_obwc.png');
+    max-width: 100%;
+    min-height: 500px;
+    height: auto;
+}
+
+.box-link {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('../assets/home_link.png');
+    max-width: 100%;
+    min-height: 80px;
+    height: auto;
+}
+
+</style>
