@@ -80,9 +80,14 @@ interface CreateContestOptions {
 }
 
 export function createContest (options?: CreateContestOptions): Promise<Contest> {
+    const now = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const contest = new Contest();
     contest.name = faker.name.jobDescriptor();
-    contest.isOpen = options?.isOpen !== undefined ? options.isOpen : true;
+    contest.announcementAt = now;
+    contest.registrationStartedAt = options?.isOpen === true ? now : tomorrow;
+    contest.registrationEndedAt = tomorrow;
 
     return contest.save();
 }

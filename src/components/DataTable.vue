@@ -58,10 +58,6 @@ export default defineComponent({
     name: 'DataTable',
 
     props: {
-        headers: {
-            type: Array as PropType<string[]>,
-            default: null,
-        },
         customClass: {
             type: String,
             default: 'table-bordered',
@@ -78,13 +74,6 @@ export default defineComponent({
 
     computed: {
         formattedHeaders (): Field[] {
-            if (this.headers) {
-                return this.headers.map(h => ({
-                    key: h,
-                    label: h,
-                }));
-            }
-
             if (this.fields.length) {
                 return this.fields.map(f => {
                     if (typeof f === 'string') {

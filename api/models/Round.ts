@@ -100,8 +100,8 @@ export class Round extends BaseEntity {
     @Column('datetime')
     resultsAt!: Date;
 
-    @Column()
-    downloadLink!: string;
+    @Column({ nullable: true })
+    downloadLink?: string;
 
     @ManyToOne(() => Contest, (contest) => contest.rounds, { nullable: false })
     contest!: Contest;

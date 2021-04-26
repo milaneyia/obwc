@@ -4,7 +4,6 @@
             <div class="col-sm">
                 <data-table
                     :items="contests"
-                    :headers="['name', 'isOpen']"
                 >
                     <template #actions="{ item: contest }">
                         <button
@@ -18,6 +17,9 @@
                         <router-link :to="{ name: 'staff-rounds', params: { id: contest.id } }">
                             View Rounds
                         </router-link>
+                        <router-link :to="{ name: 'staff-teams', params: { id: contest.id } }">
+                            View Teams
+                        </router-link>
                     </template>
                 </data-table>
             </div>
@@ -25,7 +27,7 @@
 
         <staff-contest-update
             id="contestUpdate"
-            :contest="selectedContest"
+            :contest-prop="selectedContest"
             @update:contest="update($event)"
         />
     </div>

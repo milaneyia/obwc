@@ -61,7 +61,7 @@ export interface Round {
     judgingStartedAt: Date;
     judgingEndedAt: Date;
     resultsAt: Date;
-    downloadLink: string;
+    downloadLink?: string;
     judgeToRounds: JudgeToRound[];
     songs: Song[];
     submissions: Submission[];
@@ -94,5 +94,7 @@ export interface Team {
 export interface Contest {
     id: number;
     name: string;
-    isOpen: boolean;
+    announcementAt: Date;
+    registrationStartedAt: Date;
+    registrationEndedAt: Date;
 }

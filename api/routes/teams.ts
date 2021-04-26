@@ -48,10 +48,9 @@ teamsRouter.post('/', authenticate, async (ctx) => {
         Team.findOne({
             captain: user,
         }),
-        Contest.findOne({
-            id: input.contest.id,
-            isOpen: true,
-        }),
+        Contest.open()
+            .where('id = :id', { id: input.contest.id })
+            .getOne(),
     ]);
 
     if (

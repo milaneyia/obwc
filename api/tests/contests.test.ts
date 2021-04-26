@@ -43,7 +43,9 @@ describe('contests endpoints', () => {
         ]);
         const data: CreateContest = {
             name: 'A Contest',
-            isOpen: !contest.isOpen,
+            announcementAt: contest.announcementAt,
+            registrationStartedAt: contest.registrationStartedAt,
+            registrationEndedAt: new Date(),
         };
 
         const res = await request(server)
@@ -56,7 +58,7 @@ describe('contests endpoints', () => {
         expect(res.status).toEqual(200);
         expect(updatedContest).toBeTruthy();
         expect(updatedContest.name).not.toBe(contest.name);
-        expect(updatedContest.isOpen).not.toBe(contest.isOpen);
+        expect(updatedContest.registrationEndedAt).not.toBe(contest.registrationEndedAt);
     });
 
 });

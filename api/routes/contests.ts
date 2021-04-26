@@ -5,9 +5,7 @@ const contestsRouter = new Router();
 contestsRouter.prefix('/api/contests');
 
 contestsRouter.get('/', async (ctx) => {
-    const contests = await Contest.find({
-        isOpen: true,
-    });
+    const contests = await Contest.open().getMany();
 
     ctx.body = contests;
 });

@@ -4,7 +4,7 @@
             <div class="col-sm">
                 <data-table
                     :items="formattedTeams"
-                    :headers="['name', 'country', 'captain', 'users', 'invitations']"
+                    :fields="['name', 'country', 'captain', 'users', 'invitations']"
                 >
                     <template #actions="{ item: team }">
                         <button

@@ -37,10 +37,7 @@ export interface CreateJudging {
     };
 }
 
-export interface CreateContest {
-    name: string;
-    isOpen: boolean;
-}
+export type CreateContest = Omit<Contest, 'id'>
 
 export interface Results {
     criterias: Criteria[],

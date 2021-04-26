@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
@@ -15,22 +15,47 @@
                 </div>
                 <div v-if="contest" class="modal-body">
                     <input
-                        v-model="name"
+                        v-model="contest.name"
                         type="text"
                         class="form-control mb-3"
                         placeholder="name"
                     >
 
-                    <div class="form-check">
-                        <input
-                            id="isOpen"
-                            v-model="isOpen"
-                            class="form-check-input"
-                            type="checkbox"
-                        >
-                        <label class="form-check-label" for="isOpen">
-                            Is Open?
-                        </label>
+                    <hr>
+
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Announcement Date</label>
+                                <input
+                                    v-model="contest.announcementAt"
+                                    type="datetime-local"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Registration Start Date</label>
+                                <input
+                                    v-model="contest.registrationStartedAt"
+                                    type="datetime-local"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Registration End Date</label>
+                                <input
+                                    v-model="contest.registrationEndedAt"
+                                    type="datetime-local"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -63,7 +88,7 @@ export default defineComponent({
     name: 'StaffContestUpdate',
 
     props: {
-        contest: {
+        contestProp: {
             type: Object as PropType<Contest>,
             default: () => null,
         },
@@ -75,23 +100,54 @@ export default defineComponent({
 
     data () {
         return {
-            name: '',
-            isOpen: false,
+            contest: null as CreateContest |  null,
         };
     },
 
     watch: {
-        contest (obj: Contest | null) {
-            this.name = obj?.name || '';
-            this.isOpen = obj?.isOpen || false;
+        contestProp (obj: Contest | null) {
+            if (!obj) {
+                this.contest = null;
+
+                return;
+            }
+
+            this.contest = {
+                name: obj.name,
+                announcementAt: this.formatDate(obj.announcementAt) as any,
+                registrationStartedAt: this.formatDate(obj.registrationStartedAt) as any,
+                registrationEndedAt: this.formatDate(obj.registrationEndedAt) as any,
+            };
         },
     },
 
     methods: {
+        formatValue (value: number): number | string {
+            if (value < 10)
+                return '0' + value;
+
+            return value;
+        },
+
+        formatDate (originalDate: Date) {
+            const date = new Date(originalDate);
+            const month = this.formatValue(date.getMonth() + 1);
+            const day = this.formatValue(date.getDate());
+            const hours = this.formatValue(date.getHours());
+            const minutes = this.formatValue(date.getMinutes());
+
+            //yyyy-MM-ddThh:mm
+            return `${date.getFullYear()}-${month}-${day}T${hours}:${minutes}`;
+        },
+
         async update () {
-            const { data } = await this.$http.put<Contest>(`/api/staff/contests/${this.contest.id}`, {
-                name: this.name,
-                isOpen: this.isOpen,
+            if (!this.contest) return;
+
+            const { data } = await this.$http.put<Contest>(`/api/staff/contests/${this.contestProp.id}`, {
+                name: this.contest.name,
+                announcementAt: this.contest.announcementAt,
+                registrationStartedAt: this.contest.registrationStartedAt,
+                registrationEndedAt: this.contest.registrationEndedAt,
             } as CreateContest);
             this.$emit('update:contest', data);
         },

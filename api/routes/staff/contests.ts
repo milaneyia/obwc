@@ -21,7 +21,9 @@ staffContestsRouter.put('/:id', async (ctx) => {
 
     const contest = await Contest.findOneOrFail({ id: contestId });
     contest.name = body.name;
-    contest.isOpen = body.isOpen;
+    contest.announcementAt = body.announcementAt;
+    contest.registrationStartedAt = body.registrationStartedAt;
+    contest.registrationEndedAt = body.registrationEndedAt;
     await contest.save();
 
     ctx.body = contest;
