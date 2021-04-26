@@ -18,6 +18,9 @@
                         <router-link :to="{ name: 'staff-submissions', params: { id: round.id } }">
                             View Submissions
                         </router-link>
+                        <router-link :to="{ name: 'staff-judging', params: { id: round.id } }">
+                            View Judging
+                        </router-link>
                     </template>
                 </data-table>
             </div>

@@ -54,7 +54,7 @@
             >
                 Save changes
             </button>
-            <div id="close-button" data-dismiss="modal" />
+            <div id="close-button" data-bs-dismiss="modal" />
         </div>
     </div>
     <div v-else class="text-muted">

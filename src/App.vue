@@ -5,8 +5,8 @@
         <button
             class="navbar-toggler"
             type="button"
-            data-toggle="collapse"
-            data-target="#navbarTarget"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarTarget"
         >
             <span class="navbar-toggler-icon" />
         </button>
@@ -29,7 +29,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/info">
+                    <router-link class="nav-link" :to="{ name: 'results', params: { id: 1 } }">
                         RESULTS
                     </router-link>
                 </li>
@@ -38,7 +38,7 @@
                         STAFF
                     </router-link>
                 </li>
-                <li class="nav-item dropdown">
+                <li v-if="user?.isStaff" class="nav-item dropdown">
                     <a
                         id="navbarDropdown"
                         class="nav-link dropdown-toggle"

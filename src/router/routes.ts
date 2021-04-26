@@ -3,11 +3,13 @@ import Home from '../pages/Home.vue';
 const TeamCreation = () => import('../pages/TeamCreation.vue');
 const Judging = () => import('../pages/Judging.vue');
 const Submissions = () => import('../pages/Submissions.vue');
+const Results = () => import('../pages/Results.vue');
 
 const StaffTeams = () => import('../pages/staff/StaffTeams.vue');
 const StaffContests = () => import('../pages/staff/StaffContests.vue');
 const StaffRounds = () => import('../pages/staff/StaffRounds.vue');
 const StaffSubmissions = () => import('../pages/staff/StaffSubmissions.vue');
+const StaffJudging = () => import('../pages/staff/StaffJudging.vue');
 
 const NotFound = () => import('../pages/NotFound.vue');
 
@@ -19,6 +21,16 @@ const routes = [
         alias: '/main',
         name: 'home',
     },
+    {
+        path: '/results/:id',
+        component: Results,
+        name: 'results',
+        meta: {
+            title: 'Results',
+        },
+    },
+
+    // Auth
     {
         path: '/dashboard',
         component: Home,
@@ -94,6 +106,15 @@ const routes = [
         name: 'staff-submissions',
         meta: {
             title: 'Rounds - Staff',
+            requiresStaff: true,
+        },
+    },
+    {
+        path: '/staff/rounds/:id/judging',
+        component: StaffJudging,
+        name: 'staff-judging',
+        meta: {
+            title: 'Judging - Staff',
             requiresStaff: true,
         },
     },

@@ -41,7 +41,7 @@
                 <tr v-for="submission in sortedSubmissions" :key="submission.id">
                     <td class="text-left">
                         <a
-                            class="mr-1"
+                            class="me-1"
                             :href="`api/judging/submission/${submission.id}/download`"
                             target="_blank"
                         >
@@ -53,11 +53,11 @@
                         <a
                             href="#"
                             class="d-flex align-items-center justify-content-center"
-                            data-toggle="modal"
-                            data-target="#editing-judging-modal"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editing-judging-modal"
                             @click.prevent="selectForEditing(submission, criteria)"
                         >
-                            <i class="mr-1 fas fa-edit" />
+                            <i class="me-1 fas fa-edit" />
                             {{ getScore(submission.id, criteria.id) + `/ ${criteria.maxScore}` }}
                         </a>
                     </td>

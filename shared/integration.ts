@@ -1,4 +1,5 @@
 import { Contest, Criteria, Round, Submission, User } from './models';
+import { JudgeCorrel, TeamScore } from '../api/helpers/results';
 
 export type ScopedSubmission = Pick<Submission, 'id' | 'anonymisedAs'>;
 
@@ -39,4 +40,12 @@ export interface CreateJudging {
 export interface CreateContest {
     name: string;
     isOpen: boolean;
+}
+
+export interface Results {
+    criterias: Criteria[],
+    round: Round,
+    judges: User[],
+    teamsScores: TeamScore[],
+    judgesCorrel: JudgeCorrel[],
 }

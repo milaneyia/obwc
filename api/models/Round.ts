@@ -12,6 +12,11 @@ export enum RoundScope {
     Results = 'RESULTS',
 }
 
+export enum ResultsScope {
+    User = 'USER',
+    Staff = 'STAFF',
+}
+
 @Entity()
 export class Round extends BaseEntity {
 
@@ -38,6 +43,27 @@ export class Round extends BaseEntity {
                 'judgeToRounds',
             ])
             .orderBy('submissions.anonymisedAs');
+    }
+
+    static findResults(id: number, scope: ResultsScope): Promise<Round | undefined> {
+        const query = this
+            .createQueryBuilder('round')
+            .leftJoinAndSelect('round.submissions', 'submissions')
+            .leftJoinAndSelect('round.judgeToRounds', 'judgeToRounds')
+            .leftJoinAndSelect('judgeToRounds.user', 'user')
+            .leftJoinAndSelect('submissions.judging', 'judging')
+            .leftJoinAndSelect('submissions.team', 'team')
+            .leftJoinAndSelect('team.country', 'country')
+            .leftJoinAndSelect('judging.judge', 'judge')
+            .leftJoinAndSelect('judging.judgingToCriterias', 'judgingToCriterias')
+            .leftJoinAndSelect('judgingToCriterias.criteria', 'criteria')
+            .where('round.id = :id', { id });
+
+        if (scope === ResultsScope.User) {
+            query.andWhere('round.resultsAt <= :now', { now: new Date() });
+        }
+
+        return query.getOne();
     }
 
     static fillAndSave (input: CreateRound, round: Round): Promise<Round> {
@@ -73,6 +99,9 @@ export class Round extends BaseEntity {
 
     @Column('datetime')
     resultsAt!: Date;
+
+    @Column()
+    downloadLink!: string;
 
     @ManyToOne(() => Contest, (contest) => contest.rounds, { nullable: false })
     contest!: Contest;

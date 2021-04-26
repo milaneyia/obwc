@@ -6,6 +6,7 @@ export interface Song {
 
 export interface Judging {
     judgeId: number;
+    judge: User;
     submissionId: number;
     submission: Submission;
     criteria: Criteria;
@@ -25,6 +26,8 @@ export interface Submission {
     originalPath: string;
     anonymisedAs: string;
     round: Round;
+    team: Team;
+    judging: Judging[];
     updatedAt: Date;
 }
 
@@ -58,6 +61,7 @@ export interface Round {
     judgingStartedAt: Date;
     judgingEndedAt: Date;
     resultsAt: Date;
+    downloadLink: string;
     judgeToRounds: JudgeToRound[];
     songs: Song[];
     submissions: Submission[];
@@ -66,6 +70,7 @@ export interface Round {
 export interface Country {
     id: number;
     name: string;
+    code: string;
 }
 
 export interface User {

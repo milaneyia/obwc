@@ -23,6 +23,6 @@ export class JudgingToCriteria extends BaseEntity {
     @Column()
     score!: number;
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', nullable: true })
     comment!: string;
 }

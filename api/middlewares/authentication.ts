@@ -6,10 +6,13 @@ function sendResponse(ctx: ParameterizedContext, status?: number) {
 }
 
 export async function simpleAuthenticate(ctx: ParameterizedContext, next: Next): Promise<any> {
-    const user = await User.findOne({
-        id: ctx.session!.userId,
-    });
-    ctx.state.user = user;
+    if (ctx.session!.userId) {
+        const user = await User.findOne({
+            id: ctx.session!.userId,
+        });
+
+        ctx.state.user = user;
+    }
 
     return await next();
 }
