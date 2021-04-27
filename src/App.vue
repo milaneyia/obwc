@@ -147,7 +147,6 @@ import { User } from '../shared/models';
 export default defineComponent({
     name: 'App',
 
-
     computed: mapState({
         user: (state: any) => state.loggedInUser as User | null,
     }),
