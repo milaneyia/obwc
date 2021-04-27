@@ -114,32 +114,14 @@ export default defineComponent({
 
             this.contest = {
                 name: obj.name,
-                announcementAt: this.formatDate(obj.announcementAt) as any,
-                registrationStartedAt: this.formatDate(obj.registrationStartedAt) as any,
-                registrationEndedAt: this.formatDate(obj.registrationEndedAt) as any,
+                announcementAt: this.$formatDate(obj.announcementAt) as any,
+                registrationStartedAt: this.$formatDate(obj.registrationStartedAt) as any,
+                registrationEndedAt: this.$formatDate(obj.registrationEndedAt) as any,
             };
         },
     },
 
     methods: {
-        formatValue (value: number): number | string {
-            if (value < 10)
-                return '0' + value;
-
-            return value;
-        },
-
-        formatDate (originalDate: Date) {
-            const date = new Date(originalDate);
-            const month = this.formatValue(date.getMonth() + 1);
-            const day = this.formatValue(date.getDate());
-            const hours = this.formatValue(date.getHours());
-            const minutes = this.formatValue(date.getMinutes());
-
-            //yyyy-MM-ddThh:mm
-            return `${date.getFullYear()}-${month}-${day}T${hours}:${minutes}`;
-        },
-
         async update () {
             if (!this.contest) return;
 

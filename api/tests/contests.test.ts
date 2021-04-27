@@ -28,7 +28,7 @@ describe('contests endpoints', () => {
 
     it('should list all open contests', async () => {
         const res = await request(server)
-            .get('/api/contests');
+            .get('/api/contests/open');
 
         expect(res.status).toEqual(200);
         expect(Array.isArray(res.body)).toBe(true);

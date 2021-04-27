@@ -49,7 +49,7 @@ teamsRouter.post('/', authenticate, async (ctx) => {
             captain: user,
         }),
         Contest.open()
-            .where('id = :id', { id: input.contest.id })
+            .andWhere('id = :id', { id: input.contest.id })
             .getOne(),
     ]);
 

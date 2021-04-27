@@ -105,7 +105,7 @@ export default defineComponent({
 
     async created () {
         const [{ data: contests }, { data: users }, { data: team }] = await Promise.all([
-            this.$http.get<Contest[]>('/api/contests'),
+            this.$http.get<Contest[]>('/api/contests/open'),
             this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
             this.$http.get<Team | undefined>('/api/teams/mine'),
         ]);

@@ -9,6 +9,7 @@ import router from './router/main';
 import { store } from './store/main';
 import http from './http';
 import md from './markdown';
+import { formatDate } from './formatDate';
 
 const app = createApp(App);
 app.use(router);
@@ -16,6 +17,7 @@ app.use(store);
 
 app.config.globalProperties.$http = http;
 app.config.globalProperties.$md = md;
+app.config.globalProperties.$formatDate = formatDate;
 
 app.directive('bs-tooltip', tooltip);
 

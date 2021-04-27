@@ -55,7 +55,7 @@ export default defineComponent({
     },
 
     async created () {
-        const { data } = await this.$http.get('/api/staff/contests');
+        const { data } = await this.$http.get('/api/contests');
         this.contests = data;
     },
 

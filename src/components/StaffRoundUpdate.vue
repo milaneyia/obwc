@@ -253,11 +253,11 @@ export default defineComponent({
             }
 
             this.round = {
-                submissionsStartedAt: this.formatDate(round.submissionsStartedAt) as any,
-                submissionsEndedAt: this.formatDate(round.submissionsStartedAt) as any,
-                judgingStartedAt: this.formatDate(round.submissionsStartedAt) as any,
-                judgingEndedAt: this.formatDate(round.submissionsStartedAt) as any,
-                resultsAt: this.formatDate(round.submissionsStartedAt) as any,
+                submissionsStartedAt: this.$formatDate(round.submissionsStartedAt) as any,
+                submissionsEndedAt: this.$formatDate(round.submissionsStartedAt) as any,
+                judgingStartedAt: this.$formatDate(round.submissionsStartedAt) as any,
+                judgingEndedAt: this.$formatDate(round.submissionsStartedAt) as any,
+                resultsAt: this.$formatDate(round.submissionsStartedAt) as any,
                 judgeToRounds: [
                     ...round.judgeToRounds,
                 ],
@@ -269,24 +269,6 @@ export default defineComponent({
     },
 
     methods: {
-        formatValue (value: number): number | string {
-            if (value < 10)
-                return '0' + value;
-
-            return value;
-        },
-
-        formatDate (originalDate: Date) {
-            const date = new Date(originalDate);
-            const month = this.formatValue(date.getMonth() + 1);
-            const day = this.formatValue(date.getDate());
-            const hours = this.formatValue(date.getHours());
-            const minutes = this.formatValue(date.getMinutes());
-
-            //yyyy-MM-ddThh:mm
-            return `${date.getFullYear()}-${month}-${day}T${hours}:${minutes}`;
-        },
-
         getJudgingTypeName (type: number) {
             return JUDGING_TYPE[type];
         },
