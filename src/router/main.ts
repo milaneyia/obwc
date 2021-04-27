@@ -20,10 +20,16 @@ router.beforeEach(async (to, from, next) => {
         store.commit(SET_INITIAL_DATA, data);
     }
 
-    if (
-        (to.meta.requiresAuth && !store.state.loggedInUser) ||
-        (to.meta.requiresStaff && !store.state.loggedInUser?.isStaff)
-    ) {
+    if (to.meta.requiresAuth && !store.state.loggedInUser) {
+        return next({
+            name: '401',
+            query: {
+                redirect: to.path,
+            },
+        });
+    }
+
+    if (to.meta.requiresStaff && !store.state.loggedInUser?.isStaff) {
         return next({
             name: '404',
         });

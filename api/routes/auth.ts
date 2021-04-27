@@ -17,9 +17,16 @@ router.prefix('/api');
 router.get('/login', (ctx) => {
     const state = crypto.randomBytes(48).toString('base64');
 
+    let redirectUrl = ctx.get('referer');
+    const url = new URL(redirectUrl);
+
+    if (url.searchParams.has('redirect')) {
+        redirectUrl = url.origin + url.searchParams.get('redirect');
+    }
+
     ctx.session!.state = {
         state,
-        redirectUrl: ctx.get('referer'),
+        redirectUrl,
     } as State;
 
     ctx.redirect(
@@ -40,7 +47,7 @@ router.get('/callback', async (ctx) => {
     if (!ctx.query.code || ctx.query.error) {
         ctx.status = 500;
 
-        return ctx.redirect('http://localhost:8000/error');
+        return ctx.redirect('/error');
     }
 
     const rawState = ctx.query.state?.toString() || '';
@@ -51,7 +58,7 @@ router.get('/callback', async (ctx) => {
     if (decodedState !== savedState.state) {
         ctx.status = 403;
 
-        return ctx.redirect('http://localhost:8000/error');
+        return ctx.redirect('/error');
     }
 
     let oauthData;
@@ -65,7 +72,7 @@ router.get('/callback', async (ctx) => {
         console.log(error);
         ctx.status = 500;
 
-        return ctx.redirect('http://localhost:8000/error');
+        return ctx.redirect('/error');
     }
 
     const osuId = userData.id;

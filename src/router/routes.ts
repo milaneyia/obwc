@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Home from '../pages/Home.vue';
+const Login = () => import('../pages/Login.vue');
 const Info = () => import('../pages/Info.vue');
 const Results = () => import('../pages/Results.vue');
 
@@ -127,6 +128,14 @@ const routes = [
             title: 'Judging - Staff',
             requiresStaff: true,
         },
+    },
+
+    // Login
+    {
+        path: '/login',
+        component: Login,
+        name: '401',
+        meta: { title: 'Login to continue' },
     },
 
     // Fallback
