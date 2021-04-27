@@ -8,18 +8,18 @@
                 >
                     <template #actions="{ item: round }">
                         <button
-                            class="btn btn-sm btn-success"
+                            class="btn btn-sm btn-primary me-2"
                             data-bs-toggle="modal"
                             data-bs-target="#roundUpdate"
                             @click="selectedRound = round"
                         >
                             Edit
                         </button>
-                        <router-link :to="{ name: 'staff-submissions', params: { id: round.id } }">
-                            View Submissions
+                        <router-link class="btn btn-sm btn-link me-2" :to="{ name: 'staff-submissions', params: { id: round.id } }">
+                            Submissions
                         </router-link>
-                        <router-link :to="{ name: 'staff-judging', params: { id: round.id } }">
-                            View Judging
+                        <router-link class="btn btn-sm btn-link" :to="{ name: 'staff-judging', params: { id: round.id } }">
+                            Judging
                         </router-link>
                     </template>
                 </data-table>

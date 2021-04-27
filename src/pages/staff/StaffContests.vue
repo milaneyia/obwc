@@ -7,18 +7,18 @@
                 >
                     <template #actions="{ item: contest }">
                         <button
-                            class="btn btn-sm btn-success"
+                            class="btn btn-sm btn-primary me-2"
                             data-bs-toggle="modal"
                             data-bs-target="#contestUpdate"
                             @click="selectedContest = contest"
                         >
                             Edit
                         </button>
-                        <router-link :to="{ name: 'staff-rounds', params: { id: contest.id } }">
-                            View Rounds
+                        <router-link class="btn btn-sm btn-link me-2" :to="{ name: 'staff-rounds', params: { id: contest.id } }">
+                            Rounds
                         </router-link>
-                        <router-link :to="{ name: 'staff-teams', params: { id: contest.id } }">
-                            View Teams
+                        <router-link class="btn btn-sm btn-link" :to="{ name: 'staff-teams', params: { id: contest.id } }">
+                            Teams
                         </router-link>
                     </template>
                 </data-table>
