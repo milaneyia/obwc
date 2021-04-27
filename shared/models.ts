@@ -5,6 +5,7 @@ export interface Song {
 }
 
 export interface Judging {
+    id: number;
     judgeId: number;
     judge: User;
     submissionId: number;
@@ -15,8 +16,10 @@ export interface Judging {
 }
 
 export interface JudgingToCriteria {
+    id: number;
     judgingId: number;
     criteriaId: number;
+    criteria: Criteria;
     score: number;
     comment: string;
 }

@@ -40,21 +40,12 @@
             <tbody>
                 <tr v-for="submission in sortedSubmissions" :key="submission.id">
                     <td class="text-left">
-                        <a
-                            class="me-1"
-                            :href="`api/judging/submission/${submission.id}/download`"
-                            target="_blank"
-                        >
-                            <i class="fas fa-file-download" />
-                        </a>
                         {{ submission.anonymisedAs }}
                     </td>
                     <td v-for="criteria in criterias" :key="criteria.id">
                         <a
                             href="#"
                             class="d-flex align-items-center justify-content-center"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editing-judging-modal"
                             @click.prevent="selectForEditing(submission, criteria)"
                         >
                             <i class="me-1 fas fa-edit" />

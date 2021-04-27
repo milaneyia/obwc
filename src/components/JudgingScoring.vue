@@ -9,52 +9,48 @@
             placeholder="General comment"
         />
 
-        <div class="modal-header">
-            <h5
-                id="exampleModalLongTitle"
-                class="modal-title"
-            >
+        <hr>
+
+        <div class="card bg-dark">
+            <div class="card-header">
                 Editing  <b>{{ criteria.name }}</b> for <b>{{ submission.anonymisedAs }}</b>
-            </h5>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="score">Score</label>
-                <input
-                    id="score"
-                    v-model="newScore"
-                    type="number"
-                    step="1"
-                    min="1"
-                    :max="criteria.maxScore"
-                    class="form-control"
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="score">Score</label>
+                    <input
+                        id="score"
+                        v-model="newScore"
+                        type="number"
+                        step="1"
+                        min="1"
+                        :max="criteria.maxScore"
+                        class="form-control"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="comment">
+                        Comment
+                    </label>
+                    <textarea
+                        id="comment"
+                        v-model="newComment"
+                        :maxlength="3000"
+                        :rows="5"
+                        class="form-control"
+                        placeholder="Criteria specific"
+                    />
+                </div>
+            </div>
+            <div class="card-footer">
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click.prevent="save()"
                 >
+                    Save changes
+                </button>
             </div>
-            <div
-                class="form-group"
-            >
-                <label for="comment">
-                    Comment
-                </label>
-                <textarea
-                    id="comment"
-                    v-model="newComment"
-                    :maxlength="3000"
-                    :rows="5"
-                    class="form-control"
-                    placeholder="Criteria specific"
-                />
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button
-                type="button"
-                class="btn btn-primary"
-                @click.prevent="save()"
-            >
-                Save changes
-            </button>
-            <div id="close-button" data-bs-dismiss="modal" />
         </div>
     </div>
     <div v-else class="text-muted">
