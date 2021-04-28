@@ -1,5 +1,5 @@
 <template v-cloak>
-    <nav class="nav navbar navbar-expand-md navbar-dark bg-dark navbar-custom justify-content-end text-end">
+    <nav class="nav navbar navbar-expand-md navbar-dark bg-dark navbar-custom">
         <button
             class="navbar-toggler"
             type="button"
@@ -54,36 +54,42 @@
                     </ul>
                 </li>
             </ul>
-            <ul class="navbar-nav">
-                <li v-if="!user" class="nav-item">
+        </div>
+
+        <ul class="navbar-nav flex-row">
+            <li v-if="!user" class="nav-item">
+                <a
+                    class="nav-link"
+                    href="/api/login"
+                >
+                    LOGIN
+                </a>
+            </li>
+            <template v-else>
+                <li class="nav-item">
                     <a
-                        class="nav-link"
-                        href="/api/login"
+                        class="nav-link text-uppercase px-2"
+                        href="#"
+                        @click.prevent="showProfilePopup = !showProfilePopup"
                     >
-                        LOGIN
+                        <i class="fas fa-exclamation-circle text-danger" />
+                        {{ user.username }}
                     </a>
                 </li>
-                <template v-else>
-                    <li class="nav-item">
-                        <router-link
-                            class="nav-link"
-                            :to="{ name: 'dashboard' }"
-                        >
-                            <i class="fas fa-user" />
-                            {{ user.username }}
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="/api/logout"
-                        >
-                            LOGOUT
-                        </a>
-                    </li>
-                </template>
-            </ul>
-        </div>
+                <li class="nav-item px-2">
+                    <a
+                        class="nav-link"
+                        href="/api/logout"
+                    >
+                        LOGOUT
+                    </a>
+                </li>
+            </template>
+        </ul>
+
+        <transition name="component-fade">
+            <profile-popup v-if="showProfilePopup" @navigate="showProfilePopup = false" />
+        </transition>
     </nav>
 
     <router-view v-slot="{ Component }">
@@ -145,6 +151,7 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { User } from '../shared/models';
+import ProfilePopup from './components/ProfilePopup.vue';
 import ToastMessages from './components/ToastMessages.vue';
 
 export default defineComponent({
@@ -152,6 +159,13 @@ export default defineComponent({
 
     components: {
         ToastMessages,
+        ProfilePopup,
+    },
+
+    data () {
+        return {
+            showProfilePopup: false,
+        };
     },
 
     computed: mapState({

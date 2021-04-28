@@ -8,7 +8,14 @@ function sendResponse(ctx: ParameterizedContext, status?: number) {
 export async function simpleAuthenticate(ctx: ParameterizedContext, next: Next): Promise<any> {
     if (ctx.session!.userId) {
         const user = await User.findOne({
-            id: ctx.session!.userId,
+            where: {
+                id: ctx.session!.userId,
+            },
+            relations: [
+                'team',
+                'invitations',
+                'invitations.captain',
+            ],
         });
 
         ctx.state.user = user;

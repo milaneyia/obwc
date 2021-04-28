@@ -35,7 +35,7 @@ export class Team extends BaseEntity {
     @OneToMany(() => User, (user) => user.team)
     users!: User[];
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, (user) => user.invitations)
     @JoinTable()
     invitations!: User[];
 
