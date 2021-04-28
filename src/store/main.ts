@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import { User } from '../../shared/models';
 import judgingModule from './judging';
 import { SET_INITIAL_DATA, UPDATE_LOADING_STATE } from './main-types';
+import toastsModule from './toasts';
 
 export interface MainState {
     initialized: boolean;
@@ -12,6 +13,7 @@ export interface MainState {
 export const store = createStore<MainState>({
     modules: {
         judging: judgingModule,
+        toasts: toastsModule,
     },
     state: {
         initialized: false,

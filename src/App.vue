@@ -137,19 +137,25 @@
             </div>
         </div>
     </footer>
+
+    <toast-messages />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { User } from '../shared/models';
+import ToastMessages from './components/ToastMessages.vue';
 
 export default defineComponent({
     name: 'App',
 
+    components: {
+        ToastMessages,
+    },
+
     computed: mapState({
         user: (state: any) => state.loggedInUser as User | null,
     }),
-
 });
 </script>

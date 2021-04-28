@@ -120,7 +120,7 @@ export default defineComponent({
 
         async save (e: Event): Promise<void> {
             if (!this.oszFile) {
-                alert('Select an .osz');
+                this.$store.dispatch('addToastMessage', 'Select an .osz');
 
                 return;
             }
@@ -138,7 +138,10 @@ export default defineComponent({
 
             if (data.success) {
                 await this.getData();
-                alert('Saved!');
+                this.$store.dispatch('addToastMessage', {
+                    message: 'Saved!',
+                    type: 'success',
+                });
             }
 
             this.isSaving = false;

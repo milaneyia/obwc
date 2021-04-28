@@ -1,10 +1,14 @@
 import Axios, { AxiosError } from 'axios';
+import { store } from './store/main';
 
 const http = Axios.create();
 
 http.interceptors.response.use((response) => {
     if (response.config.method !== 'get' && response.config.method !== 'GET') {
-        alert(response.data.success || response.statusText);
+        store.dispatch('addToastMessage', {
+            message: response.data.success || response.statusText,
+            type: 'success',
+        });
     }
 
     return response;
@@ -29,7 +33,7 @@ http.interceptors.response.use((response) => {
         message = 'Something went really wrong';
     }
 
-    alert(message);
+    store.dispatch('addToastMessage', message);
 
     return Promise.reject(message);
 });

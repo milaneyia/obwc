@@ -143,11 +143,11 @@ export default defineComponent({
 
         save () {
             if (this.selectedUsers.length < 2 || this.selectedUsers.length > 5) {
-                return alert('Number of members needs to be between 2 and 5');
+                return this.$store.dispatch('addToastMessage', 'Number of members needs to be between 2 and 5');
             }
 
             if (!this.selectedContest) {
-                return alert('Select a contest to participate on');
+                return this.$store.dispatch('addToastMessage', 'Select a contest to participate on');
             }
 
             this.loading = true;

@@ -282,7 +282,7 @@ export default defineComponent({
             if (!this.round) return;
 
             if (!this.selectedUser) {
-                return alert('Select an user');
+                return this.$store.dispatch('addToastMessage', 'Select an user');
             }
 
             this.round.judgeToRounds.push({
@@ -300,7 +300,7 @@ export default defineComponent({
             if (!this.round) return;
 
             if (!this.title || !this.link) {
-                return alert('Fill the blanks');
+                return this.$store.dispatch('addToastMessage', 'Fill the blanks');
             }
 
             this.round.songs.push({
