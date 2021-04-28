@@ -27,7 +27,7 @@
             />
 
             <div class="mx-4">
-                <div class="text-uppercase">
+                <div>
                     {{ invitation.captain.username }} INVITES YOU TO JOIN
                 </div>
                 <div>{{ invitation.name }}</div>

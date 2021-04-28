@@ -3,6 +3,10 @@
 @import "custom";
 @import "vue";
 
+body {
+    text-transform: uppercase;
+}
+
 body::before {
     content: " ";
     background-image: url('../bg_tile.png');
@@ -22,6 +26,12 @@ body::before {
     background-size: cover;
     background-repeat: no-repeat;
     display: inline-block;
+
+    &--large {
+        height: 85px;
+        width: 85px;
+        border: 2px solid $dark;
+    }
 }
 
 .footer {

@@ -32,6 +32,8 @@ $h6-font-size:      $font-size-base;
 
 $blue:    #75b6e5 !default;
 $yellow:  #facb5b !default;
+$indigo:  #8e94cc !default;
+$purple:  #9188c2 !default;
 $dark:    #121212 !default;
 $white:   #fff !default;
 
@@ -47,7 +49,11 @@ $navbar-dark-color: $white;
 
 $modal-content-bg: $dark;
 
-$input-bg: $dark;
+$input-bg: transparent;
+$input-border-color: $purple;
+
+$form-label-color: $indigo;
+
 $btn-border-radius: $border-radius-lg;
 $btn-border-radius-sm: $border-radius-lg;
 
@@ -55,7 +61,8 @@ $btn-border-radius-sm: $border-radius-lg;
 @import "../../../node_modules/bootstrap/scss/mixins";
 
 $custom-colors: (
-  "yellow": $yellow
+  "yellow": $yellow,
+  "purple": $purple,
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);

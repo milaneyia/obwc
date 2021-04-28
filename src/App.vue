@@ -68,7 +68,7 @@
             <template v-else>
                 <li class="nav-item">
                     <a
-                        class="nav-link text-uppercase px-2"
+                        class="nav-link px-2"
                         href="#"
                         @click.prevent="showProfilePopup = !showProfilePopup"
                     >
@@ -96,7 +96,7 @@
         <transition name="component-fade" mode="out-in">
             <component
                 :is="Component"
-                class="pt-4"
+                class="pt-4 px-sm-4"
                 style="padding-bottom: calc(1.5rem + 40px)"
             />
         </transition>

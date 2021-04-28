@@ -43,15 +43,6 @@ const routes = [
 
     // Auth
     {
-        path: '/dashboard',
-        component: Home,
-        name: 'dashboard',
-        meta: {
-            title: 'Dashboard | o!bwc',
-            requiresAuth: true,
-        },
-    },
-    {
         path: '/teams/create',
         component: TeamCreation,
         name: 'team-creation',

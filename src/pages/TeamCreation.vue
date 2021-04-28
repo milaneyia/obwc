@@ -1,81 +1,138 @@
 <template>
-    <div class="container">
-        <div class="row mb-2">
-            <div class="col-sm">
-                <div class="card card-body">
-                    <h4 class="card-title">
-                        Create your team for {{ user.country.name }}
-                    </h4>
-
-                    <ul class="card-text">
-                        <li>Only the captain should do this.</li>
-                        <li>You must choose between 2 to 5 mappers</li>
-                        <li>This lists all users registered for your country, if you don't find a specific person it's likely that they haven't logged in (in order to be registered) yet</li>
-                        <li>Once submitted, selected users need to confirm by accepting your invitation (ask them to log in and press accept in the home page)</li>
-                        <li>Staff will finalize your registration once everyone accepted their invitation and the team's name is accepted</li>
-                        <li>You're free to edit whatever before that happens</li>
-                    </ul>
+    <div class="container-fluid">
+        <div class="card card-section">
+            <div class="card-header">
+                <div class="card-header-back">
+                    <img src="../assets/home_prizes.png">
                 </div>
-            </div>
-        </div>
 
-        <div class="row">
-            <a
-                v-for="user in users"
-                :key="user.id"
-                href="#"
-                class="col-sm-2 mb-2"
-                @click.prevent="select(user)"
-            >
-                <div
-                    class="card card-body justify-content-center align-items-center"
-                    :class="selectedClass(user)"
-                >
-                    <div
-                        class="avatar"
-                        :style="`background-image: url(https://a.ppy.sh/${user.osuId})`"
-                    />
-
-                    <div class="mt-2">
-                        {{ user.username }}
+                <div class="card-header-sub">
+                    <div class="card-header-title">
+                        TEAM CREATION
                     </div>
                 </div>
-            </a>
-        </div>
+            </div>
 
-        <div class="row">
-            <div class="col-sm">
-                <select
-                    v-model="selectedContest"
-                    class="form-control mb-2"
-                >
-                    <option :value="null" disabled>
-                        Select a contest
-                    </option>
-                    <option
-                        v-for="contest in contests"
-                        :key="contest.id"
-                        :value="contest"
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="border-bottom">
+                            CREATE YOUR TEAM FOR
+                            <span class="text-yellow">
+                                {{ user.country.name }}
+                            </span>
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm">
+                        <ul class="card-text">
+                            <li class="text-yellow">
+                                Only the captain should do this.
+                            </li>
+                            <li>You must choose between 2 to 5 mappers</li>
+                            <li>This lists all users registered for your country, if you don't find a specific person it's likely that they have not been registered yet</li>
+                            <li>Once submitted, selected users need to confirm by accepting your invitation (they will recieve a notification when logged in)</li>
+                            <li>Staff will finalize your registration once everyone accepted their invitation and the team's name is approved</li>
+                            <li>You are free to perform any edits <span class="text-yellow">before</span> your team is finalized by staff</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row my-3 g-2">
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label text-end">team name</label>
+                            <div class="col-sm-9">
+                                <input
+                                    v-model="name"
+                                    type="text"
+                                    class="form-control text-end"
+                                    maxlength="16"
+                                    placeholder="maximum 16 characters"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label text-end">mode</label>
+                            <div class="col-sm-9">
+                                <template
+                                    v-for="contest in contests"
+                                    :key="contest.id"
+                                >
+                                    <input
+                                        :id="'mode-' + contest.id"
+                                        v-model="selectedContest"
+                                        type="radio"
+                                        class="btn-check"
+                                        autocomplete="off"
+                                        :value="contest"
+                                        :disabled="!openContests.some(c => c.id === contest.id)"
+                                    >
+                                    <label
+                                        class="btn btn-mode-radio me-2"
+                                        :class="selectedContest?.id === contest.id ? 'active' : ''"
+                                        :for="'mode-' + contest.id"
+                                    >
+                                        <i class="fas" :class="[getContestIcon(contest.id)]" />
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-end">
+                        <button
+                            class="btn btn-yellow btn-primary px-5 fw-bold"
+                            :disabled="loading"
+                            @click="save"
+                        >
+                            <i class="fas fa-save" />
+                            SAVE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row my-3 g-2">
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <label class="col-sm-3 col-form-label text-end">search</label>
+                            <div class="col-sm-9">
+                                <input
+                                    v-model="filter"
+                                    type="text"
+                                    class="form-control text-end w-100"
+                                    placeholder="filter by username"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row row-cols-12 g-4">
+                    <div
+                        v-for="user in filteredUsers"
+                        :key="user.id"
+                        class="col"
+                        @click.prevent="select(user)"
                     >
-                        {{ contest.name }}
-                    </option>
-                </select>
+                        <div
+                            class="card card-body justify-content-center align-items-center card-user"
+                            :class="selectedClass(user)"
+                        >
+                            <div
+                                class="avatar avatar--large"
+                                :style="`background-image: url(https://a.ppy.sh/${user.osuId})`"
+                            />
 
-                <input
-                    v-model="name"
-                    type="text"
-                    class="form-control mb-2"
-                    maxlength="16"
-                    placeholder="team's name (max 16 characters)"
-                >
-
-                <button
-                    class="btn btn-primary w-100"
-                    :disabled="loading"
-                    @click="save"
-                >
-                    Save
-                </button>
+                            <div class="mt-5">
+                                {{ user.username }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -90,8 +147,10 @@ import { Contest, Team, User } from '../../shared/models';
 export default defineComponent({
     data () {
         return {
+            filter: '',
             name: '',
             contests: [] as Contest[],
+            openContests: [] as Contest[],
             users: [] as User[],
             selectedUsers: [] as User[],
             selectedContest: null as Contest | null,
@@ -99,12 +158,19 @@ export default defineComponent({
         };
     },
 
-    computed: mapState({
-        user: (state: any) => state.loggedInUser as User,
-    }),
+    computed: {
+        ...mapState({
+            user: (state: any) => state.loggedInUser as User,
+        }),
+
+        filteredUsers (): User[] {
+            return this.users.filter(u => u.username.includes(this.filter));
+        },
+    },
 
     async created () {
-        const [{ data: contests }, { data: users }, { data: team }] = await Promise.all([
+        const [{ data: contests }, { data: openContests }, { data: users }, { data: team }] = await Promise.all([
+            this.$http.get<Contest[]>('/api/contests'),
             this.$http.get<Contest[]>('/api/contests/open'),
             this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
             this.$http.get<Team | undefined>('/api/teams/mine'),
@@ -112,6 +178,7 @@ export default defineComponent({
 
         this.users = users;
         this.contests = contests;
+        this.openContests = openContests;
 
         if (team) {
             this.name = team.name;
@@ -135,10 +202,25 @@ export default defineComponent({
 
         selectedClass (user: User) {
             if (this.selectedUsers.some(u => u.id === user.id)) {
-                return 'bg-success';
+                return 'bg-yellow text-dark border-yellow';
             }
 
-            return '';
+            return 'border-purple';
+        },
+
+        getContestIcon (id: number) {
+            switch (id) {
+                case 1:
+                    return 'fa-circle';
+                case 2:
+                    return 'fa-drum';
+                case 3:
+                    return 'fa-apple-alt';
+                case 4:
+                    return 'fa-stream';
+                default:
+                    return 'fa-times';
+            }
         },
 
         save () {
@@ -162,3 +244,22 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="scss">
+
+.card-user {
+    cursor: pointer;
+}
+
+.btn-mode-radio {
+    color: var(--bs-white);
+    border-color: var(--bs-white);
+
+    &:hover, &.active {
+        color: #000;
+        background-color: #facb5b;
+        border-color: #facb5b;
+    }
+}
+
+</style>
