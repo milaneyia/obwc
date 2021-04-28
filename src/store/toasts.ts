@@ -1,7 +1,7 @@
 import { Module } from 'vuex';
 import { MainState } from './main';
 
-interface ToastMessage {
+export interface ToastMessage {
     message: string;
     type?: 'error' | 'success' | 'info';
 }

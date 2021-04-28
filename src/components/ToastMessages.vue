@@ -23,13 +23,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
+import { ToastMessage } from '../store/toasts';
+
 export default defineComponent({
     computed: mapState({
         toastMessages: (state: any) => state.toasts.toastMessages,
     }),
 
     methods: {
-        getToastTypeClass(toast): string {
+        getToastTypeClass(toast: ToastMessage): string {
             if (toast.type === 'success') return 'bg-success';
             if (toast.type === 'info') return 'bg-info';
 
