@@ -1,5 +1,5 @@
 <template>
-    <div class="container py-5">
+    <div class="container">
         <img
             class="img-fluid mx-auto d-block"
             src="../assets/banner.png"
@@ -33,13 +33,13 @@
 
         <div class="row my-5">
             <div class="col">
-                <div class="card card-body">
+                <div class="card card-section card-body">
                     <div v-html="$md.render(docs)" />
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row my-5">
             <div class="col text-center">
                 <a
                     class="twitter-timeline"

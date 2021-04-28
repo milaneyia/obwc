@@ -21,21 +21,21 @@
                         INFO
                     </router-link>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <router-link class="nav-link" to="/info">
                         TEAMS
                     </router-link>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'results', params: { id: 1 } }">
                         RESULTS
                     </router-link>
-                </li>
-                <li class="nav-item">
+                </li> -->
+                <!-- <li class="nav-item">
                     <router-link class="nav-link" to="/info">
                         STAFF
                     </router-link>
-                </li>
+                </li> -->
                 <li v-if="user?.isStaff" class="nav-item dropdown">
                     <a
                         id="navbarDropdown"
