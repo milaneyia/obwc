@@ -1,5 +1,4 @@
 <template>
-    <div class="card card-body small rounded-3 bg-dark position-absolute profile text-start me-sm-3">
         <div class="d-flex align-items-center justify-content-between">
             <div>FOR TEAM CREATION, CLICK HERE</div>
             <i class="fas fa-arrow-right mx-2" />
@@ -75,10 +74,15 @@ export default defineComponent({
 
 .profile {
     z-index: 1080;
-    border: 2px dashed var(--bs-blue);
     right: 0;
-    top: 88%;
-    max-width: 500px;
+    top: 76%;
+    max-width: 650px;
+    height: auto;
+
+    background-image: url('../assets/popup-bg.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 </style>
