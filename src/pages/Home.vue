@@ -1,15 +1,15 @@
 <template>
     <div class="container-fluid">
         <div class="row gy-2">
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-xl-3">
                 <home-info />
             </div>
 
-            <div class="col-md-6 col-lg-5">
+            <div class="col-md-6 col-xl-5">
                 <home-prizes />
             </div>
 
-            <div class="col-md-12 col-lg-4">
+            <div class="col-md-12 col-xl-4">
                 <home-schedule />
             </div>
         </div>

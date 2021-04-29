@@ -45,6 +45,23 @@ body::before {
         vertical-align: middle;
         color: $white;
     }
+
+    &__obwc-img {
+        background-image: url('../2020_link.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+        min-width: 200px;
+        height: 56px;
+        max-height: 56px;
+
+        transition: background-image 0.25s ease-in-out;
+
+        &:hover {
+            background-image: url('../2020_link_hover.png');
+        }
+    }
+    
 }
 
 .navbar-custom {

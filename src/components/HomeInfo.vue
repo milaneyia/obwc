@@ -1,6 +1,6 @@
 <template>
     <div class="card card-section h-100">
-        <div class="card-body">
+        <div class="card-body d-flex flex-column justify-content-evenly">
             <div class="home-logo" />
 
             <div class="px-2">
@@ -8,8 +8,11 @@
                     MAY 02 - NOV 15
                 </div>
 
-                <div class="box-link" />
-                <div class="box-link" />
+                <a
+                    class="box-link"
+                    href="#"
+                    target="_blank"
+                />
             </div>
         </div>
     </div>
@@ -36,6 +39,7 @@ export default defineComponent({
 }
 
 .box-link {
+    display: block;
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -43,6 +47,11 @@ export default defineComponent({
     max-width: 100%;
     min-height: 80px;
     height: auto;
+    transition: background-image 0.2s ease-in-out;
+
+    &:hover {
+        background-image: url('../assets/home_link_hover.png');
+    }
 }
 
 </style>

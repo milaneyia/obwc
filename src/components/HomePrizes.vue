@@ -53,7 +53,7 @@
                         />
 
                         <div class="prize__detail w-100">
-                            <div class="prize__badge" />
+                            <div class="prize__badge" :class="i === 0 ? 'prize__badge--black' : ''" />
                             <div class="my-2">
                                 <i class="fas fa-plus fa-2x" />
                             </div>
@@ -103,6 +103,10 @@ export default defineComponent({
         max-width: 100%;
         min-width: 130px;
         min-height: 85px;
+
+        &--black {
+            background-image: url('../assets/badge_black.png');
+        }
     }
 
     &__players {

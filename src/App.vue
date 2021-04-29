@@ -109,17 +109,18 @@
 
     <footer class="footer mt-auto bg-dark">
         <div class="d-flex justify-content-between align-items-center pe-3">
-            <div>
+            <div class="d-flex w-100 align-items-center ">
                 <a
                     href="https://2020.obwc.net"
                     target="_blank"
                     class="me-4 d-none d-sm-inline-block"
                 >
-                    <img
+                    <!-- <img
                         src="./assets/2020_link.png"
-                        class="img-fluid"
+                        class="img-fluid footer__obwc-img"
                         style="max-height: 56px"
-                    >
+                    > -->
+                    <div class="footer__obwc-img" />
                 </a>
                 <a
                     href="https://discord.gg/CZp4bNx"
@@ -143,7 +144,7 @@
                     <i class="fab fa-twitch fa-2x" />
                 </a>
             </div>
-            <div class="d-none d-sm-block">
+            <div class="d-none d-sm-block w-100 text-end">
                 osu! Beatmapping World Championship
             </div>
         </div>

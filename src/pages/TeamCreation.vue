@@ -74,11 +74,9 @@
                                     >
                                     <label
                                         class="btn btn-mode-radio me-2"
-                                        :class="selectedContest?.id === contest.id ? 'active' : ''"
+                                        :class="[selectedContest?.id === contest.id ? 'active' : '', getContestIcon(contest.id)]"
                                         :for="'mode-' + contest.id"
-                                    >
-                                        <i class="fas" :class="[getContestIcon(contest.id)]" />
-                                    </label>
+                                    />
                                 </template>
                             </div>
                         </div>
@@ -209,17 +207,17 @@ export default defineComponent({
         },
 
         getContestIcon (id: number) {
+            let className = 'btn-mode-radio--';
+
             switch (id) {
                 case 1:
-                    return 'fa-circle';
+                    return className + 'osu';
                 case 2:
-                    return 'fa-drum';
+                    return className + 'taiko';
                 case 3:
-                    return 'fa-apple-alt';
+                    return className + 'catch';
                 case 4:
-                    return 'fa-stream';
-                default:
-                    return 'fa-times';
+                    return className + 'mania';
             }
         },
 
@@ -254,11 +252,28 @@ export default defineComponent({
 .btn-mode-radio {
     color: var(--bs-white);
     border-color: var(--bs-white);
+    border-width: 2px;
 
     &:hover, &.active {
         color: #000;
         background-color: #facb5b;
         border-color: #facb5b;
+    }
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px;
+
+    padding: 1.25rem 0.8rem;
+
+    @each $mode in 'osu', 'taiko', 'catch', 'mania' {
+        &--#{$mode} {
+            background-image: url('../assets/#{$mode}-w.png');
+        }
+
+        &--#{$mode}.active {
+            background-image: url('../assets/#{$mode}-b.png');
+        }
     }
 }
 
