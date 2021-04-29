@@ -16,6 +16,7 @@ import staffTeamsRouter from './routes/staff/teams';
 import staffContestsRouter from './routes/staff/contests';
 import staffRoundsRouter from './routes/staff/rounds';
 import staffSubmissionsRouter from './routes/staff/submissions';
+import { Log, LOG_TYPE } from './models/Log';
 
 const app = new Koa();
 app.keys = config.KOA.SESSION_KEYS;
@@ -63,6 +64,8 @@ app.use(staffSubmissionsRouter.routes());
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {
         console.log('Error caught', err);
+    } else {
+        Log.createAndSave(JSON.stringify(err), LOG_TYPE.Error);
     }
 });
 

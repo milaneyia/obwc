@@ -25,7 +25,7 @@ export class Log extends BaseEntity {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @Column()
+    @Column({ type: 'text' })
     text!: string;
 
     @Column({ type: 'enum', enum: LOG_TYPE, default: LOG_TYPE.General })

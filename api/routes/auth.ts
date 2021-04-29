@@ -5,6 +5,7 @@ import { User } from '../models/User';
 import { ROLE } from '../models/Role';
 import { Country } from '../models/Country';
 import * as osu from '../helpers/osu';
+import { Log, LOG_TYPE } from '../models/Log';
 
 interface State {
     state: string;
@@ -95,6 +96,14 @@ router.get('/callback', async (ctx) => {
         user.roleId = ROLE.User;
         user.country = country;
         await user.save();
+
+        Log.createAndSave(`User created: "${user.username}" - "${user.osuId}"`, LOG_TYPE.User, user.id);
+    } else if (user.username !== username) {
+        const oldUsername = user.username;
+        user.username = username;
+        await user.save();
+
+        Log.createAndSave(`User updated: "${oldUsername}" to "${username}"`, LOG_TYPE.User, user.id);
     }
 
     ctx.session!.userId = user.id;

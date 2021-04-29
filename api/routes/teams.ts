@@ -6,6 +6,7 @@ import { authenticate } from '../middlewares/authentication';
 import { User } from '../models/User';
 import { CreateTeam } from '../../shared/integration';
 import { Contest } from '../models/Contest';
+import { Log, LOG_TYPE } from '../models/Log';
 
 const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
@@ -86,6 +87,8 @@ teamsRouter.post('/', authenticate, async (ctx) => {
     await team.save();
 
     ctx.body = team;
+
+    Log.createAndSave(`Team created: "${team.name}" for "${user.country.name}"`, LOG_TYPE.User, user.id);
 });
 
 teamsRouter.post('/:id/acceptInvitation', authenticate, async (ctx) => {
@@ -115,6 +118,8 @@ teamsRouter.post('/:id/acceptInvitation', authenticate, async (ctx) => {
     await team.save();
 
     ctx.body = team;
+
+    Log.createAndSave(`Accepted invite: "${user.username}" from "${team.name}" for "${user.country.name}"`, LOG_TYPE.User, user.id);
 });
 
 export default teamsRouter;
