@@ -1,4 +1,5 @@
 <template>
+    <div class="card card-body small position-absolute profile text-start me-sm-3 pt-4">
         <div class="d-flex align-items-center justify-content-between">
             <div>FOR TEAM CREATION, CLICK HERE</div>
             <i class="fas fa-arrow-right mx-2" />
