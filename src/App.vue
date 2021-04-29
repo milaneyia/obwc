@@ -36,6 +36,11 @@
                         STAFF
                     </router-link>
                 </li> -->
+                <li v-if="user && !user.team" class="nav-item">
+                    <router-link class="nav-link" :to="{ name: 'team-creation' }">
+                        TEAM CREATION
+                    </router-link>
+                </li>
                 <li v-if="user?.isStaff" class="nav-item dropdown">
                     <a
                         id="navbarDropdown"
