@@ -81,8 +81,10 @@ export interface User {
     username: string;
     osuId: number;
     country: Country;
+    teamId: number;
     team?: Team;
     invitations: Team[];
+    captainFor?: Team;
     isStaff: boolean;
 }
 
@@ -90,10 +92,18 @@ export interface Team {
     id: number;
     country: Country;
     captain: User;
+    contest: Contest;
     name: string;
     users: User[];
     invitations: User[];
     wasConfirmed: boolean;
+}
+
+export enum ContestMode {
+    Standard = 1,
+    Taiko,
+    Catch,
+    Mania,
 }
 
 export interface Contest {

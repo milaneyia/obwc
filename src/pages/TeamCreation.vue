@@ -140,14 +140,13 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { CreateTeam } from '../../shared/integration';
-import { Contest, Team, User } from '../../shared/models';
+import { Contest, ContestMode, Team, User } from '../../shared/models';
 
 export default defineComponent({
     data () {
         return {
             filter: '',
             name: '',
-            contests: [] as Contest[],
             openContests: [] as Contest[],
             users: [] as User[],
             selectedUsers: [] as User[],
@@ -159,27 +158,31 @@ export default defineComponent({
     computed: {
         ...mapState({
             user: (state: any) => state.loggedInUser as User,
+            contests: (state: any) => state.contests as Contest[],
         }),
 
         filteredUsers (): User[] {
-            return this.users.filter(u => u.username.includes(this.filter));
+            return this.users.filter(u => u.username.toLowerCase().includes(this.filter.toLowerCase()));
         },
     },
 
     async created () {
-        const [{ data: contests }, { data: openContests }, { data: users }, { data: team }] = await Promise.all([
-            this.$http.get<Contest[]>('/api/contests'),
+        const [{ data: openContests }, { data: users }, { data: team }] = await Promise.all([
             this.$http.get<Contest[]>('/api/contests/open'),
             this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
             this.$http.get<Team | undefined>('/api/teams/mine'),
         ]);
 
         this.users = users;
-        this.contests = contests;
         this.openContests = openContests;
+
+        if (openContests.length) {
+            this.selectedContest = openContests[0];
+        }
 
         if (team) {
             this.name = team.name;
+            this.selectedContest = team.contest;
             this.selectedUsers = [
                 ...team.users,
                 ...team.invitations,
@@ -210,13 +213,13 @@ export default defineComponent({
             let className = 'btn-mode-radio--';
 
             switch (id) {
-                case 1:
+                case ContestMode.Standard:
                     return className + 'osu';
-                case 2:
+                case ContestMode.Taiko:
                     return className + 'taiko';
-                case 3:
+                case ContestMode.Catch:
                     return className + 'catch';
-                case 4:
+                case ContestMode.Mania:
                     return className + 'mania';
             }
         },

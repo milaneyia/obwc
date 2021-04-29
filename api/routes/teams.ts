@@ -29,6 +29,7 @@ teamsRouter.get('/mine', authenticate, async (ctx) => {
             captain: user,
         },
         relations: [
+            'contest',
             'users',
             'invitations',
         ],

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad, OneToMany, ManyToMany } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, AfterLoad, OneToMany, ManyToMany, OneToOne } from 'typeorm';
 import { Country } from './Country';
 import { JudgeToRound } from './judging/JudgeToRound';
 import { Role, ROLE } from './Role';
@@ -38,6 +38,9 @@ export class User extends BaseEntity {
 
     @ManyToMany(() => Team, (team) => team.invitations)
     invitations!: Team[];
+
+    @OneToOne(() => Team, (team) => team.captain)
+    captainFor!: Team;
 
     @OneToMany(() => JudgeToRound, (judgeToRound) => judgeToRound.user)
     judgeToRounds!: JudgeToRound[];

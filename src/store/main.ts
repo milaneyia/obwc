@@ -1,13 +1,15 @@
 import { createStore } from 'vuex';
-import { User } from '../../shared/models';
+import { Contest } from '../../api/models/Contest';
+import { User, ContestMode } from '../../shared/models';
+import http from '../http';
 import judgingModule from './judging';
-import { SET_INITIAL_DATA, UPDATE_LOADING_STATE } from './main-types';
+import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, SET_INITIALIZED } from './main-types';
 import toastsModule from './toasts';
 
 export interface MainState {
     initialized: boolean;
-    isLoading: boolean;
     loggedInUser: User | null;
+    contests: Contest[];
 }
 
 export const store = createStore<MainState>({
@@ -15,19 +17,53 @@ export const store = createStore<MainState>({
         judging: judgingModule,
         toasts: toastsModule,
     },
+
     state: {
         initialized: false,
-        isLoading: false,
         loggedInUser: null,
+        contests: [],
     },
+
     mutations: {
-        [SET_INITIAL_DATA] (state, user: User | null) {
-            state.loggedInUser = user || null;
+        [SET_INITIALIZED] (state) {
             state.initialized = true;
         },
-        [UPDATE_LOADING_STATE] (state) {
-            state.isLoading = !state.isLoading;
+
+        [UPDATE_USER] (state, user: User | null | undefined) {
+            state.loggedInUser = user || null;
+        },
+
+        [UPDATE_CONTESTS] (state, contests) {
+            state.contests = contests;
         },
     },
+
+    getters: {
+        standardContest (state): Contest | undefined {
+            return state.contests.find(c => c.id === ContestMode.Standard);
+        },
+    },
+
+    actions: {
+        async [SET_INITIAL_DATA] ({ commit, dispatch }) {
+            await Promise.all([
+                dispatch(UPDATE_USER),
+                dispatch(UPDATE_CONTESTS),
+            ]);
+
+            commit(SET_INITIALIZED);
+        },
+
+        async [UPDATE_USER] ({ commit }) {
+            const { data } = await http.get<User>('/api/users/me');
+            commit(UPDATE_USER, data);
+        },
+
+        async [UPDATE_CONTESTS] ({ commit }) {
+            const { data: contests } = await http.get<Contest[]>('/api/contests');
+            commit(UPDATE_CONTESTS, contests);
+        },
+    },
+
     strict: process.env.NODE_ENV !== 'production',
 });

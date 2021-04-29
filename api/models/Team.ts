@@ -28,7 +28,7 @@ export class Team extends BaseEntity {
     @Column()
     captainId!: number;
 
-    @OneToOne(() => User, { nullable: false })
+    @OneToOne(() => User, (user) => user.captainFor, { nullable: false })
     @JoinColumn()
     captain!: User;
 

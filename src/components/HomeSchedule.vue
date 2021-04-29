@@ -127,24 +127,29 @@ export default defineComponent({
         };
     },
 
+    computed: {
+        standardContest (): Contest {
+            return this.$store.getters.standardContest;
+        },
+    },
+
     async created () {
-        const { data: contests } = await this.$http.get<Contest[]>('/api/contests');
-        const standard = contests.find(c => c.id === 1);
-
-        if (standard) {
-            const { data: rounds } = await this.$http.get<Round[]>(`/api/contests/${standard.id}/rounds`);
-
-            this.schedule = {
-                announcement: standard.announcementAt,
-                registration: [standard.registrationStartedAt, standard.registrationEndedAt],
-                rounds: rounds.map(r => ({
-                    title: this.numberToOrdinal(r.id) + ' ROUND',
-                    mapping: [r.submissionsStartedAt, r.submissionsEndedAt],
-                    judging: [r.judgingStartedAt, r.judgingEndedAt],
-                })),
-                results: rounds[rounds.length - 1].resultsAt,
-            };
+        if (!this.standardContest) {
+            return;
         }
+
+        const { data: rounds } = await this.$http.get<Round[]>(`/api/contests/${this.standardContest.id}/rounds`);
+
+        this.schedule = {
+            announcement: this.standardContest.announcementAt,
+            registration: [this.standardContest.registrationStartedAt, this.standardContest.registrationEndedAt],
+            rounds: rounds.map(r => ({
+                title: this.numberToOrdinal(r.id) + ' ROUND',
+                mapping: [r.submissionsStartedAt, r.submissionsEndedAt],
+                judging: [r.judgingStartedAt, r.judgingEndedAt],
+            })),
+            results: rounds[rounds.length - 1].resultsAt,
+        };
     },
 
     methods: {

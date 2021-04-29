@@ -77,7 +77,7 @@
                         href="#"
                         @click.prevent="showProfilePopup = !showProfilePopup"
                     >
-                        <i class="fas fa-exclamation-circle text-danger" />
+                        <i v-if="!user.teamId && !user.captainFor" class="fas fa-exclamation-circle text-danger" />
                         {{ user.username }}
                     </a>
                 </li>
@@ -115,11 +115,6 @@
                     target="_blank"
                     class="me-4 d-none d-sm-inline-block"
                 >
-                    <!-- <img
-                        src="./assets/2020_link.png"
-                        class="img-fluid footer__obwc-img"
-                        style="max-height: 56px"
-                    > -->
                     <div class="footer__obwc-img" />
                 </a>
                 <a

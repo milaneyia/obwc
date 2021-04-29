@@ -64,8 +64,7 @@ export default defineComponent({
     methods: {
         async accept (id: number) {
             await this.$http.post(`/api/teams/${id}/acceptInvitation`);
-            const { data } = await this.$http.get<User>('/api/users/me');
-            this.$store.commit(SET_INITIAL_DATA, data);
+            await this.$store.dispatch(SET_INITIAL_DATA);
         },
     },
 });
