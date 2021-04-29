@@ -3,7 +3,7 @@
         <div class="card card-section">
             <div class="card-header">
                 <div class="card-header-back">
-                    <img src="../assets/home_prizes.png">
+                    Team Creation
                 </div>
 
                 <div class="card-header-sub">

@@ -2,7 +2,7 @@
     <div class="card card-section h-100">
         <div class="card-header">
             <div class="card-header-back">
-                <img src="../assets/home_schedule.png">
+                Schedule
             </div>
 
             <div class="card-header-sub">

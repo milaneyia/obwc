@@ -1,40 +1,21 @@
 <template>
-    <div class="container">
-        <img
-            class="img-fluid mx-auto d-block"
-            src="../assets/banner.png"
-            alt=""
-        >
-
-        <div class="row my-5">
-            <div class="col-lg-5 mx-auto">
-                <div class="d-flex justify-content-around flex-wrap">
-                    <a
-                        class="d-flex align-items-center mb-3 mb-sm-0"
-                        href="https://discord.gg/CZp4bNx"
-                        target="__blank"
-                    >
-                        <i class="fab fa-discord fa-2x" />
-                        <h5 class="mx-3 mb-0">Join us!</h5>
-                    </a>
-                    <a
-                        class="d-flex align-items-center mb-3 mb-sm-0"
-                        href="https://twitter.com/osubwc"
-                        target="__blank"
-                    >
-                        <i class="fab fa-twitter fa-2x" />
-                        <h5 class="mx-3 mb-0">
-                            Follow us!
-                        </h5>
-                    </a>
-                </div>
-            </div>
-        </div>
-
+    <div class="container-fluid">
         <div class="row my-5">
             <div class="col">
-                <div class="card card-section card-body">
-                    <div v-html="$md.render(docs)" />
+                <div class="card card-section">
+                    <div class="card-header">
+                        <div class="card-header-back">
+                            Information
+                        </div>
+
+                        <div class="card-header-sub">
+                            <div class="card-header-title">
+                                INFORMATION
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" v-html="$md.render(docs)" />
                 </div>
             </div>
         </div>

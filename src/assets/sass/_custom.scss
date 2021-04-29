@@ -15,17 +15,20 @@
         padding: 0;
 
         & > .card-header-back {
+            font-family: 'lust', sans-serif;
+            font-size: 13vh;
+            text-transform: none;
+            letter-spacing: -15px;
+            line-height: 0.6;
+            color: #22253a;
+            overflow: hidden;
+            padding: 0;
+
             border-radius: 0.25rem;
             background: rgb(145,136,194);
-            background: linear-gradient(120deg, rgba(145,136,194,1) 49%, rgba(106,182,229,1) 50%);
+            background: linear-gradient(120deg, rgba(145,136,194,1) calc(50% - 1px), rgba(106,182,229,1) 50%);
             width: 100%;
-            height: 80px;
-
-            & > img {
-                filter: invert(1);
-                max-width: 100%;
-                height: 100%;
-            }
+            height: auto;
         }
         
         & > .card-header-sub {

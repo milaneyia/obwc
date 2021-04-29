@@ -73,7 +73,7 @@ For the first time in the osu! Beatmapping World Championship, we decided to put
 **Judging Criteria** - Judging Criteria vary between judge type.
 
 1. **Mapper Judge**:
-   - **Fundamentals** - This criterion will focus on the fundamental skills of mapping. A map can show the fundamental skills of mappers in different aspects, include, but not limit to: respect to the ranking criteria, completeness of hitsounding, style and pattern consistencies throughout the difficulty, reasonale fluctuations of difficulty according to the music and many more.  
+   - **Cohesion**: This criterion will focus on how consistent the map is. All elements of the map has to remain coherent with the rhythm and the music. For instance, if the entry represents the music well and the sections from different members are integrated seamlessly without weird transitions and abrupt spikes, that entry deserves to be praised.
    - **Expertise** - This criterion will focus on the advanced skills, or expertise of mapping. A map with high expertise shows great management over note patterns, flows, movements, and even hitsounds. Those maps are outstanding compared with their peers in this contest and  mark themselves as top-tier in state-of-the-art mapping community.
    - **Creativity** - This criterion will focus on the innovativeness of the entry. The history of osu!mapping is always shaped by creative maps, showing avant-garde or even ahead-of-time understanding of mapping. Creative yet solid maps are art of osu! and thus definitely promoted in this contest.
    - **Judge's Impression** - This part is left to the Judges' sole discretion. Judges can use this for extra scores or penalties for their specific comments or remarks on something in the entry.
