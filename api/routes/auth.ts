@@ -86,14 +86,13 @@ router.get('/callback', async (ctx) => {
             country = new Country();
             country.code = userData.country.code;
             country.name = userData.country.name;
-            country.save();
+            await country.save();
         }
 
         user = new User();
         user.osuId = osuId;
         user.username = username;
         user.roleId = ROLE.User;
-
         user.country = country;
         await user.save();
     }

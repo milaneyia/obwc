@@ -81,7 +81,7 @@ export interface User {
     username: string;
     osuId: number;
     country: Country;
-    teamId: number;
+    teamId?: number;
     team?: Team;
     invitations: Team[];
     captainFor?: Team;
