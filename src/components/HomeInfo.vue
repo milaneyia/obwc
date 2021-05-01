@@ -1,6 +1,6 @@
 <template>
     <div class="card card-section h-100">
-        <div class="card-body d-flex flex-column justify-content-evenly">
+        <div class="card-body d-flex flex-column justify-content-between">
             <div class="home-logo" />
 
             <div class="px-2">
@@ -10,7 +10,7 @@
 
                 <a
                     class="box-link"
-                    href="#"
+                    href="https://osu.ppy.sh/community/forums/topics/1312490"
                     target="_blank"
                 />
             </div>

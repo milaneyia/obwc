@@ -189,10 +189,10 @@ export default defineComponent({
 }
 
 .fs-sm {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 .fs-xs {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
 }
 
 </style>

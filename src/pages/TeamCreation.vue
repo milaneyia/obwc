@@ -114,6 +114,7 @@
                         v-for="user in filteredUsers"
                         :key="user.id"
                         class="col"
+                        style="max-width: 15rem"
                         @click.prevent="select(user)"
                     >
                         <div
