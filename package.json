@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "run-p -rl watch-api watch-src",
-    "build-src": "vue-tsc --noEmit && vite build",
+    "build-api": "tsc --project api/tsconfig.json",
+    "build-src": "vite build",
     "serve": "vite preview",
     "watch-api": "ts-node-dev --respawn --project api/tsconfig.json api/main.ts",
     "watch-src": "vite",
+    "prod": "node dist/api/api/main.js",
     "test": "jest",
     "typeorm": "ts-node --project api/tsconfig.json ./node_modules/typeorm/cli.js"
   },
