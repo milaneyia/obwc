@@ -100,33 +100,3 @@ Scores from judges will be standardized before adding to the leaderboard. Sum of
 13. **Teams must consist of users from a single country only.**
 
 14. **Keep the organizers in touch with team updates past the preparation phase.**
-
-## Prizes
-
-*Please note that Players' Pick and top 3 prizes can be added together if a team wins both prizes!*
-
-| Placing | Prize(s) |
-| :-: | :-- |
-| **1st Place** | 8 months of osu!supporter tag, unique profile badge, entries fast-tracked over to the qualified section |
-| **2nd Place** | 6 months of osu!supporter tag, unique profile badge |
-| **3rd Place** | 4 months of osu!supporter tag, unique profile badge |
-| **Players' Pick Winner** | 2 months of osu!supporter tag, unique profile badge¹ |
-
-¹ Profile badge is pending approval
-
-## Schedule
-
-Dates are listed in YYYY-MM-DD format. All deadlines starts at 00:00AM and ends at 11:59PM
-
-| Event | Timestamp |
-| --: | :-- |
-| Registration Phase | 2021-05-02/2021-05-16 |
-| First Round - Mapping phase | 2021-05-17/2021-05-31 |
-| First Round - Judging phase | 2021-06-01/2021-06-15 |
-| Second Round - Mapping phase | 2021-06-16/2021-06-30 |
-| Second Round - Judging phase | 2021-07-01/2021-07-15 |
-| Third Round - Mapping phase | 2021-07-16/2021-07-30 |
-| Third Round - Judging phase | 2021-07-31/2021-08-14 |
-| Fourth Round - Mapping phase | 2021-08-15/2021-08-29 |
-| Fourth Round - Judging phase | 2021-08-30/2021-09-13 |
-| Results Announcement & Livestream | 2021-09-15 |
