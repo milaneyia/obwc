@@ -31,14 +31,14 @@
                             <li class="text-yellow">
                                 Only the captain should do this.
                             </li>
-                            <li>You must choose between 2 to 5 mappers</li>
-                            <li>This lists all users registered for your country since last edition of this tournament, if you don't find a specific person it's likely that they have not logged in yet</li>
-                            <li>Once submitted, selected users need to confirm by accepting your invitation (they will recieve a notification when logged in)</li>
-                            <li>Staff will finalize your registration once everyone accepted their invitation and the team's name is approved</li>
-                            <li>Be careful, users are <span class="text-yellow">locked</span> once they accept their invitation! However, captains are able to cancel invitations before they get accepted</li>
+                            <li>You must choose between 2 to 5 mappers.</li>
+                            <li>This lists all users registered for your country since last edition of this tournament, if you don't find a specific person it's likely that they have not logged in yet.</li>
+                            <li>Once submitted, selected users need to confirm by accepting your invitation (they will recieve a notification when logged in).</li>
+                            <li>Staff will finalize your registration once everyone accepted their invitation and the team's name is approved.</li>
+                            <li>Be careful, users are <span class="text-yellow">locked</span> once they accept their invitation! However, captains are able to cancel invitations before they get accepted.</li>
                             <li>Captains can change your team name before registration phase is over.</li>
-                            <li>Users that accepted your invitation are marked as <span class="text-primary">blue</span></li>
-                            <li>Choose responsibly</li>
+                            <li>Users that accepted your invitation are marked as <span class="text-primary">blue</span>.</li>
+                            <li>Choose responsibly.</li>
                         </ul>
                     </div>
                 </div>
