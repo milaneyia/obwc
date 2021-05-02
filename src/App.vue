@@ -36,7 +36,7 @@
                         STAFF
                     </router-link>
                 </li> -->
-                <li v-if="user && !user.team" class="nav-item">
+                <li v-if="user && !user.team && isRegistrationOpen" class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'team-creation' }">
                         TEAM CREATION
                     </router-link>
@@ -114,11 +114,11 @@
 
     <footer class="footer mt-auto bg-dark">
         <div class="d-flex justify-content-between align-items-center pe-3">
-            <div class="d-flex w-100 align-items-center ">
+            <div class="d-flex w-100 align-items-center">
                 <a
                     href="https://2020.obwc.net"
                     target="_blank"
-                    class="me-4 d-none d-sm-inline-block"
+                    class="me-4"
                 >
                     <div class="footer__obwc-img" />
                 </a>
@@ -156,7 +156,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { User } from '../shared/models';
+import { Contest, User } from '../shared/models';
 import ProfilePopup from './components/ProfilePopup.vue';
 import ToastMessages from './components/ToastMessages.vue';
 
@@ -174,8 +174,21 @@ export default defineComponent({
         };
     },
 
-    computed: mapState({
-        user: (state: any) => state.loggedInUser as User | null,
-    }),
+    computed: {
+        ...mapState({
+            user: (state: any) => state.loggedInUser as User | null,
+        }),
+
+        standardContest (): Contest | undefined {
+            return this.$store.getters.standardContest;
+        },
+
+        isRegistrationOpen (): boolean {
+            if (!this.standardContest)
+                return false;
+
+            return new Date() >= new Date(this.standardContest.registrationStartedAt) && new Date() < new Date(this.standardContest.registrationEndedAt);
+        },
+    },
 });
 </script>

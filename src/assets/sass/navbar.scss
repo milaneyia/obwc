@@ -1,0 +1,13 @@
+.navbar-custom {
+    border-bottom: 2px solid $blue;
+    background-image: url('../heading_logo.png');
+    background-repeat: no-repeat;
+    background-size: 120px;
+}
+
+.nav-link {
+    &:hover, &.active {
+        border-bottom: 1px solid $blue;
+        transition: border-bottom ease-in-out .25s;
+    }
+}

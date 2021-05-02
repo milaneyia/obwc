@@ -162,7 +162,7 @@ export default defineComponent({
                 case 3:
                     return 'THIRD';
                 case 4:
-                    return 'FORTH';
+                    return 'FOURTH';
                 case 5:
                     return 'FIFTH';
                 default:

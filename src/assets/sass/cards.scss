@@ -1,7 +1,14 @@
-.nav-link {
-    &:hover, &.active {
-        border-bottom: 1px solid $blue;
-        transition: border-bottom ease-in-out .25s;
+.card-user {
+    cursor: pointer;
+
+    &-container {
+        width: 9.5rem;
+        max-width: 9.5rem;
+
+        @include media-breakpoint-up(sm) {
+            width: 11rem;
+            max-width: 11rem;
+        }
     }
 }
 
@@ -49,8 +56,4 @@
             }
         }
     }
-}
-
-.modal-header {
-    background-color: #833f5c;
 }

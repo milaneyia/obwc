@@ -1,0 +1,15 @@
+body {
+    text-transform: uppercase;
+
+    &::before {
+        content: " ";
+        background-image: url('../bg_tile.png');
+        background-size: 366px 366px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+}

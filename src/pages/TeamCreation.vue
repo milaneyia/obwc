@@ -109,16 +109,15 @@
                     </div>
                 </div>
 
-                <div class="row row-cols-12 g-4">
+                <div class="row g-4 justify-content-center justify-content-sm-start">
                     <div
                         v-for="user in filteredUsers"
                         :key="user.id"
-                        class="col"
-                        style="max-width: 15rem"
+                        class="card-user-container"
                         @click.prevent="select(user)"
                     >
                         <div
-                            class="card card-body justify-content-center align-items-center card-user"
+                            class="card card-body justify-content-center align-items-center h-100 card-user"
                             :class="selectedClass(user)"
                         >
                             <div
@@ -126,7 +125,7 @@
                                 :style="`background-image: url(https://a.ppy.sh/${user.osuId})`"
                             />
 
-                            <div class="mt-5">
+                            <div class="mt-5 w-100 text-center">
                                 {{ user.username }}
                             </div>
                         </div>
@@ -248,10 +247,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-
-.card-user {
-    cursor: pointer;
-}
 
 .btn-mode-radio {
     color: var(--bs-white);
