@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <div class="row my-5">
+        <div class="row mb-5">
             <div class="col">
                 <div class="card card-section">
                     <div class="card-header">
