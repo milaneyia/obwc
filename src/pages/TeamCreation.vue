@@ -36,6 +36,7 @@
                             <li>Once submitted, selected users need to confirm by accepting your invitation (they will recieve a notification when logged in)</li>
                             <li>Staff will finalize your registration once everyone accepted their invitation and the team's name is approved</li>
                             <li>You are free to perform any edits <span class="text-yellow">before</span> your team is finalized by staff</li>
+                            <li>Choose responsibly, users that accepted your invitation are marked as <span class="text-primary">blue</span></li>
                         </ul>
                     </div>
                 </div>
@@ -150,6 +151,7 @@ export default defineComponent({
             openContests: [] as Contest[],
             users: [] as User[],
             selectedUsers: [] as User[],
+            acceptedUsers: [] as User[],
             selectedContest: null as Contest | null,
             loading: false,
         };
@@ -173,7 +175,6 @@ export default defineComponent({
             this.$http.get<Team | undefined>('/api/teams/mine'),
         ]);
 
-        this.users = users;
         this.openContests = openContests;
 
         if (openContests.length) {
@@ -184,14 +185,25 @@ export default defineComponent({
             this.name = team.name;
             this.selectedContest = team.contest;
             this.selectedUsers = [
-                ...team.users,
                 ...team.invitations,
+                ...team.users.filter(u => !team.invitations.some(i => i.id === u.id)),
             ];
+            this.acceptedUsers = team.users;
+
+            this.users = [
+                ...users,
+                ...team.users,
+            ];
+        } else {
+            this.users = users;
         }
     },
 
     methods: {
         select (user: User) {
+            if (this.acceptedUsers.some(u => u.id === user.id))
+                return;
+
             const i = this.selectedUsers.findIndex(u => u.id === user.id);
 
             if (i !== -1) {
@@ -202,6 +214,10 @@ export default defineComponent({
         },
 
         selectedClass (user: User) {
+            if (this.acceptedUsers.some(u => u.id === user.id)) {
+                return 'bg-primary text-dark border-primary cursor-default';
+            }
+
             if (this.selectedUsers.some(u => u.id === user.id)) {
                 return 'bg-yellow text-dark border-yellow';
             }
@@ -247,6 +263,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+
+.cursor-default {
+    cursor: default;
+}
 
 .btn-mode-radio {
     color: var(--bs-white);

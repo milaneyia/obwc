@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { IsNull, Not } from 'typeorm';
+import { Brackets, IsNull, Not } from 'typeorm';
 import validator from 'validator';
 import { Team } from '../models/Team';
 import { authenticate } from '../middlewares/authentication';
@@ -41,12 +41,7 @@ teamsRouter.post('/', authenticate, async (ctx) => {
     const user: User = ctx.state.user;
     const input: CreateTeam = ctx.request.body;
     const name = validator.trim(input.name);
-    const [users, currentTeam, contest] = await Promise.all([
-        User.findByIds(input.invitations, {
-            countryId: user.country.id,
-            teamId: IsNull(),
-            id: Not(user.id),
-        }),
+    const [currentTeam, contest] = await Promise.all([
         Team.findOne({
             captain: user,
         }),
@@ -54,6 +49,26 @@ teamsRouter.post('/', authenticate, async (ctx) => {
             .andWhere('id = :id', { id: input.contest.id })
             .getOne(),
     ]);
+
+    let users: User[] = [];
+
+    if (currentTeam) {
+        users = await User.createQueryBuilder('user')
+            .where('countryId = :countryId', { countryId: user.country.id })
+            .andWhere('id != :userId', { userId: user.id })
+            .andWhere('id IN (:ids)', { ids: input.invitations.map(i => i.id) })
+            .andWhere(new Brackets(qb => {
+                qb.where('teamId IS NULL')
+                    .orWhere('teamId = :teamId', { teamId: currentTeam.id });
+            }))
+            .getMany();
+    } else {
+        users = await User.findByIds(input.invitations, {
+            id: Not(user.id),
+            countryId: user.country.id,
+            teamId: IsNull(),
+        });
+    }
 
     if (
         !validator.isLength(name, {

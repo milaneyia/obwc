@@ -1,5 +1,7 @@
 # osu! Beatmapping World Championship 2021 - Summary of the Official Documentation (osu!)
 
+**Read the full documentation [here](https://gist.github.com/zeusminus/5b7cac0cbd6bcec422776dac5085f25f).**
+
 ## Website
 
 ### Introduction
