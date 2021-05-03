@@ -81,8 +81,8 @@ export interface User {
     username: string;
     osuId: number;
     country: Country;
-    teamId?: number;
-    team?: Team;
+    teamId?: number | null;
+    team?: Team | null;
     invitations: Team[];
     captainFor?: Team;
     isStaff: boolean;
