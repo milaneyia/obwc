@@ -50,6 +50,14 @@ teamsRouter.post('/', authenticate, async (ctx) => {
             .getOne(),
     ]);
 
+    if (currentTeam?.wasConfirmed) {
+        ctx.status = 400;
+
+        return ctx.body = {
+            error: 'Team was locked by a staff member',
+        };
+    }
+
     let users: User[] = [];
 
     if (currentTeam) {
@@ -108,6 +116,9 @@ teamsRouter.post('/', authenticate, async (ctx) => {
 
 teamsRouter.post('/:id/acceptInvitation', authenticate, async (ctx) => {
     const team = await Team.findOneOrFail(ctx.params.id, {
+        where: {
+            wasConfirmed: false,
+        },
         relations: [
             'invitations',
             'users',

@@ -29,12 +29,12 @@ export class User extends BaseEntity {
     country!: Country;
 
     @Column({ nullable: true })
-    teamId?: number;
+    teamId?: number | null;
 
     @ManyToOne(() => Team, (team) => team.users, {
         onDelete: 'SET NULL',
     })
-    team?: Team;
+    team?: Team | null;
 
     @ManyToMany(() => Team, (team) => team.invitations)
     invitations!: Team[];
