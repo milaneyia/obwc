@@ -55,7 +55,10 @@
 
                             <div class="col-8">
                                 <div class="prize__detail w-100">
-                                    <div class="prize__badge" :class="i === 0 ? 'prize__badge--black' : ''" />
+                                    <div
+                                        class="prize__badge"
+                                        :style="{ 'background-image': 'url(' + getImgSrc(i) + ')' }"
+                                    />
                                     <div class="my-2">
                                         <i class="fas fa-plus fa-2x" />
                                     </div>
@@ -73,6 +76,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import badge1 from '../assets/badge_1.png';
+import badge2 from '../assets/badge_2.png';
+import badge3 from '../assets/badge_3.png';
+import badge4 from '../assets/badge_4.png';
 
 export default defineComponent({
     name: 'HomePrizes',
@@ -85,7 +92,19 @@ export default defineComponent({
                 { supporter: 4, bg: 'background-color: #5c5c5c', text: 'text-white', sup: 'rd' },
                 { supporter: 2, bg: 'background-color: #9188c2', text: 'text-white' },
             ],
+            badges: [
+                badge1,
+                badge2,
+                badge3,
+                badge4,
+            ],
         };
+    },
+
+    methods: {
+        getImgSrc (index: number) {
+            return this.badges[index];
+        },
     },
 });
 </script>
@@ -99,14 +118,9 @@ export default defineComponent({
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
-        background-image: url('../assets/badge.png');
         max-width: 100%;
         min-width: 130px;
         min-height: 85px;
-
-        &--black {
-            background-image: url('../assets/badge_black.png');
-        }
     }
 
     &__players {
