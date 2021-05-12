@@ -1,6 +1,4 @@
 body {
-    text-transform: uppercase;
-
     &::before {
         content: " ";
         background-image: url('../bg_tile.png');
