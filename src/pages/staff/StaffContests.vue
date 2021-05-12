@@ -4,6 +4,7 @@
             <div class="col-sm">
                 <data-table
                     :items="contests"
+                    :fields="fields"
                 >
                     <template #actions="{ item: contest }">
                         <button
@@ -36,7 +37,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Contest } from '../../../shared/models';
-import DataTable from '../../components/DataTable.vue';
+import DataTable, { Field, Format } from '../../components/DataTable.vue';
 import StaffContestUpdate from '../../components/StaffContestUpdate.vue';
 
 export default defineComponent({
@@ -51,6 +52,14 @@ export default defineComponent({
         return {
             contests: [] as Contest[],
             selectedContest: null as Contest | null,
+
+            fields: [
+                'id',
+                'name',
+                { key: 'announcementAt', label: 'Announcement Date', formatter: Format.DateTimeString },
+                { key: 'registrationStartedAt', label: 'Registration Start', formatter: Format.DateTimeString },
+                { key: 'registrationEndedAt', label: 'Registration Start', formatter: Format.DateTimeString },
+            ] as Field[],
         };
     },
 
