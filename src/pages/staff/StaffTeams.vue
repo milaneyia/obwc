@@ -3,9 +3,17 @@
         <div class="row">
             <div class="col-sm">
                 <data-table
-                    :items="formattedTeams"
-                    :fields="['name', 'country', 'captain', 'usersNames', 'invitationsNames']"
+                    :items="teams"
+                    :fields="fields"
                 >
+                    <template #cell-users="{ value: users }">
+                        <users-links :users="users" />
+                    </template>
+
+                    <template #cell-invitations="{ value: invitations }">
+                        <users-links :users="invitations" />
+                    </template>
+
                     <template #actions="{ item: team }">
                         <button
                             class="btn btn-sm btn-primary me-2"
@@ -46,34 +54,31 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Team } from '../../../shared/models';
-import DataTable from '../../components/DataTable.vue';
+import { Country, Team, User } from '../../../shared/models';
+import DataTable, { Field } from '../../components/DataTable.vue';
 import StaffTeamUpdate from '../../components/StaffTeamUpdate.vue';
+import UsersLinks from './UsersLinks';
 
 export default defineComponent({
     components: {
         DataTable,
         StaffTeamUpdate,
+        UsersLinks,
     },
 
     data () {
         return {
             teams: [] as Team[],
             selectedTeam: null as Team | null,
-        };
-    },
 
-    computed: {
-        formattedTeams (): Record<string, any>[] {
-            return this.teams.map(t => ({
-                ...t,
-                name: t.name,
-                country: t.country.name,
-                captain: t.captain.username,
-                usersNames: t.users.map(u => u.username).join(', '),
-                invitationsNames: t.invitations.map(u => u.username).join(', '),
-            }));
-        },
+            fields: [
+                { key: 'country', label: 'Country', formatter: (country: Country) => country.name },
+                { key: 'name', label: 'Name' },
+                { key: 'captain', label: 'Captain', formatter: (captain: User) => captain.username },
+                { key: 'users', label: 'Accepted Users' },
+                { key: 'invitations', label: 'Invited Users' },
+            ] as Field[],
+        };
     },
 
     async created () {
