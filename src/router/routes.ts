@@ -76,7 +76,8 @@ const routes = [
 
     // Staff
     {
-        path: '/staff/teams',
+        path: '/staff/contests/:id?/teams',
+        alias: '/staff/teams',
         component: StaffTeams,
         name: 'staff-teams',
         meta: {

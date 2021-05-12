@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Country, Team, User } from '../../../shared/models';
+import { ContestMode, Country, Team, User } from '../../../shared/models';
 import DataTable, { Field } from '../../components/DataTable.vue';
 import StaffTeamUpdate from '../../components/StaffTeamUpdate.vue';
 import UsersLinks from './UsersLinks';
@@ -102,7 +102,7 @@ export default defineComponent({
     },
 
     async created () {
-        const { data } = await this.$http.get('/api/staff/teams');
+        const { data } = await this.$http.get(`/api/staff/contests/${this.$route.params.id || ContestMode.Standard}/teams`);
         this.teams = data;
     },
 

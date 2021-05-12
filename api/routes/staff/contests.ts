@@ -3,6 +3,7 @@ import validator from 'validator';
 import { CreateContest } from '../../../shared/integration';
 import { authenticate, isStaff } from '../../middlewares/authentication';
 import { Contest } from '../../models/Contest';
+import { Team } from '../../models/Team';
 
 const staffContestsRouter = new Router();
 staffContestsRouter.prefix('/api/staff/contests');
@@ -22,6 +23,18 @@ staffContestsRouter.put('/:id', async (ctx) => {
     await contest.save();
 
     ctx.body = contest;
+});
+
+staffContestsRouter.get('/:id/teams', async (ctx) => {
+    ctx.body = await Team.createQueryBuilder('team')
+        .innerJoinAndSelect('team.captain', 'captain')
+        .innerJoinAndSelect('team.country', 'country')
+        .leftJoinAndSelect('team.users', 'users')
+        .leftJoinAndSelect('team.invitations', 'invitations')
+        .where('team.contestId = :contestId', { contestId: ctx.params.id })
+        .orderBy('country.name', 'ASC')
+        .addOrderBy('team.name', 'ASC')
+        .getMany();
 });
 
 export default staffContestsRouter;
