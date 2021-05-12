@@ -1,5 +1,23 @@
 <template>
     <div class="container">
+        <div class="row mb-2">
+            <div class="col-sm">
+                <button class="btn btn-sm btn-info me-2" @click="generateTeamList(false)">
+                    generate list
+                </button>
+                <button class="btn btn-sm btn-info" @click="generateTeamList(true)">
+                    generate list (only confirmed)
+                </button>
+
+                <textarea
+                    v-if="generatedTeamList"
+                    v-model.trim="generatedTeamList"
+                    class="my-4 bg-white text-dark form-control form-control-sm fs-xs"
+                    rows="10"
+                />
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm">
                 <data-table
@@ -78,6 +96,8 @@ export default defineComponent({
                 { key: 'users', label: 'Accepted Users' },
                 { key: 'invitations', label: 'Invited Users' },
             ] as Field[],
+
+            generatedTeamList: '',
         };
     },
 
@@ -119,6 +139,16 @@ export default defineComponent({
             if (i !== -1) {
                 this.teams.splice(i, 1);
             }
+        },
+
+        generateTeamList (confirmed: boolean) {
+            if (this.generatedTeamList && !confirm('this will reset the view')) return;
+
+            let teams: Team[] = confirmed ? this.teams.filter(t => t.wasConfirmed) : this.teams;
+
+            this.generatedTeamList = `|  | Country | Name | Members |\n| :-: | :-: | :-: | :-- |\n`;
+
+            this.generatedTeamList += teams.map(t => `| ![][flag_${t.country.code}] | **${t.country.name}** | **${t.name}** | **[${t.captain.username}](https://osu.ppy.sh/users/${t.captain.osuId})**, ${t.users.map(u => `[${u.username}](https://osu.ppy.sh/users/${u.osuId})`).join(', ')} |\n`);
         },
     },
 });
