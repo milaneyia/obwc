@@ -88,7 +88,7 @@ export default defineComponent({
         return {
             prizes: [
                 { supporter: 8, bg: 'background-color: #facb5b', text: 'text-dark', sup: 'st' },
-                { supporter: 6, bg: 'background-color: #3bbce1', text: 'text-white', sup: 'nd' },
+                { supporter: 6, bg: 'background-color: #75b6e5', text: 'text-white', sup: 'nd' },
                 { supporter: 4, bg: 'background-color: #5c5c5c', text: 'text-white', sup: 'rd' },
                 { supporter: 2, bg: 'background-color: #9188c2', text: 'text-white' },
             ],
