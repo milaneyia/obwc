@@ -266,10 +266,6 @@ export default defineComponent({
 
 <style lang="scss">
 
-.cursor-default {
-    cursor: default;
-}
-
 .btn-mode-radio {
     color: var(--bs-white);
     border-color: var(--bs-white);

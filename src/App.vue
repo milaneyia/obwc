@@ -86,9 +86,12 @@
                         <i v-if="!user.teamId && !user.captainFor" class="fas fa-exclamation-circle text-danger" />
                         {{ user.username }}
                     </a>
-                    <span v-else class="px-2">
+                    <div
+                        v-else
+                        class="py-2 px-3 cursor-default"
+                    >
                         {{ user.username }}
-                    </span>
+                    </div>
                 </li>
                 <li class="nav-item px-2">
                     <a
