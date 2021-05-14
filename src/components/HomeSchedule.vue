@@ -97,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center fs-sm mb-2 px-3 py-0">
+            <div v-if="schedule.results" class="d-flex justify-content-between align-items-center fs-sm mb-2 px-3 py-0">
                 <div>RESULTS ANNOUNCEMENT + LIVESTREAM</div>
                 <time-string div :timestamp="schedule.results" />
             </div>
@@ -107,68 +107,30 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Contest, Round } from '../../shared/models';
+import { Contest } from '../../shared/models';
+import { Schedule } from '../store/main';
+import { UPDATE_ROUNDS } from '../store/main-types';
 import TimeString from './TimeString.vue';
 
-interface Schedule {
-    announcement: Date | null,
-    registration: [Date, Date],
-    rounds: { title: string, mapping: [Date, Date], judging: [Date, Date] }[],
-    results: Date | null,
-}
 
 export default defineComponent({
     name: 'HomeSchedule',
-    components: { TimeString },
 
-    data () {
-        return {
-            schedule: null as Schedule | null,
-        };
-    },
+    components: { TimeString },
 
     computed: {
         standardContest (): Contest {
             return this.$store.getters.standardContest;
         },
+        schedule (): Schedule | undefined {
+            return this.$store.getters.schedule;
+        },
     },
 
     async created () {
-        if (!this.standardContest) {
-            return;
+        if (this.standardContest) {
+            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
         }
-
-        const { data: rounds } = await this.$http.get<Round[]>(`/api/contests/${this.standardContest.id}/rounds`);
-
-        this.schedule = {
-            announcement: this.standardContest.announcementAt,
-            registration: [this.standardContest.registrationStartedAt, this.standardContest.registrationEndedAt],
-            rounds: rounds.map(r => ({
-                title: this.numberToOrdinal(r.id) + ' ROUND',
-                mapping: [r.submissionsStartedAt, r.submissionsEndedAt],
-                judging: [r.judgingStartedAt, r.judgingEndedAt],
-            })),
-            results: rounds[rounds.length - 1].resultsAt,
-        };
-    },
-
-    methods: {
-        numberToOrdinal (id: number): string {
-            switch (id) {
-                case 1:
-                    return 'FIRST';
-                case 2:
-                    return 'SECOND';
-                case 3:
-                    return 'THIRD';
-                case 4:
-                    return 'FOURTH';
-                case 5:
-                    return 'FIFTH';
-                default:
-                    return id.toString();
-            }
-        },
     },
 });
 </script>

@@ -4,8 +4,8 @@
             <div class="home-logo" />
 
             <div class="px-2">
-                <div class="bg-white text-dark rounded-pill p-1 text-center fw-bold my-2">
-                    MAY 02 - NOV 15
+                <div v-if="schedule" class="bg-white text-dark rounded-pill p-1 text-center text-uppercase fw-bold my-2">
+                    {{ formatDate(schedule.announcement) }} - {{ formatDate(schedule.results) }}
                 </div>
 
                 <a
@@ -20,9 +20,24 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Schedule } from '../store/main';
 
 export default defineComponent({
     name: 'HomeInfo',
+
+    computed: {
+        schedule (): Schedule | undefined {
+            return this.$store.getters.schedule;
+        },
+    },
+
+    methods: {
+        formatDate (date: Date | null): string {
+            if (!date) return '--';
+
+            return new Date(date).toLocaleString('en-US', { month: 'short', day: '2-digit' });
+        },
+    },
 });
 </script>
 
