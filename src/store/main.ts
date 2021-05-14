@@ -1,15 +1,16 @@
 import { createStore } from 'vuex';
 import { Contest } from '../../api/models/Contest';
-import { User, ContestMode } from '../../shared/models';
+import { User, ContestMode, Team } from '../../shared/models';
 import http from '../http';
 import judgingModule from './judging';
-import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, SET_INITIALIZED } from './main-types';
+import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, UPDATE_TEAMS, SET_INITIALIZED } from './main-types';
 import toastsModule from './toasts';
 
 export interface MainState {
     initialized: boolean;
     loggedInUser: User | null;
     contests: Contest[];
+    teams: Team[];
 }
 
 export const store = createStore<MainState>({
@@ -22,6 +23,7 @@ export const store = createStore<MainState>({
         initialized: false,
         loggedInUser: null,
         contests: [],
+        teams: [],
     },
 
     mutations: {
@@ -35,6 +37,10 @@ export const store = createStore<MainState>({
 
         [UPDATE_CONTESTS] (state, contests) {
             state.contests = contests;
+        },
+
+        [UPDATE_TEAMS] (state, teams) {
+            state.teams = teams;
         },
     },
 
@@ -62,6 +68,11 @@ export const store = createStore<MainState>({
         async [UPDATE_CONTESTS] ({ commit }) {
             const { data: contests } = await http.get<Contest[]>('/api/contests');
             commit(UPDATE_CONTESTS, contests);
+        },
+
+        async [UPDATE_TEAMS] ({ commit }) {
+            const { data: teams } = await http.get<Team[]>('/api/teams');
+            commit(UPDATE_TEAMS, teams);
         },
     },
 

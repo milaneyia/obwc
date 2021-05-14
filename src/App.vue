@@ -21,11 +21,11 @@
                         INFO
                     </router-link>
                 </li>
-                <!-- <li class="nav-item">
-                    <router-link class="nav-link" to="/info">
+                <li v-if="!isRegistrationOpen" class="nav-item">
+                    <router-link class="nav-link" :to="{ name: 'teams' }">
                         TEAMS
                     </router-link>
-                </li> -->
+                </li>
                 <!-- <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'results', params: { id: 1 } }">
                         RESULTS
@@ -78,6 +78,7 @@
             <template v-else>
                 <li class="nav-item">
                     <a
+                        v-if="isRegistrationOpen"
                         class="nav-link px-2"
                         href="#"
                         @click.prevent="showProfilePopup = !showProfilePopup"
@@ -85,6 +86,9 @@
                         <i v-if="!user.teamId && !user.captainFor" class="fas fa-exclamation-circle text-danger" />
                         {{ user.username }}
                     </a>
+                    <span v-else class="px-2">
+                        {{ user.username }}
+                    </span>
                 </li>
                 <li class="nav-item px-2">
                     <a

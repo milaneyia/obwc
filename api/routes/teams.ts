@@ -17,6 +17,8 @@ teamsRouter.get('/', async (ctx) => {
             wasConfirmed: true,
         },
         relations: [
+            'country',
+            'captain',
             'users',
         ],
     });

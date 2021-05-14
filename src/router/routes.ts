@@ -2,6 +2,7 @@
 import Home from '../pages/Home.vue';
 const Login = () => import('../pages/Login.vue');
 const Info = () => import('../pages/Info.vue');
+const Teams = () => import('../pages/Teams.vue');
 const Results = () => import('../pages/Results.vue');
 
 const TeamCreation = () => import('../pages/TeamCreation.vue');
@@ -30,6 +31,14 @@ const routes = [
         name: 'info',
         meta: {
             title: 'Info | o!bwc',
+        },
+    },
+    {
+        path: '/teams',
+        component: Teams,
+        name: 'teams',
+        meta: {
+            title: 'Teams | o!bwc',
         },
     },
     {
