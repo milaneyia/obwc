@@ -42,7 +42,7 @@
 
                         <div class="col-lg-10">
                             <div class="card card-body border-2 border-purple rounded-2 h-100">
-                                <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 gap-2">
+                                <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-2">
                                     <a
                                         class="col d-flex flex-column align-items-center justify-content-between user-link"
                                         :href="`https://osu.ppy.sh/users/${team.captain.osuId}`"
