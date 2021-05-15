@@ -22,7 +22,7 @@
                     >
                         <div class="col-lg-2 mb-2 mb-lg-0">
                             <div class="card card-body flex-column align-items-center justify-content-between border-2 border-yellow rounded-2 ms-auto">
-                                <div class="fst-italic fs-sm text-yellow">
+                                <div class="fst-italic fs-sm text-yellow text-center text-break">
                                     {{ team.name }}
                                 </div>
                                 <img
@@ -34,7 +34,7 @@
                                 <div class="text-yellow fs-sm fw-lighter">
                                     TEAM
                                 </div>
-                                <div class="text-uppercase">
+                                <div class="text-uppercase text-center text-break">
                                     {{ team.country.name }}
                                 </div>
                             </div>
@@ -57,7 +57,9 @@
                                             <div class="fs-sm text-yellow">
                                                 CAPTAIN
                                             </div>
-                                            <div>{{ team.captain.username }}</div>
+                                            <div class="text-center text-break">
+                                                {{ team.captain.username }}
+                                            </div>
                                         </div>
                                     </a>
 
@@ -72,7 +74,7 @@
                                             class="avatar avatar--x-large mb-2"
                                             :style="`background-image: url(https://a.ppy.sh/${user.osuId})`"
                                         />
-                                        <div>
+                                        <div class="text-center text-break">
                                             {{ user.username }}
                                         </div>
                                     </a>
