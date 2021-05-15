@@ -12,6 +12,7 @@ export async function simpleAuthenticate(ctx: ParameterizedContext, next: Next):
                 id: ctx.session!.userId,
             },
             relations: [
+                'captainFor',
                 'team',
                 'invitations',
                 'invitations.captain',

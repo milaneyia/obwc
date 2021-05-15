@@ -8,7 +8,7 @@
     "serve": "vite preview",
     "watch-api": "ts-node-dev --respawn --project api/tsconfig.json api/main.ts",
     "watch-src": "vite",
-    "prod": "node dist/api/main.js",
+    "prod": "set NODE_ENV=production&& node dist/api/main.js",
     "test": "jest",
     "typeorm": "ts-node --project api/tsconfig.json ./node_modules/typeorm/cli.js"
   },
@@ -16,7 +16,9 @@
     "@koa/router": "^10.0.0",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0",
+    "googleapis": "^39.2.0",
     "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",
     "koa-helmet": "^6.1.0",
     "koa-logger": "^3.2.1",
