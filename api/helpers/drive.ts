@@ -34,8 +34,8 @@ function verifyFile (file: FFile | undefined): void {
 }
 
 export async function createFile (file: FFile | undefined, fileName: string): Promise<string> {
-    init();
     verifyFile(file);
+    init();
 
     const drive = google.drive('v3');
     const { data } = await drive.files.create({
@@ -54,8 +54,8 @@ export async function createFile (file: FFile | undefined, fileName: string): Pr
 }
 
 export async function updateFile (id: string, file: FFile | undefined, fileName: string): Promise<string> {
-    init();
     verifyFile(file);
+    init();
 
     const drive = google.drive('v3');
     const { data } = await drive.files.update({
