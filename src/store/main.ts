@@ -102,6 +102,10 @@ export const store = createStore<MainState>({
 
             return schedule;
         },
+
+        currentSubmissionRound (state): Round | undefined {
+            return state.rounds.find(r => new Date() >= new Date(r.submissionsStartedAt) && new Date() < new Date(r.submissionsEndedAt));
+        },
     },
 
     actions: {

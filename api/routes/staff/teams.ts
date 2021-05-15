@@ -55,9 +55,6 @@ staffTeamsRouter.put('/:id/removeUser', async (ctx) => {
     if (user.teamId === teamId) {
         user.teamId = null;
         await user.save();
-
-        console.log(user);
-
     }
 
     const team = await Team.findOneOrFail({

@@ -70,7 +70,6 @@ router.get('/callback', async (ctx) => {
         oauthData = await osu.getToken(code);
         userData = await osu.getUserInfo(oauthData.access_token);
     } catch (error) {
-        console.log(error);
         ctx.status = 500;
 
         return ctx.redirect('/error');
