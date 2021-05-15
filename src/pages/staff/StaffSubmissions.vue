@@ -15,14 +15,6 @@
                     :fields="fields"
                     :items="submissions"
                 >
-                    <template #cell-originalPath="cellProps">
-                        <a
-                            v-if="cellProps.value"
-                            :href="`/api/staff/submissions/${cellProps.item.id}/download`"
-                        >
-                            download
-                        </a>
-                    </template>
                     <template #actions="{ item: submission }">
                         <button
                             class="btn btn-sm btn-primary"
@@ -66,9 +58,9 @@ export default defineComponent({
     data () {
         return {
             fields: [
+                { key: 'team', label: 'Country', formatter: (team: Team) => team.country.name },
                 { key: 'team', label: 'Team', formatter: (team: Team) => team.name },
-                { key: 'updatedAt', label: 'Submission Date', formatter: Format.DateTimeString },
-                { key: 'originalPath', label: 'Download' },
+                { key: 'updatedAt', label: 'Submission Last Update', formatter: Format.DateTimeString },
                 { key: 'anonymisedAs', label: 'Anonymised As' },
             ] as Field[],
 

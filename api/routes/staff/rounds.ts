@@ -36,6 +36,7 @@ staffRoundsRouter.get('/:id/submissions', async (ctx) => {
         },
         relations: [
             'team',
+            'team.country',
         ],
     });
 

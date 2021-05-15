@@ -18,6 +18,7 @@ staffSubmissionsRouter.put('/:id', async (ctx) => {
         },
         relations: [
             'team',
+            'team.country',
         ],
     });
     submission.anonymisedAs = anonymisedAs;
