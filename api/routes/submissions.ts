@@ -16,8 +16,13 @@ submissionsRouter.use(authenticate);
 submissionsRouter.use(async (ctx, next) => {
     const user: User = ctx.state.user;
     const team = await Team.findOne({
-        captain: user,
-        wasConfirmed: true,
+        where: {
+            captain: user,
+            wasConfirmed: true,
+        },
+        relations: [
+            'country',
+        ],
     });
 
     if (!team) {
@@ -30,7 +35,12 @@ submissionsRouter.use(async (ctx, next) => {
 
 submissionsRouter.get('/', async (ctx) => {
     ctx.body = await Submission.find({
-        team: ctx.state.team,
+        where: {
+            team: ctx.state.team,
+        },
+        relations: [
+            'round',
+        ],
     });
 });
 
@@ -46,18 +56,12 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     const oszFile = ctx.request.files?.oszFile as FFile | undefined;
 
     let submission = await Submission.findOne({
-        where: {
-            round: currentRound,
-            team,
-        },
-        relations: [
-            'team',
-            'team.country',
-        ],
+        round: currentRound,
+        team,
     });
 
     let fileId = '';
-    const fileName = `${team.country.name} - ${team.name} - ${new Date().toLocaleString()}`;
+    const fileName = `${team.country.name} - ${team.name} - ${new Date().toLocaleString()}.osz`;
 
     if (!submission) {
         ctx.status = 201;

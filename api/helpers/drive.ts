@@ -20,10 +20,6 @@ export function init (): void {
 
 function generateParams (file: FFile, fileName: string): drive_v3.Params$Resource$Files$Create | drive_v3.Params$Resource$Files$Update {
     return {
-        requestBody: {
-            name: fileName,
-            parents: [config.DRIVE.OSU_FOLDER],
-        },
         media: {
             body: fs.createReadStream(file.path),
         },
@@ -42,9 +38,13 @@ export async function createFile (file: FFile | undefined, fileName: string): Pr
     verifyFile(file);
 
     const drive = google.drive('v3');
-    const { data } = await drive.files.create(
-        generateParams(file!, fileName)
-    );
+    const { data } = await drive.files.create({
+        ...generateParams(file!, fileName),
+        requestBody: {
+            name: fileName,
+            parents: [config.DRIVE.OSU_FOLDER],
+        },
+    });
 
     if (!data.id) {
         throw new Error();
@@ -60,6 +60,9 @@ export async function updateFile (id: string, file: FFile | undefined, fileName:
     const drive = google.drive('v3');
     const { data } = await drive.files.update({
         ...generateParams(file!, fileName),
+        requestBody: {
+            name: fileName,
+        },
         fileId: id,
     });
 
