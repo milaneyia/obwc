@@ -36,6 +36,15 @@
                         STAFF
                     </router-link>
                 </li> -->
+                <li class="nav-item">
+                    <router-link
+                        v-if="isValidCaptain"
+                        class="nav-link"
+                        :to="{ name: 'submissions' }"
+                    >
+                        SUBMISSIONS
+                    </router-link>
+                </li>
                 <li v-if="user && !user.team && isRegistrationOpen" class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'team-creation' }">
                         TEAM CREATION
@@ -188,6 +197,10 @@ export default defineComponent({
 
         standardContest (): Contest | undefined {
             return this.$store.getters.standardContest;
+        },
+
+        isValidCaptain (): boolean {
+            return this.user?.captainFor?.wasConfirmed || false;
         },
 
         isRegistrationOpen (): boolean {
