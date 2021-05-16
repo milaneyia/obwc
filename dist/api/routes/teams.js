@@ -14,16 +14,14 @@ const Log_1 = require("../models/Log");
 const teamsRouter = new router_1.default();
 teamsRouter.prefix('/api/teams');
 teamsRouter.get('/', async (ctx) => {
-    ctx.body = await Team_1.Team.find({
-        where: {
-            wasConfirmed: true,
-        },
-        relations: [
-            'country',
-            'captain',
-            'users',
-        ],
-    });
+    ctx.body = await Team_1.Team.createQueryBuilder('team')
+        .innerJoinAndSelect('team.captain', 'captain')
+        .innerJoinAndSelect('team.country', 'country')
+        .leftJoinAndSelect('team.users', 'users')
+        .where('team.wasConfirmed = true')
+        .orderBy('country.name', 'ASC')
+        .addOrderBy('team.name', 'ASC')
+        .getMany();
 });
 teamsRouter.get('/mine', authentication_1.authenticate, async (ctx) => {
     const user = ctx.state.user;

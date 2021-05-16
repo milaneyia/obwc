@@ -12,16 +12,14 @@ const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
 
 teamsRouter.get('/', async (ctx) => {
-    ctx.body = await Team.find({
-        where: {
-            wasConfirmed: true,
-        },
-        relations: [
-            'country',
-            'captain',
-            'users',
-        ],
-    });
+    ctx.body = await Team.createQueryBuilder('team')
+        .innerJoinAndSelect('team.captain', 'captain')
+        .innerJoinAndSelect('team.country', 'country')
+        .leftJoinAndSelect('team.users', 'users')
+        .where('team.wasConfirmed = true')
+        .orderBy('country.name', 'ASC')
+        .addOrderBy('team.name', 'ASC')
+        .getMany();
 });
 
 teamsRouter.get('/mine', authenticate, async (ctx) => {
