@@ -10,9 +10,9 @@ For this edition of the osu! Beatmapping World Championship, we are using a webs
 
 ### Registration
 
-The registration of your team will be done through the website, please note that you (or your teammates) don’t need to have any ranked mapsets to register your team or participate in the contest. Please be aware that the country you’re applying for is the one displayed on your osu! profile. 
+The registration of your team will be done through the website, please note that you (or your teammates) don’t need to have any ranked mapsets to register your team or participate in the contest. Please be aware that the country you’re applying for is the one displayed on your osu! profile.
 
-On the registration form, you’ll be asked to write down your team name, the Team Captain of your team and the list of your entire team with their osu! UID (the number right after /users/ on someone’s userpage). *No more edits of your team will be allowed once the deadline is passed.*
+On the Team Creation page, you will be asked to fill out your team name and choose your team members. This is supposed to be done by the Team Captain. *No more edits of your team will be allowed once the deadline is passed.*
 
 Your team name should abide by the following so as to avoid occurences:
 - it shouldn't be inappropriate or insulting
@@ -45,7 +45,7 @@ A typical round consists of 3 sections: the mapping section, the judging section
 
 ### Players' Pick
 
-A new prize makes its appearence in the osu! Beatmapping World Championship this year, the **Players' Pick**. A batch of 5 professional players (above #5000) will vote under specific judging criteria for their favorite entries among all the entries starting at Round 2. Note that results of Players' Pick will not influence the mapper judges as described in the leaderboard section below.
+A new prize makes its appearence in the osu! Beatmapping World Championship this year, the **Players' Pick**. A batch of 5 professional players (above #5000) will evaluate the entries under a specific judging criteria. Note that results of Players' Pick will not influence the mapper judges as described in the leaderboard section below.
 
 ### Leaderboard
 
@@ -79,7 +79,7 @@ Scores from judges will be standardized before adding to the leaderboard. Sum of
 
 2. **3-6 members per team required.**
 
-3. **Each mapper must contribute at least once during the contest.**
+3. **All team members must contribute each round throughout the contest.**
 
 4. **A team must participate in at least 3 rounds in order to be eligible for prizes.**
 
