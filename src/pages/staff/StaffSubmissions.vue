@@ -62,6 +62,7 @@ export default defineComponent({
                 { key: 'team', label: 'Country', formatter: (team: Team) => team.country.name },
                 { key: 'team', label: 'Team', formatter: (team: Team) => team.name },
                 { key: 'updatedAt', label: 'Submission Last Update', formatter: DateFormat.Locale },
+                { key: 'information', label: 'Information' },
                 { key: 'anonymisedAs', label: 'Anonymised As' },
             ] as Field[],
 

@@ -6,11 +6,12 @@ import { Team } from './Team';
 @Entity()
 export class Submission extends BaseEntity {
 
-    static fillAndSave (round: Round, team: Team, fileId: string, submission?: Submission): Promise<Submission> {
+    static fillAndSave (information: string, round: Round, team: Team, fileId: string, submission?: Submission): Promise<Submission> {
         if (!submission) {
             submission = new Submission();
         }
 
+        submission.information = information;
         submission.round = round;
         submission.team = team;
         submission.originalPath = fileId;
@@ -29,6 +30,9 @@ export class Submission extends BaseEntity {
 
     @Column()
     teamId!: number;
+
+    @Column({ type: 'text' })
+    information!: string;
 
     @ManyToOne(() => Team, (team) => team.submissions, { nullable: false })
     team!: Team;

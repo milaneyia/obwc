@@ -41,11 +41,20 @@
                                     <p v-for="song in currentRound.songs" :key="song">
                                         <a :href="song.link" target="_blank">
                                             {{ song.title }}
+
+                                            <i class="fas fa-file-download" />
                                         </a>
                                     </p>
                                 </div>
 
                                 <hr>
+
+                                <textarea
+                                    v-model="information"
+                                    class="form-control mb-2"
+                                    rows="5"
+                                    placeholder="Add details on how people participated on this entry"
+                                />
 
                                 <div>
                                     <label for="oszFile" class="form-label">.osz File (30Mb max)</label>
@@ -102,6 +111,7 @@ export default defineComponent({
         return {
             submissions: [] as Submission[],
             oszFile: null as File | null,
+            information: '',
             isSaving: false,
 
             fields: [
@@ -111,9 +121,11 @@ export default defineComponent({
         };
     },
 
-    computed: mapState({
-        user: (state: any) => state.loggedInUser as User,
-        rounds: (state: any) => state.rounds as Round[],
+    computed: {
+        ...mapState({
+            user: (state: any) => state.loggedInUser as User,
+            rounds: (state: any) => state.rounds as Round[],
+        }),
 
         standardContest (): Contest {
             return this.$store.getters.standardContest;
@@ -122,10 +134,15 @@ export default defineComponent({
         currentRound (): Round | undefined {
             return this.$store.getters.currentSubmissionRound;
         },
-    }),
+
+        currentSubmission (): Submission | undefined {
+            return this.submissions.find(s => s.round.id === this.currentRound?.id);
+        },
+    },
 
     async created (): Promise<void> {
         await this.getData();
+        this.information = this.currentSubmission?.information || '';
     },
 
     methods: {
@@ -145,10 +162,22 @@ export default defineComponent({
                 return;
             }
 
+            if (!this.information) {
+                this.$store.dispatch('addToastMessage', 'Add details about your entry');
+
+                return;
+            }
+
+            this.$store.dispatch('addToastMessage', {
+                type: 'info',
+                message: 'This may take a couple of minutes',
+            });
+
             (e?.target as HTMLInputElement).disabled = true;
             this.isSaving = true;
             const formData = new FormData();
             formData.append('oszFile', this.oszFile);
+            formData.append('information', this.information);
 
             await this.$http.post('/api/submissions', formData, {
                 headers: {

@@ -8,6 +8,7 @@ import { Round, RoundScope } from '../models/Round';
 import { User } from '../models/User';
 import { Team } from '../models/Team';
 import { cleanUpload, createFile, updateFile } from '../helpers/drive';
+import validator from 'validator';
 
 const submissionsRouter = new Router();
 submissionsRouter.prefix('/api/submissions');
@@ -54,6 +55,9 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     const team: Team = ctx.state.team;
     const currentRound: Round = ctx.state.currentRound;
     const oszFile = ctx.request.files?.oszFile as FFile | undefined;
+    const information = validator.trim(ctx.request.body.information);
+
+    if (!information) throw new Error('Need Information');
 
     let submission = await Submission.findOne({
         round: currentRound,
@@ -71,7 +75,7 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
         fileId = await updateFile(submission.originalPath, oszFile, fileName);
     }
 
-    submission = await Submission.fillAndSave(currentRound, team, fileId, submission);
+    submission = await Submission.fillAndSave(information, currentRound, team, fileId, submission);
 
     ctx.body = submission;
 

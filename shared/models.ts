@@ -26,6 +26,7 @@ export interface JudgingToCriteria {
 
 export interface Submission {
     id: number;
+    information: string;
     originalPath: string;
     anonymisedAs: string;
     round: Round;
