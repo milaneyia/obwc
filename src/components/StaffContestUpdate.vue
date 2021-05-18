@@ -127,9 +127,9 @@ export default defineComponent({
 
             const { data } = await this.$http.put<Contest>(`/api/staff/contests/${this.contestProp.id}`, {
                 name: this.contest.name,
-                announcementAt: this.contest.announcementAt,
-                registrationStartedAt: this.contest.registrationStartedAt,
-                registrationEndedAt: this.contest.registrationEndedAt,
+                announcementAt: new Date(this.contest.announcementAt),
+                registrationStartedAt: new Date(this.contest.registrationStartedAt),
+                registrationEndedAt: new Date(this.contest.registrationEndedAt),
             } as CreateContest);
             this.$emit('update:contest', data);
         },

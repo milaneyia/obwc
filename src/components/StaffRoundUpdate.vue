@@ -314,7 +314,14 @@ export default defineComponent({
         },
 
         async update () {
-            const { data } = await this.$http.put<Round>(`/api/staff/rounds/${this.roundProp.id}`, this.round);
+            const { data } = await this.$http.put<Round>(`/api/staff/rounds/${this.roundProp.id}`, {
+                ...this.round,
+                submissionsStartedAt: new Date(this.round.submissionsStartedAt),
+                submissionsEndedAt: new Date(this.round.submissionsEndedAt),
+                judgingStartedAt: new Date(this.round.judgingStartedAt),
+                judgingEndedAt: new Date(this.round.judgingEndedAt),
+                resultsAt: new Date(this.round.resultsAt),
+            });
             this.$emit('update:round', data);
         },
     },
