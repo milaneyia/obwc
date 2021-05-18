@@ -38,8 +38,9 @@
 import { defineComponent } from 'vue';
 import { CreateJudgeToRound, CreateSong } from '../../../shared/integration';
 import { Round } from '../../../shared/models';
-import DataTable, { Field, Format } from '../../components/DataTable.vue';
+import DataTable, { Field } from '../../components/DataTable.vue';
 import StaffRoundUpdate from '../../components/StaffRoundUpdate.vue';
+import { DateFormat } from '../../formatDate';
 
 export default defineComponent({
     name: 'StaffRounds',
@@ -53,11 +54,11 @@ export default defineComponent({
         return {
             fields: [
                 'id',
-                { key: 'submissionsStartedAt', label: 'Submissions Start', formatter: Format.DateTimeString },
-                { key: 'submissionsEndedAt', label: 'Submissions End', formatter: Format.DateTimeString },
-                { key: 'judgingStartedAt', label: 'Judging Start', formatter: Format.DateTimeString },
-                { key: 'judgingEndedAt', label: 'Judging End', formatter: Format.DateTimeString },
-                { key: 'resultsAt', label: 'Results', formatter: Format.DateTimeString },
+                { key: 'submissionsStartedAt', label: 'Submissions Start', formatter: DateFormat.Locale },
+                { key: 'submissionsEndedAt', label: 'Submissions End', formatter: DateFormat.Locale },
+                { key: 'judgingStartedAt', label: 'Judging Start', formatter: DateFormat.Locale },
+                { key: 'judgingEndedAt', label: 'Judging End', formatter: DateFormat.Locale },
+                { key: 'resultsAt', label: 'Results', formatter: DateFormat.Locale },
                 { key: 'judgeToRounds', label: 'Judges', formatter: this.formatJudges },
                 { key: 'songs', label: 'Songs', formatter: this.formatSongs },
             ] as Field[],

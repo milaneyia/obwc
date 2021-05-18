@@ -37,8 +37,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Contest } from '../../../shared/models';
-import DataTable, { Field, Format } from '../../components/DataTable.vue';
+import DataTable, { Field } from '../../components/DataTable.vue';
 import StaffContestUpdate from '../../components/StaffContestUpdate.vue';
+import { DateFormat } from '../../formatDate';
 
 export default defineComponent({
     name: 'StaffContests',
@@ -56,9 +57,9 @@ export default defineComponent({
             fields: [
                 'id',
                 'name',
-                { key: 'announcementAt', label: 'Announcement Date', formatter: Format.DateTimeString },
-                { key: 'registrationStartedAt', label: 'Registration Start', formatter: Format.DateTimeString },
-                { key: 'registrationEndedAt', label: 'Registration Start', formatter: Format.DateTimeString },
+                { key: 'announcementAt', label: 'Announcement Date', formatter: DateFormat.Locale },
+                { key: 'registrationStartedAt', label: 'Registration Start', formatter: DateFormat.Locale },
+                { key: 'registrationEndedAt', label: 'Registration Start', formatter: DateFormat.Locale },
             ] as Field[],
         };
     },

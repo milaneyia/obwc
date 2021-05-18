@@ -4,7 +4,7 @@ export enum DateFormat {
     /** yyyy-MM-ddThh:mm */
     Input = 'INPUT',
     /** April 1, 2 AM */
-    Locale = 'LOCALE'
+    Locale = 'LOCALE',
 }
 
 function formatValue (value: number): number | string {
@@ -29,5 +29,9 @@ export function formatDate (originalDate: Date | string, format = DateFormat.Inp
         return `${date.getFullYear()}-${month}-${day}`;
     }
 
-    return date.toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric' });
+    if (format === DateFormat.Locale) {
+        return date.toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric' });
+    }
+
+    return date.toLocaleString();
 }

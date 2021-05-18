@@ -77,8 +77,9 @@
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { Contest, Round, Submission, User } from '../../shared/models';
-import DataTable, { Field, Format } from '../components/DataTable.vue';
+import DataTable, { Field } from '../components/DataTable.vue';
 import TimeString from '../components/TimeString.vue';
+import { DateFormat } from '../formatDate';
 import { UPDATE_ROUNDS } from '../store/main-types';
 
 export default defineComponent({
@@ -95,7 +96,7 @@ export default defineComponent({
 
             fields: [
                 { key: 'round', label: 'Round', formatter: (round: Round) => round.id },
-                { key: 'updatedAt', label: 'Update Date', formatter: Format.DateTimeString },
+                { key: 'updatedAt', label: 'Update Date', formatter: DateFormat.Locale },
             ] as Field[],
         };
     },

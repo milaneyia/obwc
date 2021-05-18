@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { DateFormat } from '../formatDate';
 
 export default defineComponent({
@@ -31,7 +31,7 @@ export default defineComponent({
         },
 
         format: {
-            type: String,
+            type: String as PropType<DateFormat>,
             default: DateFormat.Date,
         },
     },
@@ -46,7 +46,7 @@ export default defineComponent({
         shortDateTimeString (value: string) {
             if (!value) return '';
 
-            return this.$formatDate(value, this.format as DateFormat);
+            return this.$formatDate(value, this.format);
         },
     },
 });

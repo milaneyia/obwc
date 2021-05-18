@@ -43,15 +43,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-
-export enum Format {
-    DateTimeString
-}
+import { DateFormat } from '../formatDate';
 
 export interface Field {
     key: string;
     label: string;
-    formatter?: ((value: any) => string) | Format;
+    formatter?: ((value: any) => string) | DateFormat;
 }
 
 export default defineComponent({
@@ -83,20 +80,10 @@ export default defineComponent({
                         };
                     }
 
-                    let formatter = f.formatter;
-
-                    if (formatter === Format.DateTimeString) {
-                        formatter = (value) => {
-                            if (!value) return '';
-
-                            return  new Date(value).toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric' });
-                        };
-                    }
-
                     return {
                         key: f.key,
                         label: f.label || f.key,
-                        formatter,
+                        formatter: f.formatter,
                     };
                 });
             }
@@ -118,7 +105,13 @@ export default defineComponent({
                 let value = item[h.key];
 
                 if (h.formatter) {
-                    value = h.formatter(value);
+                    if (!value) value = '';
+
+                    if (typeof h.formatter === 'string') {
+                        value = this.$formatDate(value, h.formatter);
+                    } else {
+                        value = h.formatter(value);
+                    }
                 }
 
                 return {

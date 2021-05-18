@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Update Round (dates are UTC)
+                        Update Round
                     </h5>
                     <button
                         type="button"
