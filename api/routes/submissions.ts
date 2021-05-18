@@ -9,6 +9,7 @@ import { User } from '../models/User';
 import { Team } from '../models/Team';
 import { cleanUpload, createFile, updateFile } from '../helpers/drive';
 import validator from 'validator';
+import { Log, LOG_TYPE } from '../models/Log';
 
 const submissionsRouter = new Router();
 submissionsRouter.prefix('/api/submissions');
@@ -80,6 +81,8 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     ctx.body = submission;
 
     await cleanUpload(oszFile!.path);
+    const user: User = ctx.state.user;
+    Log.createAndSave(`Entry ${ctx.status === 201 ? 'submitted' : 'updated'}: "${team.name}" (round ${currentRound.id}) - by "${user.username}"`, LOG_TYPE.User, user.id);
 });
 
 export default submissionsRouter;
