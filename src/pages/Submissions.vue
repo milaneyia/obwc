@@ -37,6 +37,16 @@
 
                                 <hr>
 
+                                <div v-if="currentRound.songs && currentRound.songs.length" class="text-center">
+                                    <p v-for="song in currentRound.songs" :key="song">
+                                        <a :href="song.link" target="_blank">
+                                            {{ song.title }}
+                                        </a>
+                                    </p>
+                                </div>
+
+                                <hr>
+
                                 <div>
                                     <label for="oszFile" class="form-label">.osz File (15Mb max)</label>
                                     <input
