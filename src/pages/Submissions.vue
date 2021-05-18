@@ -48,7 +48,7 @@
                                 <hr>
 
                                 <div>
-                                    <label for="oszFile" class="form-label">.osz File (15Mb max)</label>
+                                    <label for="oszFile" class="form-label">.osz File (30Mb max)</label>
                                     <input
                                         id="oszFile"
                                         class="form-control"

@@ -48,7 +48,7 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     multipart: true,
     formidable: {
         multiples: false,
-        maxFileSize: 15 * 1024 * 1024, // 15mb
+        maxFileSize: 30 * 1024 * 1024, // 30mb
     },
 }), async (ctx) => {
     const team: Team = ctx.state.team;
