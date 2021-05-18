@@ -16,6 +16,7 @@ import staffTeamsRouter from './routes/staff/teams';
 import staffContestsRouter from './routes/staff/contests';
 import staffRoundsRouter from './routes/staff/rounds';
 import staffSubmissionsRouter from './routes/staff/submissions';
+import staffLogsRouter from './routes/staff/logs';
 import { Log, LOG_TYPE } from './models/Log';
 
 const app = new Koa();
@@ -60,6 +61,7 @@ app.use(staffTeamsRouter.routes());
 app.use(staffContestsRouter.routes());
 app.use(staffRoundsRouter.routes());
 app.use(staffSubmissionsRouter.routes());
+app.use(staffLogsRouter.routes());
 
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {

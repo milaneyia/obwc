@@ -114,3 +114,10 @@ export interface Contest {
     registrationStartedAt: Date;
     registrationEndedAt: Date;
 }
+
+export interface Log {
+    id: number;
+    text: string;
+    type: string;
+    createdAt: Date;
+}

@@ -14,6 +14,7 @@ const StaffContests = () => import('../pages/staff/StaffContests.vue');
 const StaffRounds = () => import('../pages/staff/StaffRounds.vue');
 const StaffSubmissions = () => import('../pages/staff/StaffSubmissions.vue');
 const StaffJudging = () => import('../pages/staff/StaffJudging.vue');
+const StaffLogs = () => import('../pages/staff/StaffLogs.vue');
 
 const NotFound = () => import('../pages/NotFound.vue');
 
@@ -127,6 +128,15 @@ const routes = [
         name: 'staff-judging',
         meta: {
             title: 'Judging - Staff',
+            requiresStaff: true,
+        },
+    },
+    {
+        path: '/staff/logs',
+        component: StaffLogs,
+        name: 'staff-logs',
+        meta: {
+            title: 'Logs - Staff',
             requiresStaff: true,
         },
     },

@@ -70,6 +70,11 @@
                                 Teams
                             </router-link>
                         </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'staff-logs' }">
+                                Logs
+                            </router-link>
+                        </li>
                     </ul>
                 </li>
             </ul>
