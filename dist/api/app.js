@@ -20,6 +20,7 @@ const teams_2 = __importDefault(require("./routes/staff/teams"));
 const contests_2 = __importDefault(require("./routes/staff/contests"));
 const rounds_2 = __importDefault(require("./routes/staff/rounds"));
 const submissions_2 = __importDefault(require("./routes/staff/submissions"));
+const logs_1 = __importDefault(require("./routes/staff/logs"));
 const Log_1 = require("./models/Log");
 const app = new koa_1.default();
 app.keys = config_json_1.default.KOA.SESSION_KEYS;
@@ -59,6 +60,7 @@ app.use(teams_2.default.routes());
 app.use(contests_2.default.routes());
 app.use(rounds_2.default.routes());
 app.use(submissions_2.default.routes());
+app.use(logs_1.default.routes());
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {
         console.log('Error caught', err);

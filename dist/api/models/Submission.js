@@ -16,10 +16,11 @@ const Judging_1 = require("./judging/Judging");
 const Round_1 = require("./Round");
 const Team_1 = require("./Team");
 let Submission = Submission_1 = class Submission extends typeorm_1.BaseEntity {
-    static fillAndSave(round, team, fileId, submission) {
+    static fillAndSave(information, round, team, fileId, submission) {
         if (!submission) {
             submission = new Submission_1();
         }
+        submission.information = information;
         submission.round = round;
         submission.team = team;
         submission.originalPath = fileId;
@@ -42,6 +43,10 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Number)
 ], Submission.prototype, "teamId", void 0);
+__decorate([
+    typeorm_1.Column({ type: 'text' }),
+    __metadata("design:type", String)
+], Submission.prototype, "information", void 0);
 __decorate([
     typeorm_1.ManyToOne(() => Team_1.Team, (team) => team.submissions, { nullable: false }),
     __metadata("design:type", Team_1.Team)

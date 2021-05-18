@@ -11,6 +11,8 @@ const Submission_1 = require("../models/Submission");
 const Round_1 = require("../models/Round");
 const Team_1 = require("../models/Team");
 const drive_1 = require("../helpers/drive");
+const validator_1 = __importDefault(require("validator"));
+const Log_1 = require("../models/Log");
 const submissionsRouter = new router_1.default();
 submissionsRouter.prefix('/api/submissions');
 submissionsRouter.use(authentication_1.authenticate);
@@ -45,12 +47,15 @@ submissionsRouter.post('/', rounds_1.getCurrentRound(Round_1.RoundScope.Submissi
     multipart: true,
     formidable: {
         multiples: false,
-        maxFileSize: 15 * 1024 * 1024, // 15mb
+        maxFileSize: 30 * 1024 * 1024, // 30mb
     },
 }), async (ctx) => {
     const team = ctx.state.team;
     const currentRound = ctx.state.currentRound;
     const oszFile = ctx.request.files?.oszFile;
+    const information = validator_1.default.trim(ctx.request.body.information);
+    if (!information)
+        throw new Error('Need Information');
     let submission = await Submission_1.Submission.findOne({
         round: currentRound,
         team,
@@ -65,8 +70,10 @@ submissionsRouter.post('/', rounds_1.getCurrentRound(Round_1.RoundScope.Submissi
     else {
         fileId = await drive_1.updateFile(submission.originalPath, oszFile, fileName);
     }
-    submission = await Submission_1.Submission.fillAndSave(currentRound, team, fileId, submission);
+    submission = await Submission_1.Submission.fillAndSave(information, currentRound, team, fileId, submission);
     ctx.body = submission;
     await drive_1.cleanUpload(oszFile.path);
+    const user = ctx.state.user;
+    Log_1.Log.createAndSave(`Entry ${ctx.status === 201 ? 'submitted' : 'updated'}: "${team.name}" (round ${currentRound.id}) - by "${user.username}"`, Log_1.LOG_TYPE.User, user.id);
 });
 exports.default = submissionsRouter;
