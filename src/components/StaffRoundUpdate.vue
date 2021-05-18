@@ -254,10 +254,10 @@ export default defineComponent({
 
             this.round = {
                 submissionsStartedAt: this.$formatDate(round.submissionsStartedAt) as any,
-                submissionsEndedAt: this.$formatDate(round.submissionsStartedAt) as any,
-                judgingStartedAt: this.$formatDate(round.submissionsStartedAt) as any,
-                judgingEndedAt: this.$formatDate(round.submissionsStartedAt) as any,
-                resultsAt: this.$formatDate(round.submissionsStartedAt) as any,
+                submissionsEndedAt: this.$formatDate(round.submissionsEndedAt) as any,
+                judgingStartedAt: this.$formatDate(round.judgingStartedAt) as any,
+                judgingEndedAt: this.$formatDate(round.judgingEndedAt) as any,
+                resultsAt: this.$formatDate(round.resultsAt) as any,
                 judgeToRounds: [
                     ...round.judgeToRounds,
                 ],
