@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanUpload = exports.findFile = exports.updateFile = exports.createFile = exports.init = void 0;
+exports.downloadFile = exports.cleanUpload = exports.findFile = exports.updateFile = exports.createFile = exports.init = void 0;
 const fs_1 = __importDefault(require("fs"));
 const googleapis_1 = require("googleapis");
 const drive_json_1 = __importDefault(require("../../drive.json"));
@@ -80,3 +80,13 @@ async function cleanUpload(filePath) {
     await fs_1.default.promises.unlink(filePath);
 }
 exports.cleanUpload = cleanUpload;
+async function downloadFile(id) {
+    init();
+    const drive = googleapis_1.google.drive('v3');
+    const { data } = await drive.files.get({
+        fileId: id,
+        alt: 'media',
+    }, { responseType: 'stream' });
+    return data;
+}
+exports.downloadFile = downloadFile;
