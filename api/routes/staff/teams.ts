@@ -47,6 +47,39 @@ staffTeamsRouter.put('/:id', async (ctx) => {
     ctx.body = team;
 });
 
+staffTeamsRouter.put('/:id/transferOwnership', async (ctx) => {
+    const teamId = validator.toInt(ctx.params.id);
+    const userId = ctx.request.body.userId;
+    const [user, team] = await Promise.all([
+        User.findOneOrFail({ id: userId }),
+        Team.findOneOrFail({
+            where: { id: teamId },
+            relations: ['users', 'captain'],
+        }),
+    ]);
+
+    if (user.teamId !== team.id) {
+        throw new Error();
+    }
+
+    team.users.push(team.captain);
+    team.users.splice(team.users.findIndex(u => u.id === user.id), 1);
+    team.captain = user;
+    await team.save();
+
+    ctx.body = await Team.findOneOrFail({
+        where: {
+            id: teamId,
+        },
+        relations: [
+            'users',
+            'invitations',
+            'country',
+            'captain',
+        ],
+    });
+});
+
 staffTeamsRouter.put('/:id/removeUser', async (ctx) => {
     const teamId = validator.toInt(ctx.params.id);
     const userId = ctx.request.body.userId;

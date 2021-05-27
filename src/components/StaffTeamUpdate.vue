@@ -33,14 +33,25 @@
                         <hr>
 
                         <div class="row">
-                            <button
+                            <div
                                 v-for="user in users"
                                 :key="user.id"
-                                class="btn btn-sm btn-danger mr-2 mb-2"
-                                @click="removeUser(user.id)"
+                                class="col-sm-12"
                             >
-                                Remove {{ user.username }}
-                            </button>
+                                {{ user.username }}
+                                <button
+                                    class="btn btn-sm btn-danger me-2 mb-2"
+                                    @click="removeUser(user.id)"
+                                >
+                                    Remove
+                                </button>
+                                <button
+                                    class="btn btn-sm btn-danger me-2 mb-2"
+                                    @click="transferOwnership(user.id)"
+                                >
+                                    Transfer Captain Role
+                                </button>
+                            </div>
                         </div>
 
                         <hr>
@@ -53,22 +64,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >
-                        Close
-                    </button>
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        @click="update"
-                    >
-                        Save changes
-                    </button>
                 </div>
             </div>
         </div>
@@ -122,6 +117,14 @@ export default defineComponent({
                 return;
 
             const { data } = await this.$http.put<Team>(`/api/staff/teams/${this.teamProp.id}/removeUser`, {
+                userId,
+            });
+            this.$emit('update:team', data);
+            this.users = data.users;
+        },
+
+        async transferOwnership (userId: number) {
+            const { data } = await this.$http.put<Team>(`/api/staff/teams/${this.teamProp.id}/transferOwnership`, {
                 userId,
             });
             this.$emit('update:team', data);
