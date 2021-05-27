@@ -17,13 +17,19 @@
                 >
                     <template #actions="{ item: submission }">
                         <button
-                            class="btn btn-sm btn-primary"
+                            class="btn btn-sm btn-primary me-2 mb-2"
                             data-bs-toggle="modal"
                             data-bs-target="#submissionUpdate"
                             @click="selectedSubmission = submission"
                         >
                             Edit
                         </button>
+                        <a
+                            class="btn btn-sm btn-primary me-2 mb-2"
+                            :href="`/api/staff/submissions/${submission.id}/download`"
+                        >
+                            Download
+                        </a>
                     </template>
                 </data-table>
 

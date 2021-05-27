@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { drive_v3, google } from 'googleapis';
 import { File as FFile } from 'formidable';
+import { Readable } from 'stream';
 import credentials from '../../drive.json';
 import config from '../../config.json';
 
@@ -86,4 +87,16 @@ export async function findFile (id: string): Promise<drive_v3.Schema$File[]> {
 
 export async function cleanUpload (filePath: string): Promise<void> {
     await fs.promises.unlink(filePath);
+}
+
+export async function downloadFile (id: string): Promise<Readable> {
+    init();
+    const drive = google.drive('v3');
+
+    const { data } = await drive.files.get({
+        fileId: id,
+        alt: 'media',
+    }, { responseType: 'stream' });
+
+    return data;
 }
