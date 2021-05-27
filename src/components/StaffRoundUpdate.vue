@@ -314,6 +314,8 @@ export default defineComponent({
         },
 
         async update () {
+            if (!this.round) return;
+
             const { data } = await this.$http.put<Round>(`/api/staff/rounds/${this.roundProp.id}`, {
                 ...this.round,
                 submissionsStartedAt: new Date(this.round.submissionsStartedAt),
