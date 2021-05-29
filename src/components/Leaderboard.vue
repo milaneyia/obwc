@@ -1,176 +1,85 @@
 <template>
-    <div class="container">
-        <div class="row my-3">
-            <div class="col-sm">
-                <a
-                    href="#"
-                    :class="displayMode === 'criterias' ? 'border-bottom border-secondary' : ''"
-                    @click.prevent="displayMode = 'criterias'"
-                >
-                    Per criteria
-                </a>
-                |
-                <a
-                    href="#"
-                    :class="displayMode === 'judges' ? 'border-bottom border-secondary' : ''"
-                    @click.prevent="displayMode = 'judges'"
-                >
-                    Per judge
-                </a>
-                |
-                <a
-                    href="#"
-                    :class="displayMode === 'detail' ? 'border-bottom border-secondary' : ''"
-                    @click.prevent="displayMode = 'detail'"
-                >
-                    Std detail
-                </a>
-                <template v-if="round && new Date() >= new Date(round.resultsAt) && round.downloadLink">
-                    |
-                    <a
-                        :href="round.downloadLink"
-                        target="_blank"
-                    >
-                        Download all entries
-                    </a>
+    <data-table
+        v-bind="$attrs"
+        :fields="fields"
+        :items="teamsScores"
+    >
+        <template #cell-index="{ index }">
+            {{ index + 1 }}
+        </template>
+        <template #cell-team="{ item: score }">
+            <country-flag
+                :country="score.team.country"
+                :title="score.team.name"
+            />
+        </template>
+        <!-- <template v-if="displayMode === 'criterias'">
+                    <td v-for="criteria in criterias" :key="criteria.id">
+                        {{ getCriteriaScore(score, criteria.id) }}
+                    </td>
                 </template>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Team</th>
-                            <template v-if="displayMode === 'criterias'">
-                                <th
-                                    v-for="criteria in criterias"
-                                    :key="criteria.id"
-                                >
-                                    <a
-                                        href="#"
-                                        @click.prevent="sortByCriteria(criteria.id)"
-                                    >
-                                        {{ criteria.name }}
-                                    </a>
-                                </th>
-                            </template>
-                            <template v-else>
-                                <th
-                                    v-for="judge in judges"
-                                    :key="judge.id"
-                                >
-                                    <a
-                                        href="#"
-                                        @click.prevent="sortByJudge(judge.id)"
-                                    >
-                                        {{ judge.username }}
-                                    </a>
-                                </th>
-                            </template>
-                            <th>
-                                <a
-                                    href="#"
-                                    @click.prevent="sortByRawScore"
-                                >
-                                    Final Score (raw)
-                                </a>
-                            </th>
-                            <th>
-                                <a
-                                    href="#"
-                                    @click.prevent="sortByStdScore"
-                                >
-                                    Final Score (standardized)
-                                </a>
-                            </th>
-                            <th />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(score, i) in teamsScores"
-                            :key="i"
-                        >
-                            <td>{{ i + 1 }}</td>
-                            <td>
-                                <country-flag
-                                    :country="score.team.country"
-                                    :title="score.team.name"
-                                />
-                            </td>
-                            <template v-if="displayMode === 'criterias'">
-                                <td v-for="criteria in criterias" :key="criteria.id">
-                                    {{ getCriteriaScore(score, criteria.id) }}
-                                </td>
-                            </template>
-                            <template v-else>
-                                <td v-for="judge in judges" :key="judge.id">
-                                    {{ getJudgeScore(score, judge.id, displayMode === 'detail') }}
-                                </td>
-                            </template>
+                <template v-else>
+                    <td v-for="judge in judges" :key="judge.id">
+                        {{ getJudgeScore(score, judge.id, displayMode === 'detail') }}
+                    </td>
+                </template> -->
 
-                            <td>{{ score.rawFinalScore }}</td>
-                            <td>{{ getFinalScore(score.standardizedFinalScore) }}</td>
-                            <td>
-                                <a
-                                    href="#"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#detailModal"
-                                    @click.prevent="selectedScore = score"
-                                >
-                                    Detail
-                                </a>
-                            </td>
-                        </tr>
+        <!-- <td>
+                    <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#detailModal"
+                        @click.prevent="selectedScore = score"
+                    >
+                        Detail
+                    </a>
+                </td> -->
 
-                        <template v-if="displayMode === 'detail'">
-                            <tr class="cursor-default">
-                                <td />
-                                <td>AVG</td>
-                                <td v-for="judge in judges" :key="judge.id">
-                                    {{ getJudgeAvg(judge.id) }}
-                                </td>
-                                <td />
-                                <td />
-                            </tr>
-                            <tr class="cursor-default">
-                                <td />
-                                <td>SD</td>
-                                <td v-for="judge in judges" :key="judge.id">
-                                    {{ getJudgeSd(judge.id) }}
-                                </td>
-                                <td />
-                                <td />
-                            </tr>
-                            <tr class="cursor-default">
-                                <td />
-                                <td>COR</td>
-                                <td v-for="judge in judges" :key="judge.id">
-                                    {{ getJudgeCorrel(judge.id) }}
-                                </td>
-                                <td />
-                                <td />
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <template v-if="displayMode === 'detail'">
+            <tr class="cursor-default">
+                <td />
+                <td>AVG</td>
+                <td v-for="judge in judges" :key="judge.id">
+                    {{ getJudgeAvg(judge.id) }}
+                </td>
+                <td />
+                <td />
+            </tr>
+            <tr class="cursor-default">
+                <td />
+                <td>SD</td>
+                <td v-for="judge in judges" :key="judge.id">
+                    {{ getJudgeSd(judge.id) }}
+                </td>
+                <td />
+                <td />
+            </tr>
+            <tr class="cursor-default">
+                <td />
+                <td>COR</td>
+                <td v-for="judge in judges" :key="judge.id">
+                    {{ getJudgeCorrel(judge.id) }}
+                </td>
+                <td />
+                <td />
+            </tr>
+        </template>
+    </data-table>
 
-        <judging-detail
-            :submission="scoreDetail"
-        />
-    </div>
+    <judging-detail
+        :submission="scoreDetail"
+    />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapState } from 'vuex';
 import { JudgeCorrel, TeamScore } from '../../api/helpers/results';
 import { Results } from '../../shared/integration';
-import { Criteria, Round, Submission, User } from '../../shared/models';
+import { Contest, Criteria, Round, Submission, Team, User } from '../../shared/models';
+import { UPDATE_ROUNDS } from '../store/main-types';
 import CountryFlag from './CountryFlag.vue';
+import DataTable, { Field } from './DataTable.vue';
 import JudgingDetail from './JudgingDetail.vue';
 
 export default defineComponent({
@@ -179,22 +88,38 @@ export default defineComponent({
     components: {
         CountryFlag,
         JudgingDetail,
+        DataTable,
+    },
+
+    props: {
+        displayMode: {
+            type: String,
+            required: true,
+        },
     },
 
     data () {
         return {
             selectedScore: null as TeamScore | null,
-            displayMode: 'criterias' as 'criterias' | 'judges' | 'detail',
             sortDesc: false,
 
             round: null as Round | null,
             criterias: [] as Criteria[],
             teamsScores: [] as TeamScore[],
             judgesCorrel: [] as JudgeCorrel[],
+
         };
     },
 
     computed: {
+        ...mapState({
+            rounds: (state: any) => state.rounds as Round[],
+        }),
+
+        standardContest (): Contest {
+            return this.$store.getters.standardContest;
+        },
+
         scoreDetail (): Submission | undefined {
             if (this.selectedScore) {
                 return this.round?.submissions?.find(s => s.team.id == this.selectedScore?.team.id);
@@ -206,10 +131,46 @@ export default defineComponent({
         judges (): User[] {
             return this.round?.judgeToRounds.map(j => j.user) || [];
         },
+
+        fields (): Field[] {
+            const fields = [
+                { key: 'index', label: '#' },
+                { key: 'team', label: 'Team' },
+            ] as Field[];
+
+            if (this.displayMode === 'criterias') {
+                fields.push(
+                    ...this.criterias.map(c => ({
+                        key: 'criteria-' + c.id,
+                        label: c.name,
+                    }))
+                );
+            } else {
+                fields.push(
+                    ...this.judges.map(j => ({
+                        key: 'judge-' + j.id,
+                        label: j.username,
+                    }))
+                );
+            }
+
+            fields.push(...[
+                { key: 'rawFinalScore', label: 'Final Score (raw)' },
+                { key: 'standardizedFinalScore', label: 'Final Score (standardized)', formatter: this.getFinalScore },
+            ]);
+
+            return fields;
+        },
     },
 
     async created () {
-        const { data } = await this.$http.get<Results>(`/api/rounds/${this.$route.params.id}/results`);
+        if (!this.rounds.length)  {
+            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+        }
+
+        const roundId = this.$route.params.id || this.rounds[0]?.id;
+
+        const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results`);
         this.round = data.round;
         this.criterias = data.criterias;
         this.teamsScores = data.teamsScores;

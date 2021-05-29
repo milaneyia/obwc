@@ -43,7 +43,8 @@ const routes = [
         },
     },
     {
-        path: '/results/:id',
+        path: '/results/:id?',
+        alias: '/results',
         component: Results,
         name: 'results',
         meta: {

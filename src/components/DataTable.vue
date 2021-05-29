@@ -28,6 +28,7 @@
                             :name="'cell-' + formattedValues.header"
                             :value="formattedValues.value"
                             :item="item"
+                            :index="i"
                         />
                         <span v-else>{{ formattedValues.value }}</span>
                     </td>
