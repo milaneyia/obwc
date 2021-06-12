@@ -1,4 +1,5 @@
 import Router from '@koa/router';
+import { In } from 'typeorm';
 import validator from 'validator';
 import { CreateJudging } from '../../shared/integration';
 import { JUDGING_TYPE } from '../../shared/models';
@@ -34,13 +35,14 @@ judgingRouter.get('/', async (ctx) => {
     const currentRound: Round = ctx.state.currentRound;
     const judgingType: JUDGING_TYPE = ctx.state.judgingType;
 
-    const [criterias, judgingDone] = await Promise.all([
-        Criteria.find({ judgingTypeId: judgingType }),
-        Judging.find({
-            where: { judgeId: ctx.state.user.id },
-            relations: ['judgingToCriterias'],
-        }),
-    ]);
+    const criterias = await Criteria.find({ judgingTypeId: judgingType });
+
+    const criteriasID = criterias.map(c => c.id);
+
+    const judgingDone = await Judging.createQueryBuilder('judging')
+        .leftJoinAndSelect('judging.judgingToCriterias', 'judgingToCriterias')
+        .where('judgeId = :id AND judgingToCriterias.criteriaId IN (:...criteriasID)', { id: ctx.state.user.id, criteriasID })
+        .getMany();
 
     ctx.body = {
         currentRound,

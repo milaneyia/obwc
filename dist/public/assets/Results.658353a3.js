@@ -1,0 +1,1 @@
+import{_ as r}from"./Leaderboard.7ff820c1.js";import{d as a,b as e,o,c as d}from"./vendor.8d251a54.js";var s=a({name:"Results",components:{Leaderboard:r}});s.render=function(r,a,s,n,t,f){const m=e("leaderboard");return o(),d(m)};export default s;
