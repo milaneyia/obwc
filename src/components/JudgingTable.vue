@@ -95,7 +95,7 @@ export default defineComponent({
         }),
 
         sortedSubmissions (): Submission[] {
-            const submissions = this.round.submissions || [];
+            const submissions = [...this.round.submissions] || [];
 
             if (this.sortBy === 'name') {
                 submissions.sort((a, b) => {
