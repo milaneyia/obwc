@@ -29,13 +29,12 @@ judgingRouter.use(async (ctx, next) => {
 judgingRouter.get('/', async (ctx) => {
     const currentRound = ctx.state.currentRound;
     const judgingType = ctx.state.judgingType;
-    const [criterias, judgingDone] = await Promise.all([
-        Criteria_1.Criteria.find({ judgingTypeId: judgingType }),
-        Judging_1.Judging.find({
-            where: { judgeId: ctx.state.user.id },
-            relations: ['judgingToCriterias'],
-        }),
-    ]);
+    const criterias = await Criteria_1.Criteria.find({ judgingTypeId: judgingType });
+    const criteriasID = criterias.map(c => c.id);
+    const judgingDone = await Judging_1.Judging.createQueryBuilder('judging')
+        .leftJoinAndSelect('judging.judgingToCriterias', 'judgingToCriterias')
+        .where('judgeId = :id AND judgingToCriterias.criteriaId IN (:...criteriasID)', { id: ctx.state.user.id, criteriasID })
+        .getMany();
     ctx.body = {
         currentRound,
         criterias,
