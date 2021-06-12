@@ -16,7 +16,7 @@ roundsRouter.get('/', async (ctx) => {
 
 roundsRouter.get('/:id/results', simpleAuthenticate, async (ctx) => {
     const id = validator.toInt(ctx.params.id);
-    const scope: ResultsScope = ctx.session?.user?.isStaff ? ResultsScope.Staff : ResultsScope.User;
+    const scope: ResultsScope = ctx.state?.user?.isStaff ? ResultsScope.Staff : ResultsScope.User;
 
     const [round, criterias] = await Promise.all([
         Round.findResults(id, scope),
