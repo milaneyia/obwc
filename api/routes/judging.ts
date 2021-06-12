@@ -1,5 +1,4 @@
 import Router from '@koa/router';
-import { In } from 'typeorm';
 import validator from 'validator';
 import { CreateJudging } from '../../shared/integration';
 import { JUDGING_TYPE } from '../../shared/models';
