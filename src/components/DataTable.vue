@@ -19,7 +19,7 @@
                     v-for="(item, i) in items"
                     :key="'item-' + i"
                     :class="{ 'row-clickable': item.clickable }"
-                    @click="emit('rowClick', item)"
+                    @click="$emit('rowClick', item)"
                 >
                     <td
                         v-for="(formattedValues, j) in formatItem(item)"
