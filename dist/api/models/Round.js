@@ -52,7 +52,7 @@ let Round = Round_1 = class Round extends typeorm_1.BaseEntity {
         ])
             .orderBy('submissions.anonymisedAs');
     }
-    static findResults(id, scope) {
+    static findResults(id, judgingType, scope) {
         const query = this
             .createQueryBuilder('round')
             .leftJoinAndSelect('round.submissions', 'submissions')
@@ -64,7 +64,10 @@ let Round = Round_1 = class Round extends typeorm_1.BaseEntity {
             .leftJoinAndSelect('judging.judge', 'judge')
             .leftJoinAndSelect('judging.judgingToCriterias', 'judgingToCriterias')
             .leftJoinAndSelect('judgingToCriterias.criteria', 'criteria')
-            .where('round.id = :id', { id });
+            .where('round.id = :id', { id })
+            .andWhere('judgeToRounds.judgingTypeId = :judgingTypeId')
+            .andWhere('criteria.judgingTypeId = :judgingTypeId')
+            .setParameter('judgingTypeId', judgingType);
         if (scope === ResultsScope.User) {
             query.andWhere('round.resultsAt <= :now', { now: new Date() });
         }

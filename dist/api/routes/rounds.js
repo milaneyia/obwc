@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = __importDefault(require("@koa/router"));
 const validator_1 = __importDefault(require("validator"));
+const models_1 = require("../../shared/models");
 const results_1 = require("../helpers/results");
 const authentication_1 = require("../middlewares/authentication");
 const Criteria_1 = require("../models/judging/Criteria");
@@ -17,10 +18,13 @@ roundsRouter.get('/', async (ctx) => {
 });
 roundsRouter.get('/:id/results', authentication_1.simpleAuthenticate, async (ctx) => {
     const id = validator_1.default.toInt(ctx.params.id);
+    const judgingType = ctx.query.type ? validator_1.default.toInt(ctx.query.type.toString()) : models_1.JUDGING_TYPE.Mappers;
     const scope = ctx.state?.user?.isStaff ? Round_1.ResultsScope.Staff : Round_1.ResultsScope.User;
     const [round, criterias] = await Promise.all([
-        Round_1.Round.findResults(id, scope),
-        Criteria_1.Criteria.find({}),
+        Round_1.Round.findResults(id, judgingType, scope),
+        Criteria_1.Criteria.find({
+            judgingTypeId: judgingType,
+        }),
     ]);
     const judges = round?.judgeToRounds.map(j => j.user);
     const { teamsScores, judgesCorrel } = await results_1.calculateScores(round);
