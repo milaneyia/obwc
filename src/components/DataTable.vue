@@ -58,7 +58,7 @@ export default defineComponent({
     props: {
         customClass: {
             type: String,
-            default: 'table-bordered',
+            default: '',
         },
         fields: {
             type: Array as PropType<(Field | string)[]>,
