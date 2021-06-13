@@ -18,6 +18,8 @@
                 <tr
                     v-for="(item, i) in items"
                     :key="'item-' + i"
+                    :class="{ 'row-clickable': item.clickable }"
+                    @click="emit('rowClick', item)"
                 >
                     <td
                         v-for="(formattedValues, j) in formatItem(item)"
@@ -37,6 +39,8 @@
                         <slot name="actions" :item="item" />
                     </td>
                 </tr>
+
+                <slot name="custom-rows" />
             </tbody>
         </table>
     </div>
@@ -69,6 +73,10 @@ export default defineComponent({
             required: true,
         },
     },
+
+    emits: [
+        'rowClick',
+    ],
 
     computed: {
         formattedHeaders (): Field[] {
@@ -124,3 +132,11 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="scss">
+
+.row-clickable > td {
+    cursor: pointer;
+}
+
+</style>

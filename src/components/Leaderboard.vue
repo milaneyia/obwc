@@ -2,7 +2,9 @@
     <data-table
         v-bind="$attrs"
         :fields="fields"
-        :items="teamsScores"
+        :items="items"
+        class="leaderboard"
+        @row-click="openDetailModal"
     >
         <template #cell-index="{ index }">
             {{ index + 1 }}
@@ -13,29 +15,11 @@
                 :title="score.team.name"
             />
         </template>
-        <!-- <template v-if="displayMode === 'criterias'">
-                    <td v-for="criteria in criterias" :key="criteria.id">
-                        {{ getCriteriaScore(score, criteria.id) }}
-                    </td>
-                </template>
-                <template v-else>
-                    <td v-for="judge in judges" :key="judge.id">
-                        {{ getJudgeScore(score, judge.id, displayMode === 'detail') }}
-                    </td>
-                </template> -->
 
-        <!-- <td>
-                    <a
-                        href="#"
-                        data-bs-toggle="modal"
-                        data-bs-target="#detailModal"
-                        @click.prevent="selectedScore = score"
-                    >
-                        Detail
-                    </a>
-                </td> -->
-
-        <template v-if="displayMode === 'detail'">
+        <template
+            v-if="displayMode === 'detail'"
+            #custom-rows
+        >
             <tr class="cursor-default">
                 <td />
                 <td>AVG</td>
@@ -72,15 +56,20 @@
 </template>
 
 <script lang="ts">
+import Modal from 'bootstrap/js/dist/modal';
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { JudgeCorrel, TeamScore } from '../../api/helpers/results';
 import { Results } from '../../shared/integration';
-import { Contest, Criteria, Round, Submission, Team, User } from '../../shared/models';
+import { Contest, Criteria, Round, Submission, User } from '../../shared/models';
 import { UPDATE_ROUNDS } from '../store/main-types';
 import CountryFlag from './CountryFlag.vue';
 import DataTable, { Field } from './DataTable.vue';
 import JudgingDetail from './JudgingDetail.vue';
+
+interface TeamScoreFormatted extends Pick<TeamScore, 'team' | 'rawFinalScore' | 'standardizedFinalScore'> {
+    [key: string]: any;
+}
 
 export default defineComponent({
     name: 'Leaderboard',
@@ -100,7 +89,7 @@ export default defineComponent({
 
     data () {
         return {
-            selectedScore: null as TeamScore | null,
+            selectedScore: null as TeamScoreFormatted | null,
             sortDesc: false,
 
             round: null as Round | null,
@@ -133,10 +122,10 @@ export default defineComponent({
         },
 
         fields (): Field[] {
-            const fields = [
+            const fields: Field[] = [
                 { key: 'index', label: '#' },
                 { key: 'team', label: 'Team' },
-            ] as Field[];
+            ];
 
             if (this.displayMode === 'criterias') {
                 fields.push(
@@ -161,6 +150,29 @@ export default defineComponent({
 
             return fields;
         },
+
+        items (): TeamScoreFormatted[] {
+            return this.teamsScores.map(s => {
+                const item: TeamScoreFormatted = {
+                    team: s.team,
+                    rawFinalScore: s.rawFinalScore,
+                    standardizedFinalScore: s.standardizedFinalScore,
+                    clickable: true,
+                };
+
+                if (this.displayMode === 'criterias') {
+                    for (const criteria of this.criterias) {
+                        item['criteria-' + criteria.id] = this.getCriteriaScore(s, criteria.id);
+                    }
+                } else {
+                    for (const judge of this.judges) {
+                        item['judge-' + judge.id] = this.getJudgeScore(s, judge.id, this.displayMode === 'detail');
+                    }
+                }
+
+                return item;
+            });
+        },
     },
 
     async created () {
@@ -178,9 +190,22 @@ export default defineComponent({
     },
 
     methods: {
+        openDetailModal (score: TeamScoreFormatted): void {
+            this.selectedScore = score;
+            const el = document.getElementById('detailModal')!;
+
+            let modal = Modal.getInstance(el);
+
+            if (!modal)
+                modal = new Modal(el);
+
+            modal.toggle();
+        },
+
         getCriteriaScore (score: TeamScore, criteriaId: number): number {
             return score.criteriaSum.find(c => c.criteriaId === criteriaId)?.sum || 0;
         },
+
         getJudgeScore (score: TeamScore, judgeId: number, std = false): number | string {
             const judgeScore = score.judgingSum.find(j => j.judgeId === judgeId);
             const stdScore = judgeScore?.standardized || 0;
@@ -191,46 +216,51 @@ export default defineComponent({
 
             return judgeScore?.sum || 0;
         },
+
         getJudgeAvg (id: number): number | string {
             return this.judgesCorrel.find(j => j.id === id)?.rawAvg.toFixed(4) || 0;
         },
+
         getJudgeSd (id: number): number | string {
             return this.judgesCorrel.find(j => j.id === id)?.sd.toFixed(4) || 0;
         },
+
         getJudgeCorrel (id: number): number | string {
             const correl = this.judgesCorrel.find(j => j.id === id)?.correl || 0;
 
             return correl.toFixed(4);
         },
+
         getFinalScore (standardizedFinalScore: number): string {
             return (!standardizedFinalScore || isNaN(standardizedFinalScore)) ? '0' : standardizedFinalScore.toFixed(4);
         },
-        sortByCriteria (criteriaId: number): void {
-            this.sortDesc = !this.sortDesc;
-            this.$store.commit('sortByCriteria', {
-                criteriaId,
-                sortDesc: this.sortDesc,
-            });
-        },
-        sortByJudge (judgeId: number): void {
-            this.sortDesc = !this.sortDesc;
-            this.$store.commit('sortByJudge', {
-                judgeId,
-                sortDesc: this.sortDesc,
-            });
-        },
-        sortByRawScore (): void {
-            this.sortDesc = !this.sortDesc;
-            this.$store.commit('sortByRawScore', {
-                sortDesc: this.sortDesc,
-            });
-        },
-        sortByStdScore (): void {
-            this.sortDesc = !this.sortDesc;
-            this.$store.commit('sortByStdScore', {
-                sortDesc: this.sortDesc,
-            });
-        },
+
+        // sortByCriteria (criteriaId: number): void {
+        //     this.sortDesc = !this.sortDesc;
+        //     this.$store.commit('sortByCriteria', {
+        //         criteriaId,
+        //         sortDesc: this.sortDesc,
+        //     });
+        // },
+        // sortByJudge (judgeId: number): void {
+        //     this.sortDesc = !this.sortDesc;
+        //     this.$store.commit('sortByJudge', {
+        //         judgeId,
+        //         sortDesc: this.sortDesc,
+        //     });
+        // },
+        // sortByRawScore (): void {
+        //     this.sortDesc = !this.sortDesc;
+        //     this.$store.commit('sortByRawScore', {
+        //         sortDesc: this.sortDesc,
+        //     });
+        // },
+        // sortByStdScore (): void {
+        //     this.sortDesc = !this.sortDesc;
+        //     this.$store.commit('sortByStdScore', {
+        //         sortDesc: this.sortDesc,
+        //     });
+        // },
     },
 });
 </script>
