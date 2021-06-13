@@ -4,11 +4,11 @@
             v-if="currentRound"
             class="row"
         >
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <judging-table />
             </div>
 
-            <div class="col-md-4">
+            <div class="col-lg-4">
                 <judging-scoring />
             </div>
         </div>
