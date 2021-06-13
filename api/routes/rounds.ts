@@ -15,9 +15,9 @@ roundsRouter.get('/', async (ctx) => {
     ctx.body = rounds;
 });
 
-roundsRouter.get('/:id/results/:judgingType', simpleAuthenticate, async (ctx) => {
+roundsRouter.get('/:id/results', simpleAuthenticate, async (ctx) => {
     const id = validator.toInt(ctx.params.id);
-    const judgingType = ctx.params.judgingType ? validator.toInt(ctx.params.judgingType) : JUDGING_TYPE.Mappers;
+    const judgingType = ctx.query.type ? validator.toInt(ctx.query.type.toString()) : JUDGING_TYPE.Mappers;
     const scope: ResultsScope = ctx.state?.user?.isStaff ? ResultsScope.Staff : ResultsScope.User;
 
     const [round, criterias] = await Promise.all([

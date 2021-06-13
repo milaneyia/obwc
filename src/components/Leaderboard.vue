@@ -190,7 +190,7 @@ export default defineComponent({
 
                 const roundId = this.$route.params.id || this.rounds[0]?.id;
 
-                const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results/${type}`);
+                const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results?type=${type}`);
                 this.round = data.round;
                 this.criterias = data.criterias;
                 this.teamsScores = data.teamsScores;

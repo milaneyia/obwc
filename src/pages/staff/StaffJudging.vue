@@ -5,11 +5,9 @@
                 Judging List
             </div>
             <div class="card-subtitle">
-                Listing of all the judging (scores/comments) done by entries
+                Summary of all the judging done
             </div>
         </div>
-
-        <leaderboard />
 
         <div class="card my-2">
             <data-table
@@ -33,14 +31,12 @@ import { defineComponent } from 'vue';
 import { Results } from '../../../shared/integration';
 import { Judging, Team } from '../../../shared/models';
 import DataTable, { Field } from '../../components/DataTable.vue';
-import Leaderboard from '../../components/Leaderboard.vue';
 
 export default defineComponent({
     name: 'StaffJudging',
 
     components: {
         DataTable,
-        Leaderboard,
     },
 
     data () {
