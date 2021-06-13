@@ -101,8 +101,8 @@ export default defineComponent({
                 submissions.sort((a, b) => {
                     const anomA = a.anonymisedAs?.toUpperCase();
                     const anomB = b.anonymisedAs?.toUpperCase();
-                    if (anomA < anomB) return this.sortDesc ? -1 : 1;
-                    if (anomA > anomB) return this.sortDesc ? 1 : -1;
+                    if (anomA < anomB) return this.sortDesc ? 1 : -1;
+                    if (anomA > anomB) return this.sortDesc ? -1 : 1;
 
                     return 0;
                 });
