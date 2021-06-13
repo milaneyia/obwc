@@ -1,5 +1,5 @@
 <template>
-    <div v-if="originalJudging && criteria && submission">
+    <div v-if="originalJudging && criteria && submission" class="judging-scoring">
         <textarea
             id="comment"
             v-model="newGeneralComment"
@@ -125,3 +125,10 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="scss">
+.judging-scoring {
+    position: sticky;
+    top: 1.5rem;
+}
+</style>
