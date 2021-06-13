@@ -57,11 +57,12 @@
 
 <script lang="ts">
 import Modal from 'bootstrap/js/dist/modal';
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { mapState } from 'vuex';
 import { JudgeCorrel, TeamScore } from '../../api/helpers/results';
 import { Results } from '../../shared/integration';
-import { Contest, Criteria, Round, Submission, User } from '../../shared/models';
+import { Contest, Criteria, JUDGING_TYPE, Round, Submission, User } from '../../shared/models';
+import { DisplayMode } from '../pages/Results.vue';
 import { UPDATE_ROUNDS } from '../store/main-types';
 import CountryFlag from './CountryFlag.vue';
 import DataTable, { Field } from './DataTable.vue';
@@ -81,8 +82,13 @@ export default defineComponent({
     },
 
     props: {
+        judgingType: {
+            type: Number as PropType<JUDGING_TYPE>,
+            required: true,
+        },
+
         displayMode: {
-            type: String,
+            type: String as PropType<DisplayMode>,
             required: true,
         },
     },
@@ -175,18 +181,23 @@ export default defineComponent({
         },
     },
 
-    async created () {
-        if (!this.rounds.length)  {
-            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
-        }
+    watch: {
+        judgingType: {
+            async handler (type) {
+                if (!this.rounds.length) {
+                    await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+                }
 
-        const roundId = this.$route.params.id || this.rounds[0]?.id;
+                const roundId = this.$route.params.id || this.rounds[0]?.id;
 
-        const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results`);
-        this.round = data.round;
-        this.criterias = data.criterias;
-        this.teamsScores = data.teamsScores;
-        this.judgesCorrel = data.judgesCorrel;
+                const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results/${type}`);
+                this.round = data.round;
+                this.criterias = data.criterias;
+                this.teamsScores = data.teamsScores;
+                this.judgesCorrel = data.judgesCorrel;
+            },
+            immediate: true,
+        },
     },
 
     methods: {

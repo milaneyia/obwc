@@ -43,8 +43,19 @@
                                                 JUDGING
                                             </div>
                                             <div class="card-body">
-                                                <a class="me-2" href="#">mapper</a>
-                                                <a href="#">player</a>
+                                                <a
+                                                    class="me-2"
+                                                    href="#"
+                                                    @click.prevent="judgingType = 1"
+                                                >
+                                                    mapper
+                                                </a>
+                                                <a
+                                                    href="#"
+                                                    @click.prevent="judgingType = 2"
+                                                >
+                                                    player
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -106,6 +117,7 @@
                                 <leaderboard
                                     class="h-100"
                                     :display-mode="displayMode"
+                                    :judging-type="judgingType"
                                 />
                             </div>
                         </div>
@@ -118,7 +130,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { JUDGING_TYPE } from '../../shared/models';
 import Leaderboard from '../components/Leaderboard.vue';
+
+export type DisplayMode = 'criterias' | 'judges' | 'detail';
 
 export default defineComponent({
     name: 'Results',
@@ -129,7 +144,8 @@ export default defineComponent({
 
     data () {
         return {
-            displayMode: 'criterias' as 'criterias' | 'judges' | 'detail',
+            judgingType: JUDGING_TYPE.Mappers,
+            displayMode: 'criterias' as DisplayMode,
         };
     },
 });

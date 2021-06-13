@@ -45,7 +45,7 @@ export class Round extends BaseEntity {
             .orderBy('submissions.anonymisedAs');
     }
 
-    static findResults(id: number, scope: ResultsScope): Promise<Round | undefined> {
+    static findResults(id: number, judgingType: JUDGING_TYPE, scope: ResultsScope): Promise<Round | undefined> {
         const query = this
             .createQueryBuilder('round')
             .leftJoinAndSelect('round.submissions', 'submissions')
@@ -57,7 +57,10 @@ export class Round extends BaseEntity {
             .leftJoinAndSelect('judging.judge', 'judge')
             .leftJoinAndSelect('judging.judgingToCriterias', 'judgingToCriterias')
             .leftJoinAndSelect('judgingToCriterias.criteria', 'criteria')
-            .where('round.id = :id', { id });
+            .where('round.id = :id', { id })
+            .andWhere('judgeToRounds.judgingTypeId = :judgingTypeId')
+            .andWhere('criteria.judgingTypeId = :judgingTypeId')
+            .setParameter('judgingTypeId', judgingType);
 
         if (scope === ResultsScope.User) {
             query.andWhere('round.resultsAt <= :now', { now: new Date() });
