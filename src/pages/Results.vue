@@ -25,7 +25,7 @@
                                                 MODE
                                             </div>
 
-                                            <div class="card-body d-flex justify-content-between">
+                                            <div class="card-body d-flex justify-content-between px-3">
                                                 <i
                                                     v-for="i in 4"
                                                     :key="i"
@@ -134,16 +134,26 @@
                                             <div class="card-header text-center bg-purple p-0 fw-bold">
                                                 ROUND
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body d-flex justify-content-between px-3">
                                                 <i
                                                     v-for="i in 4"
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
-                                                <div v-for="i in 4" :key="i">
+                                                <a
+                                                    v-for="i in 4"
+                                                    :key="i"
+                                                    class="btn btn-round btn-outline-light"
+                                                    @click.prevent=""
+                                                >
                                                     {{ i }}
-                                                </div>
-                                                <div>ALL</div>
+                                                </a>
+                                                <a
+                                                    class="btn btn-round btn-outline-light"
+                                                    @click.prevent=""
+                                                >
+                                                    ALL
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -264,6 +274,10 @@ export default defineComponent({
     height: 24px;
 }
 
+.btn-outline-light {
+    border: 3px solid white;
+}
+
 .btn-mode {
     background-repeat: no-repeat;
     background-position: center;
@@ -328,5 +342,15 @@ export default defineComponent({
 
 .btn-save {
     border: 2px dotted #facb5b;
+}
+
+.btn-round {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 3rem;
+    width: 3rem;
+    font-weight: 600;
 }
 </style>
