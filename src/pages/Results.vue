@@ -171,29 +171,35 @@
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
-                                                <a
-                                                    href="#"
-                                                    :class="displayMode === 'criterias' ? 'border-bottom border-secondary' : ''"
-                                                    @click.prevent="displayMode = 'criterias'"
-                                                >
-                                                    Per criteria
-                                                </a>
-                                                |
-                                                <a
-                                                    href="#"
-                                                    :class="displayMode === 'judges' ? 'border-bottom border-secondary' : ''"
-                                                    @click.prevent="displayMode = 'judges'"
-                                                >
-                                                    Per judge
-                                                </a>
-                                                |
-                                                <a
-                                                    href="#"
-                                                    :class="displayMode === 'detail' ? 'border-bottom border-secondary' : ''"
-                                                    @click.prevent="displayMode = 'detail'"
-                                                >
-                                                    Std detail
-                                                </a>
+                                                <ul class="display-mode">
+                                                    <li>
+                                                        <a
+                                                            href="#"
+                                                            :class="displayMode === 'criterias' ? 'border-bottom border-secondary active' : ''"
+                                                            @click.prevent="displayMode = 'criterias'"
+                                                        >
+                                                            Per criteria
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a
+                                                            href="#"
+                                                            :class="displayMode === 'judges' ? 'border-bottom border-secondary active' : ''"
+                                                            @click.prevent="displayMode = 'judges'"
+                                                        >
+                                                            Per judge
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a
+                                                            href="#"
+                                                            :class="displayMode === 'detail' ? 'border-bottom border-secondary active' : ''"
+                                                            @click.prevent="displayMode = 'detail'"
+                                                        >
+                                                            Std detail
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -352,5 +358,28 @@ export default defineComponent({
     height: 3rem;
     width: 3rem;
     font-weight: 600;
+}
+
+.display-mode {
+    list-style-type: none;
+
+    & li a {
+        text-transform: uppercase;
+        text-decoration: none;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    & li a.active {
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #facb5b;
+    }
+
+    & li a:before {
+        content: '\2014';
+        position: absolute;
+        margin-left: -20px;
+    }
 }
 </style>
