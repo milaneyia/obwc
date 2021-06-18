@@ -32,25 +32,25 @@
                                                     class="fas fa-plus"
                                                 />
                                                 <a
-                                                    class="btn btn-mode btn-yellow mx-2 py-3 px-1 osu"
+                                                    class="btn btn-mode btn-yellow py-3 px-1 osu"
                                                     @click.prevent=""
                                                 >
                                                     <div class="icon-placeholder" />
                                                 </a>
                                                 <a
-                                                    class="btn btn-mode btn-outline-light mx-2 py-3 px-1 taiko"
+                                                    class="btn btn-mode btn-outline-light py-3 px-1 taiko"
                                                     @click.prevent=""
                                                 >
                                                     <div class="icon-placeholder" />
                                                 </a>
                                                 <a
-                                                    class="btn btn-mode btn-outline-light mx-2 py-3 px-1 mania"
+                                                    class="btn btn-mode btn-outline-light py-3 px-1 mania"
                                                     @click.prevent=""
                                                 >
                                                     <div class="icon-placeholder" />
                                                 </a>
                                                 <a
-                                                    class="btn btn-mode btn-outline-light mx-2 py-3 px-1 catch"
+                                                    class="btn btn-mode btn-outline-light py-3 px-1 catch"
                                                     @click.prevent=""
                                                 >
                                                     <div class="icon-placeholder" />
