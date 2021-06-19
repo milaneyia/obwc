@@ -18,7 +18,7 @@
                 <tr
                     v-for="(item, i) in items"
                     :key="'item-' + i"
-                    :class="{ 'row-clickable': item.clickable }"
+                    :class="item.rowClasses || ''"
                     @click="$emit('rowClick', item)"
                 >
                     <td
@@ -132,11 +132,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style lang="scss">
-
-.row-clickable > td {
-    cursor: pointer;
-}
-
-</style>

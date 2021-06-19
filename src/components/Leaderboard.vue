@@ -163,7 +163,7 @@ export default defineComponent({
                     team: s.team,
                     rawFinalScore: s.rawFinalScore,
                     standardizedFinalScore: s.standardizedFinalScore,
-                    clickable: true,
+                    rowClasses: 'row-clickable ' + (s.isEliminated ? 'row-eliminated' : ''),
                 };
 
                 if (this.displayMode === 'criterias') {
