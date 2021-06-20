@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.calculateScores = void 0;
 const Team_1 = require("../models/Team");
-async function calculateScores(round) {
+const models_1 = require("../../shared/models");
+async function calculateScores(round, judingType) {
     const teamsScores = [];
     const judgesCorrel = [];
     if (!round) {
@@ -31,6 +32,7 @@ async function calculateScores(round) {
                 judgingSum: [],
                 rawFinalScore: 0,
                 standardizedFinalScore: 0,
+                isEliminated: false,
             })),
             judgesCorrel,
         };
@@ -42,6 +44,7 @@ async function calculateScores(round) {
             judgingSum: [],
             rawFinalScore: 0,
             standardizedFinalScore: 0,
+            isEliminated: false,
         };
         for (const judging of submission.judging) {
             let judgeSum = 0;
@@ -130,6 +133,16 @@ async function calculateScores(round) {
         }
     }
     teamsScores.sort((a, b) => b.standardizedFinalScore - a.standardizedFinalScore);
+    if (judingType === models_1.JUDGING_TYPE.Mappers) {
+        const countryIds = new Set(teamsScores.map(t => t.team.country.id));
+        // Eliminate teams from countries with more than 1 team
+        for (const countryId of countryIds) {
+            const countryScores = teamsScores.filter(t => t.team.country.id === countryId);
+            for (let i = 1; i < countryScores.length; i++) {
+                countryScores[i].isEliminated = true;
+            }
+        }
+    }
     return {
         teamsScores,
         judgesCorrel,
