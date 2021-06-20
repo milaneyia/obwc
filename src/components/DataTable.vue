@@ -141,13 +141,33 @@ export default defineComponent({
             }
 
             return [...this.items].sort((a, b) => {
-                const valueA = a[this.sortKey];
-                const valueB = b[this.sortKey];
+                let valueA = a[this.sortKey];
+                let valueB = b[this.sortKey];
 
-                if (this.sortAsc)
-                    return valueA - valueB;
+                if (typeof valueA === 'number') {
+                    if (this.sortAsc)
+                        return valueA - valueB;
 
-                return valueB - valueA;
+                    return valueB - valueA;
+                }
+
+                if (typeof valueA === 'string') {
+                    valueA = valueA.toUpperCase();
+                    valueB = valueB.toUpperCase();
+
+                    if (valueA < valueB) return this.sortAsc ? 1 : -1;
+                    if (valueA > valueB) return this.sortAsc ? -1 : 1;
+
+                    return 0;
+                }
+
+                if (valueA === valueB) return 0;
+
+                if (this.sortAsc) {
+                    return valueA ? 1 : -1;
+                }
+
+                return valueA ? -1 : 1;
             });
         },
     },

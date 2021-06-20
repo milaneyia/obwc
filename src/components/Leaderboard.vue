@@ -96,7 +96,6 @@ export default defineComponent({
     data () {
         return {
             selectedScore: null as TeamScoreFormatted | null,
-            sortDesc: false,
 
             round: null as Round | null,
             criterias: [] as Criteria[],
