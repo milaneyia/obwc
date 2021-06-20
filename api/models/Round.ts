@@ -77,6 +77,7 @@ export class Round extends BaseEntity {
         round.resultsAt = input.resultsAt;
         round.judgeToRounds = input.judgeToRounds as JudgeToRound[];
         round.songs = input.songs as Song[];
+        round.downloadLink = input.downloadLink || null;
 
         return round.save();
     }
@@ -103,8 +104,12 @@ export class Round extends BaseEntity {
     @Column('datetime')
     resultsAt!: Date;
 
-    @Column({ nullable: true })
-    downloadLink?: string;
+    @Column({
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    })
+    downloadLink?: string | null;
 
     @ManyToOne(() => Contest, (contest) => contest.rounds, { nullable: false })
     contest!: Contest;

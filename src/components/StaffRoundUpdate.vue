@@ -178,6 +178,19 @@
                                 </button>
                             </div>
                         </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-sm">
+                                <input
+                                    v-model="round.downloadLink"
+                                    type="text"
+                                    placeholder="Link to download all submissions"
+                                    class="form-control"
+                                >
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -265,6 +278,8 @@ export default defineComponent({
                 songs: [
                     ...round.songs,
                 ],
+
+                downloadLink: round.downloadLink,
             };
         },
     },
@@ -324,6 +339,7 @@ export default defineComponent({
                 judgingStartedAt: new Date(this.round.judgingStartedAt),
                 judgingEndedAt: new Date(this.round.judgingEndedAt),
                 resultsAt: new Date(this.round.resultsAt),
+                downloadLink: this.round.downloadLink,
             });
             this.$emit('update:round', data);
         },

@@ -61,6 +61,7 @@ export default defineComponent({
                 { key: 'resultsAt', label: 'Results', formatter: DateFormat.Locale },
                 { key: 'judgeToRounds', label: 'Judges', formatter: this.formatJudges },
                 { key: 'songs', label: 'Songs', formatter: this.formatSongs },
+                { key: 'downloadLink', label: 'Download All Link' },
             ] as Field[],
 
             rounds: [] as Round[],

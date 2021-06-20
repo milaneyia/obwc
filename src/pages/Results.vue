@@ -19,8 +19,8 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="row">
-                                    <div class="col-sm-8">
-                                        <card :title="'MODE'" :plus="true">
+                                    <div :class="downloadLink ? 'col-sm-8' : 'col-sm-12'">
+                                        <card title="MODE" plus>
                                             <!-- TODO: need good disabled selector -->
                                             <mode-button
                                                 v-for="contest in contests"
@@ -32,11 +32,15 @@
                                             />
                                         </card>
                                     </div>
-                                    <div class="col-sm-4">
-                                        <card :title="'DOWNLOAD'" :plus="true">
+                                    <div
+                                        v-if="downloadLink"
+                                        class="col-sm-4"
+                                    >
+                                        <card title="DOWNLOAD" plus>
                                             <a
                                                 class="btn btn-outline-light btn-save py-2 px-3"
-                                                @click.prevent=""
+                                                :href="downloadLink"
+                                                target="_blank"
                                             >
                                                 <i class="fa fa-save" />
                                             </a>
@@ -168,7 +172,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { JUDGING_TYPE } from '../../shared/models';
+import { JUDGING_TYPE, User } from '../../shared/models';
 import Leaderboard from '../components/Leaderboard.vue';
 import ModeButton from '../components/ModeButton.vue';
 import Card from '../components/Card.vue';
@@ -197,9 +201,14 @@ export default defineComponent({
 
     computed: {
         ...mapState({
+            loggedInUser: (state: any) => state.loggedInUser as User | null,
             contests: (state: any) => state.contests as Contest[],
             rounds: (state: any) => state.rounds as Round[],
         }),
+
+        downloadLink (): string | undefined {
+            return this.selectedRound?.downloadLink;
+        },
     },
 
     created() {
@@ -208,6 +217,9 @@ export default defineComponent({
 
     methods: {
         isDatePassed(date: Date | string) {
+            if (this.loggedInUser?.isStaff)
+                return true;
+
             if (typeof date === 'string')
                 date = new Date(date);
 
