@@ -206,6 +206,7 @@ export default defineComponent({
                 this.teamsScores = data.teamsScores;
                 this.judgesCorrel = data.judgesCorrel;
             },
+
             immediate: true,
         },
     },

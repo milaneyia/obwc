@@ -84,6 +84,7 @@ export default defineComponent({
             get (): string | undefined {
                 return this.$store.state.judging.newJudging?.judging.comment;
             },
+
             set (value) {
                 const judging: CreateJudging = this.cloneNewJudging();
                 judging.judging.comment = value;
@@ -95,6 +96,7 @@ export default defineComponent({
             get (): string | undefined {
                 return this.$store.state.judging.newJudging?.judgingToCriteria.comment;
             },
+
             set (value) {
                 const judging: CreateJudging = this.cloneNewJudging();
                 judging.judgingToCriteria.comment = value;
@@ -106,6 +108,7 @@ export default defineComponent({
             get (): number | undefined {
                 return this.$store.state.judging.newJudging?.judgingToCriteria.score;
             },
+
             set (value) {
                 const judging: CreateJudging = this.cloneNewJudging();
                 judging.judgingToCriteria.score = value;

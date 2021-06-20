@@ -122,6 +122,7 @@ export default defineComponent({
         standardContest (): Contest {
             return this.$store.getters.standardContest;
         },
+
         schedule (): Schedule | undefined {
             return this.$store.getters.schedule;
         },

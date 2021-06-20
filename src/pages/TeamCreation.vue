@@ -140,6 +140,7 @@ export default defineComponent({
     components: {
         ModeButton,
     },
+
     data () {
         return {
             filter: '',

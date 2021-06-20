@@ -62,6 +62,7 @@ export default defineComponent({
                 { key: 'judgeToRounds', label: 'Judges', formatter: this.formatJudges },
                 { key: 'songs', label: 'Songs', formatter: this.formatSongs },
             ] as Field[],
+
             rounds: [] as Round[],
             selectedRound: null as Round | null,
         };

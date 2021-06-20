@@ -86,5 +86,6 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
+        'vue/new-line-between-multi-line-property': 'error',
     },
 };

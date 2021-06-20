@@ -24,16 +24,20 @@ export default {
             type: Object as PropType<Contest>,
             required: true,
         },
+
         disabled: {
             type: Boolean,
             default: false,
         },
+
         selected: {
             type: Boolean,
             required: true,
         },
     },
+
     emits: ['changeSelected'],
+
     methods: {
         getContestIcon (id: number): string {
             let className = 'btn-mode-radio--';
@@ -51,6 +55,7 @@ export default {
 
             return 'btn-mode-radio';
         },
+
         changeSelected(): void {
             this.$emit('changeSelected', this.contest);
         },
