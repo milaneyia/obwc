@@ -96,7 +96,6 @@ export default defineComponent({
     data () {
         return {
             selectedScore: null as TeamScoreFormatted | null,
-            sortDesc: false,
 
             round: null as Round | null,
             criterias: [] as Criteria[],
@@ -138,6 +137,7 @@ export default defineComponent({
                     ...this.criterias.map(c => ({
                         key: 'criteria-' + c.id,
                         label: c.name,
+                        sortable: true,
                     }))
                 );
             } else {
@@ -145,13 +145,23 @@ export default defineComponent({
                     ...this.judges.map(j => ({
                         key: 'judge-' + j.id,
                         label: j.username,
+                        sortable: true,
                     }))
                 );
             }
 
             fields.push(...[
-                { key: 'rawFinalScore', label: 'Final Score (raw)' },
-                { key: 'standardizedFinalScore', label: 'Final Score (standardized)', formatter: this.getFinalScore },
+                {
+                    key: 'rawFinalScore',
+                    label: 'Final Score (raw)',
+                    sortable: true,
+                },
+                {
+                    key: 'standardizedFinalScore',
+                    label: 'Final Score (standardized)',
+                    formatter: this.getFinalScore,
+                    sortable: true,
+                },
             ]);
 
             return fields;
@@ -163,7 +173,7 @@ export default defineComponent({
                     team: s.team,
                     rawFinalScore: s.rawFinalScore,
                     standardizedFinalScore: s.standardizedFinalScore,
-                    clickable: true,
+                    rowClasses: 'row-clickable ' + (s.isEliminated ? 'row-eliminated' : ''),
                 };
 
                 if (this.displayMode === 'criterias') {
@@ -245,33 +255,6 @@ export default defineComponent({
         getFinalScore (standardizedFinalScore: number): string {
             return (!standardizedFinalScore || isNaN(standardizedFinalScore)) ? '0' : standardizedFinalScore.toFixed(4);
         },
-
-        // sortByCriteria (criteriaId: number): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByCriteria', {
-        //         criteriaId,
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByJudge (judgeId: number): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByJudge', {
-        //         judgeId,
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByRawScore (): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByRawScore', {
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByStdScore (): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByStdScore', {
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
     },
 });
 </script>

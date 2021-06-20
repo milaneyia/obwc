@@ -27,7 +27,7 @@ roundsRouter.get('/:id/results', authentication_1.simpleAuthenticate, async (ctx
         }),
     ]);
     const judges = round?.judgeToRounds.map(j => j.user);
-    const { teamsScores, judgesCorrel } = await results_1.calculateScores(round);
+    const { teamsScores, judgesCorrel } = await results_1.calculateScores(round, judgingType);
     return ctx.body = {
         criterias,
         round,

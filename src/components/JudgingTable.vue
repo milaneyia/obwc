@@ -1,88 +1,56 @@
 <template>
-    <div class="card-body p-0">
-        <table class="table table-bordered table-sm table-hover table-responsive-sm">
-            <thead>
-                <tr>
-                    <th class="text-left">
-                        <a
-                            href="#"
-                            @click.prevent="sortSubmissionsBy('name')"
-                        >
-                            Entry's Name
-                        </a>
-                    </th>
-                    <th v-for="criteria in criterias" :key="criteria.id">
-                        <a
-                            href="#"
-                            @click.prevent="sortSubmissionsBy('criteria', criteria.id)"
-                        >
-                            {{ criteria.name }}
-                        </a>
-                    </th>
-                    <th>
-                        <a
-                            href="#"
-                            @click.prevent="sortSubmissionsBy('total')"
-                        >
-                            Total
-                        </a>
-                    </th>
-                    <th>
-                        <a
-                            href="#"
-                            @click.prevent="sortSubmissionsBy('completed')"
-                        >
-                            Completed
-                        </a>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="submission in sortedSubmissions" :key="submission.id">
-                    <td class="text-left">
-                        {{ submission.anonymisedAs }}
-                    </td>
-                    <td v-for="criteria in criterias" :key="criteria.id">
-                        <a
-                            href="#"
-                            class="d-flex align-items-center justify-content-center"
-                            @click.prevent="selectForEditing(submission, criteria)"
-                        >
-                            <i class="me-1 fas fa-edit" />
-                            {{ getScore(submission.id, criteria.id) + `/ ${criteria.maxScore}` }}
-                        </a>
-                    </td>
-                    <td>
-                        {{ getTotalScore(submission.id) }} / {{ maxPossibleScore }}
-                    </td>
-                    <td>
-                        <i
-                            class="fa"
-                            :class="isCompleted(submission.id) ? 'fa-check text-success' : 'fa-times text-danger'"
-                        />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <data-table
+        custom-class="table-bordered table-sm"
+        :fields="fields"
+        :items="items"
+    >
+        <template
+            v-for="criteria in criterias"
+            :key="criteria.id"
+            #[getSlotName(criteria.id)]="{ item: submission, value }"
+        >
+            <a
+                href="#"
+                class="d-flex align-items-center justify-content-center"
+                @click.prevent="selectForEditing(submission.id, criteria)"
+            >
+                <i class="me-1 fas fa-edit" />
+                {{ value }} / {{ criteria.maxScore }}
+            </a>
+        </template>
+        <template #cell-total="{ value }">
+            {{ value }} / {{ maxPossibleScore }}
+        </template>
+        <template #cell-completed="{ value: completed }">
+            <i
+                class="fa"
+                :class="completed ? 'fa-check text-success' : 'fa-times text-danger'"
+            />
+        </template>
+    </data-table>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
 import { CreateJudging } from '../../shared/integration';
-import { Submission, Round, Criteria, Judging } from '../../shared/models';
+import { Round, Criteria, Judging } from '../../shared/models';
 import { SELECT_FOR_EDITING } from '../store/judging-types';
+import DataTable, { Field } from './DataTable.vue';
+
+interface RowJudgingFormatted {
+    id: number;
+    anonymisedAs: string;
+    total: number;
+    completed: boolean;
+    [key: string]: any;
+}
 
 export default defineComponent({
     name: 'JudgingTable',
 
-    data () {
-        return {
-            sortBy: 'name',
-            sortByCriteria: 1,
-            sortDesc: false,
-        };
+    components: {
+        DataTable,
     },
 
     computed: {
@@ -94,55 +62,39 @@ export default defineComponent({
             newJudging: (state: any) => state.judging.newJudging as CreateJudging | null,
         }),
 
-        sortedSubmissions (): Submission[] {
-            const submissions = [...this.round.submissions] || [];
+        fields (): Field[] {
+            const fields: Field[] = [
+                { key: 'anonymisedAs', label: `Entry's Name`, sortable: true },
+            ];
 
-            if (this.sortBy === 'name') {
-                submissions.sort((a, b) => {
-                    const anomA = a.anonymisedAs?.toUpperCase();
-                    const anomB = b.anonymisedAs?.toUpperCase();
-                    if (anomA < anomB) return this.sortDesc ? 1 : -1;
-                    if (anomA > anomB) return this.sortDesc ? -1 : 1;
+            fields.push(
+                ...this.criterias.map(c => ({
+                    key: 'criteria-' + c.id,
+                    label: c.name,
+                    sortable: true,
+                })),
+                { key: 'total', label: 'Total', sortable: true },
+                { key: 'completed', label: 'Completed', sortable: true }
+            );
 
-                    return 0;
-                });
-            } else if (this.sortBy === 'total') {
-                submissions.sort((a, b) => {
-                    const aValue = this.getTotalScore(a.id);
-                    const bValue = this.getTotalScore(b.id);
+            return fields;
+        },
 
-                    if (this.sortDesc) {
-                        return aValue - bValue;
-                    }
+        items (): RowJudgingFormatted[] {
+            return this.round.submissions.map(s => {
+                const item: RowJudgingFormatted = {
+                    id: s.id,
+                    anonymisedAs: s.anonymisedAs,
+                    total: this.getTotalScore(s.id),
+                    completed: this.isCompleted(s.id),
+                };
 
-                    return bValue - aValue;
-                });
-            } else if (this.sortBy === 'criteria') {
-                submissions.sort((a, b) => {
-                    const aValue = this.getScore(a.id, this.sortByCriteria);
-                    const bValue = this.getScore(b.id, this.sortByCriteria);
+                for (const criteria of this.criterias) {
+                    item['criteria-' + criteria.id] = this.getScore(s.id, criteria.id);
+                }
 
-                    if (this.sortDesc) {
-                        return aValue - bValue;
-                    }
-
-                    return bValue - aValue;
-                });
-            } else if (this.sortBy === 'completed') {
-                submissions.sort((a, b) => {
-                    const aValue = this.isCompleted(a.id);
-                    const bValue = this.isCompleted(b.id);
-                    if (aValue === bValue) return 0;
-
-                    if (this.sortDesc) {
-                        return aValue ? 1 : -1;
-                    }
-
-                    return aValue ? -1 : 1;
-                });
-            }
-
-            return submissions;
+                return item;
+            });
         },
 
         maxPossibleScore (): number {
@@ -151,6 +103,10 @@ export default defineComponent({
     },
 
     methods: {
+        getSlotName (criteriaId: number): string {
+            return 'cell-criteria-' + criteriaId;
+        },
+
         getScore(submissionId: number, criteriaId: number): number {
             const qualifierJudgingToCriterias = this.$store.getters['judging/getJudgingToCriterias']({
                 submissionId,
@@ -179,16 +135,7 @@ export default defineComponent({
             return judging.judgingToCriterias.length === this.criterias.length;
         },
 
-        sortSubmissionsBy (type: string, criteriaId?: number): void {
-            this.sortBy = type;
-            this.sortDesc = !this.sortDesc;
-
-            if (type === 'criteria' && criteriaId) {
-                this.sortByCriteria = criteriaId;
-            }
-        },
-
-        selectForEditing (submission: Submission, criteria: Criteria) {
+        selectForEditing (submissionId: number, criteria: Criteria) {
             if (
                 this.originalJudging && this.newJudging &&
                 (this.originalJudging?.judgingToCriteria.comment !== this.newJudging?.judgingToCriteria.comment ||
@@ -199,7 +146,7 @@ export default defineComponent({
             }
 
             this.$store.dispatch('judging/' + SELECT_FOR_EDITING, {
-                submission,
+                submission: this.round.submissions.find(s => s.id === submissionId),
                 criteria,
             });
         },
