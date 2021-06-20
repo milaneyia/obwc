@@ -31,11 +31,13 @@
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
+                                                <!-- TODO: need good disabled selector -->
                                                 <mode-button
                                                     v-for="contest in contests"
                                                     :key="contest.id"
                                                     :contest="contest"
                                                     :selected="selectedContest?.id === contest.id"
+                                                    :disabled="!isDatePassed(contest.registrationEndedAt)"
                                                     @changeSelected="c => selectedContest = c"
                                                 />
                                             </div>
@@ -128,18 +130,21 @@
                                                     class="fas fa-plus"
                                                 />
                                                 <a
-                                                    v-for="i in 4"
-                                                    :key="i"
+                                                    v-for="round in rounds"
+                                                    :key="round.id"
                                                     class="btn btn-round btn-outline-light mx-1"
-                                                    :class="(activeRound == i) ? 'active' : ''"
-                                                    @click.prevent="activeRound = i"
+                                                    :class="[
+                                                        { active: selectedRound == round},
+                                                        { disabled: !isDatePassed(round.resultsAt) }
+                                                    ]"
+                                                    @click.prevent="selectedRound = round"
                                                 >
-                                                    {{ i }}
+                                                    {{ isDatePassed(round.resultsAt) ? round.id : 'TBA' }}
                                                 </a>
                                                 <a
                                                     class="btn btn-round btn-outline-light mx-1"
-                                                    :class="(activeRound == 0) ? 'active' : ''"
-                                                    @click.prevent="activeRound = 0"
+                                                    :class="(selectedRound == null) ? 'active' : ''"
+                                                    @click.prevent="selectedRound = null"
                                                 >
                                                     ALL
                                                 </a>
@@ -219,7 +224,7 @@ import { JUDGING_TYPE } from '../../shared/models';
 import Leaderboard from '../components/Leaderboard.vue';
 import ModeButton from '../components/ModeButton.vue';
 
-import { Contest } from '../../shared/models';
+import { Contest, Round } from '../../shared/models';
 
 export type DisplayMode = 'criterias' | 'judges' | 'detail';
 
@@ -236,18 +241,30 @@ export default defineComponent({
             judgingType: JUDGING_TYPE.Mappers,
             displayMode: 'criterias' as DisplayMode,
             selectedContest: null as Contest | null,
-            activeRound: 1,
+            selectedRound: null as Round | null,
         };
     },
 
     computed: {
         ...mapState({
             contests: (state: any) => state.contests as Contest[],
+            rounds: (state: any) => state.rounds as Round[],
         }),
     },
 
     created() {
         this.selectedContest = this.contests[0];
+    },
+
+    methods: {
+        isDatePassed(date: Date | string) {
+            if (typeof date === 'string')
+                date = new Date(date);
+
+            const now = new Date();
+
+            return now.valueOf() - date.valueOf() > 0;
+        },
     },
 });
 </script>
