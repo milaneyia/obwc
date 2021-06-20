@@ -332,7 +332,7 @@ ul {
     & li a {
         text-transform: uppercase;
         text-decoration: none;
-        color: white;
+        color: var(--bs-white);
         font-size: 1.5rem;
         transition: color 0.15s ease-in-out;
     }
@@ -340,7 +340,7 @@ ul {
     & li a.active {
         text-transform: uppercase;
         text-decoration: none;
-        color: #facb5b;
+        color: var(--bs-yellow);
     }
 
     & li a:before {
