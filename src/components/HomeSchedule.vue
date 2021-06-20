@@ -41,62 +41,57 @@
                     </div>
                 </div>
             </div>
-            <div
+            <card
                 v-for="(round, i) in schedule.rounds"
                 :key="i"
-                class="card fs-sm border border-yellow mb-2 card-schedule"
+                :title="round.title"
+                card-class="fs-sm border border-yellow mb-2 card-schedule"
+                header-class="text-center bg-yellow text-dark p-0 fw-bold"
+                body-class="d-flex flex-column px-3 py-0"
             >
-                <div class="card-header text-center bg-yellow text-dark p-0 fw-bold">
-                    {{ round.title }}
-                </div>
-
-                <div class="card-body d-flex flex-column px-3 py-0">
-                    <div class="d-flex justify-content-between align-items-center border-yellow border-bottom-dashed">
-                        <div>MAPPING PHASE</div>
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <div class="fs-xs text-yellow">
-                                    START
-                                </div>
-                                <div class="ms-3">
-                                    <time-string div :timestamp="round.mapping[0]" />
-                                </div>
+                <div class="d-flex justify-content-between align-items-center border-yellow border-bottom-dashed">
+                    <div>MAPPING PHASE</div>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <div class="fs-xs text-yellow">
+                                START
                             </div>
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <div class="fs-xs text-yellow">
-                                    END
-                                </div>
-                                <div class="ms-3">
-                                    <time-string div :timestamp="round.mapping[1]" />
-                                </div>
+                            <div class="ms-3">
+                                <time-string div :timestamp="round.mapping[0]" />
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <div class="fs-xs text-yellow">
+                                END
+                            </div>
+                            <div class="ms-3">
+                                <time-string div :timestamp="round.mapping[1]" />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-body d-flex flex-column px-3 py-0">
-                    <div class="d-flex justify-content-between align-items-center border-yellow">
-                        <div>JUDGING PHASE</div>
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <div class="fs-xs text-yellow">
-                                    START
-                                </div>
-                                <div class="ms-3">
-                                    <time-string div :timestamp="round.judging[0]" />
-                                </div>
+                <div class="d-flex justify-content-between align-items-center border-yellow">
+                    <div>JUDGING PHASE</div>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <div class="fs-xs text-yellow">
+                                START
                             </div>
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <div class="fs-xs text-yellow">
-                                    END
-                                </div>
-                                <div class="ms-3">
-                                    <time-string div :timestamp="round.judging[1]" />
-                                </div>
+                            <div class="ms-3">
+                                <time-string div :timestamp="round.judging[0]" />
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center ">
+                            <div class="fs-xs text-yellow">
+                                END
+                            </div>
+                            <div class="ms-3">
+                                <time-string div :timestamp="round.judging[1]" />
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </card>
             <div v-if="schedule.results" class="d-flex justify-content-between align-items-center fs-sm mb-2 px-3 py-0">
                 <div>RESULTS ANNOUNCEMENT + LIVESTREAM</div>
                 <time-string div :timestamp="schedule.results" />
@@ -110,13 +105,14 @@ import { defineComponent } from 'vue';
 import { Contest } from '../../shared/models';
 import { Schedule } from '../store/main';
 import { UPDATE_ROUNDS } from '../store/main-types';
+import Card from './Card.vue';
 import TimeString from './TimeString.vue';
 
 
 export default defineComponent({
     name: 'HomeSchedule',
 
-    components: { TimeString },
+    components: { TimeString, Card },
 
     computed: {
         standardContest (): Contest {

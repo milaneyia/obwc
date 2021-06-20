@@ -1,10 +1,10 @@
 <template>
-    <div class="card fs-sm border border-purple mb-2 card-schedule">
-        <div class="card-header text-center bg-purple p-0 fw-bold">
+    <div class="card" :class="cardClass">
+        <div class="card-header" :class="headerClass">
             {{ title }}
         </div>
 
-        <div class="card-body d-flex justify-content-center">
+        <div class="card-body" :class="bodyClass">
             <div v-if="plus" class="card-body--plus">
                 <i
                     v-for="i in 4"
@@ -28,6 +28,21 @@ export default {
         plus: {
             type: Boolean,
             default: false,
+        },
+
+        cardClass: {
+            type: Array,
+            default: (): string[] => { return ['fs-sm', 'border', 'border-purple', 'mb-2', 'card-schedule']; },
+        },
+
+        headerClass: {
+            type: Array,
+            default: (): string[] => { return ['text-center', 'bg-purple', 'p-0', 'fw-bold']; },
+        },
+
+        bodyClass: {
+            type: Array,
+            default: (): string[] => { return ['d-flex', 'justify-content-center']; },
         },
     },
 };
