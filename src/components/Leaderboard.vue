@@ -256,33 +256,6 @@ export default defineComponent({
         getFinalScore (standardizedFinalScore: number): string {
             return (!standardizedFinalScore || isNaN(standardizedFinalScore)) ? '0' : standardizedFinalScore.toFixed(4);
         },
-
-        // sortByCriteria (criteriaId: number): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByCriteria', {
-        //         criteriaId,
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByJudge (judgeId: number): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByJudge', {
-        //         judgeId,
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByRawScore (): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByRawScore', {
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
-        // sortByStdScore (): void {
-        //     this.sortDesc = !this.sortDesc;
-        //     this.$store.commit('sortByStdScore', {
-        //         sortDesc: this.sortDesc,
-        //     });
-        // },
     },
 });
 </script>
