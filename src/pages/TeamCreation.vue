@@ -62,25 +62,14 @@
                         <div class="row">
                             <label class="col-sm-3 col-form-label text-end">mode</label>
                             <div class="col-sm-9">
-                                <template
+                                <mode-button
                                     v-for="contest in contests"
                                     :key="contest.id"
-                                >
-                                    <input
-                                        :id="'mode-' + contest.id"
-                                        v-model="selectedContest"
-                                        type="radio"
-                                        class="btn-check"
-                                        autocomplete="off"
-                                        :value="contest"
-                                        :disabled="!openContests.some(c => c.id === contest.id)"
-                                    >
-                                    <label
-                                        class="btn btn-mode-radio me-2"
-                                        :class="[selectedContest?.id === contest.id ? 'active' : '', getContestIcon(contest.id)]"
-                                        :for="'mode-' + contest.id"
-                                    />
-                                </template>
+                                    :contest="contest"
+                                    :disabled="!openContests.some(c => c.id === contest.id)"
+                                    :selected="selectedContest?.id === contest.id"
+                                    @changeSelected="c => selectedContest = c"
+                                />
                             </div>
                         </div>
                     </div>
@@ -145,7 +134,13 @@ import { mapState } from 'vuex';
 import { CreateTeam } from '../../shared/integration';
 import { Contest, ContestMode, Team, User } from '../../shared/models';
 
+import ModeButton from '../components/ModeButton.vue';
+
 export default defineComponent({
+    components: {
+        ModeButton,
+    },
+
     data () {
         return {
             filter: '',

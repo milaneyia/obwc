@@ -261,6 +261,7 @@ export default defineComponent({
                 judgeToRounds: [
                     ...round.judgeToRounds,
                 ],
+
                 songs: [
                     ...round.songs,
                 ],

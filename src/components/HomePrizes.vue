@@ -92,6 +92,7 @@ export default defineComponent({
                 { supporter: 4, bg: 'background-color: #5c5c5c', text: 'text-white', sup: 'rd' },
                 { supporter: 2, bg: 'background-color: #9188c2', text: 'text-white' },
             ],
+
             badges: [
                 badge1,
                 badge2,

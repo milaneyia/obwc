@@ -88,6 +88,7 @@ export default defineComponent({
                 const { data } = await this.$http.get<Results>(`/api/rounds/${this.$route.params.id}/results?type=${type}`);
                 this.resultsData = data;
             },
+
             immediate: true,
         },
     },

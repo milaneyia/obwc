@@ -84,10 +84,12 @@ export default defineComponent({
             type: String,
             default: '',
         },
+
         fields: {
             type: Array as PropType<(Field | string)[]>,
             default: () => [],
         },
+
         items: {
             type: Array as PropType<any[]>,
             required: true,
