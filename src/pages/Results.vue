@@ -25,36 +25,19 @@
                                                 MODE
                                             </div>
 
-                                            <div class="card-body d-flex justify-content-between px-3">
+                                            <div class="card-body d-flex justify-content-center px-3">
                                                 <i
                                                     v-for="i in 4"
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
-                                                <a
-                                                    class="btn btn-mode btn-yellow py-3 px-1 osu"
-                                                    @click.prevent=""
-                                                >
-                                                    <div class="icon-placeholder" />
-                                                </a>
-                                                <a
-                                                    class="btn btn-mode btn-outline-light py-3 px-1 taiko"
-                                                    @click.prevent=""
-                                                >
-                                                    <div class="icon-placeholder" />
-                                                </a>
-                                                <a
-                                                    class="btn btn-mode btn-outline-light py-3 px-1 mania"
-                                                    @click.prevent=""
-                                                >
-                                                    <div class="icon-placeholder" />
-                                                </a>
-                                                <a
-                                                    class="btn btn-mode btn-outline-light py-3 px-1 catch"
-                                                    @click.prevent=""
-                                                >
-                                                    <div class="icon-placeholder" />
-                                                </a>
+                                                <mode-button
+                                                    v-for="contest in contests"
+                                                    :key="contest.id"
+                                                    :contest="contest"
+                                                    :selected="selectedContest?.id === contest.id"
+                                                    @changeSelected="c => selectedContest = c"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -71,7 +54,7 @@
                                                     class="fas fa-plus"
                                                 />
                                                 <a
-                                                    class="btn btn-outline-light btn-save py-3 px-3"
+                                                    class="btn btn-outline-light btn-save py-2 px-3"
                                                     @click.prevent=""
                                                 >
                                                     <i class="fa fa-save" />
@@ -80,23 +63,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div v-if="round && new Date() >= new Date(round.resultsAt) && round.downloadLink" class="row">
-                                    <div class="col-sm">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                DOWNLOAD
-                                            </div>
-                                            <div class="card-body">
-                                                <a
-                                                    href="#"
-                                                    target="_blank"
-                                                >
-                                                    <i class="fas fa-download"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
 
                                 <div class="row">
                                     <div class="col-sm">
@@ -110,19 +76,40 @@
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
-                                                <a
-                                                    class="me-2"
-                                                    href="#"
-                                                    @click.prevent="judgingType = 1"
-                                                >
-                                                    mapper
-                                                </a>
-                                                <a
-                                                    href="#"
-                                                    @click.prevent="judgingType = 2"
-                                                >
-                                                    player
-                                                </a>
+                                                <div class="d-flex justify-content-center">
+                                                    <div>
+                                                        <img src="../assets/results-click-indicator.png" alt="Click Indicator">
+                                                        <img
+                                                            src="../assets/results-knob.png"
+                                                            alt="Knob"
+                                                            class="judging-knob"
+                                                            :class="judgingType == 2 ? 'player' : 'mapper'"
+                                                            @click.prevent="judgingType == 1 ? judgingType = 2 : judgingType = 1"
+                                                        >
+                                                    </div>
+                                                    <div>
+                                                        <ul>
+                                                            <li>
+                                                                <a
+                                                                    href="#"
+                                                                    :class="judgingType === 1 ? 'active' : ''"
+                                                                    @click.prevent="judgingType = 1"
+                                                                >
+                                                                    mapper
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a
+                                                                    href="#"
+                                                                    :class="judgingType === 2 ? 'active' : ''"
+                                                                    @click.prevent="judgingType = 2"
+                                                                >
+                                                                    player
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -134,7 +121,7 @@
                                             <div class="card-header text-center bg-purple p-0 fw-bold">
                                                 ROUND
                                             </div>
-                                            <div class="card-body d-flex justify-content-between px-3">
+                                            <div class="card-body d-flex justify-content-center px-3">
                                                 <i
                                                     v-for="i in 4"
                                                     :key="i"
@@ -143,14 +130,16 @@
                                                 <a
                                                     v-for="i in 4"
                                                     :key="i"
-                                                    class="btn btn-round btn-outline-light"
-                                                    @click.prevent=""
+                                                    class="btn btn-round btn-outline-light mx-1"
+                                                    :class="(activeRound == i) ? 'active' : ''"
+                                                    @click.prevent="activeRound = i"
                                                 >
                                                     {{ i }}
                                                 </a>
                                                 <a
-                                                    class="btn btn-round btn-outline-light"
-                                                    @click.prevent=""
+                                                    class="btn btn-round btn-outline-light mx-1"
+                                                    :class="(activeRound == 0) ? 'active' : ''"
+                                                    @click.prevent="activeRound = 0"
                                                 >
                                                     ALL
                                                 </a>
@@ -165,41 +154,43 @@
                                             <div class="card-header text-center bg-purple p-0 fw-bold">
                                                 DISPLAY
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body d-flex justify-content-center">
                                                 <i
                                                     v-for="i in 4"
                                                     :key="i"
                                                     class="fas fa-plus"
                                                 />
-                                                <ul class="display-mode">
-                                                    <li>
-                                                        <a
-                                                            href="#"
-                                                            :class="displayMode === 'criterias' ? 'border-bottom border-secondary active' : ''"
-                                                            @click.prevent="displayMode = 'criterias'"
-                                                        >
-                                                            Per criteria
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#"
-                                                            :class="displayMode === 'judges' ? 'border-bottom border-secondary active' : ''"
-                                                            @click.prevent="displayMode = 'judges'"
-                                                        >
-                                                            Per judge
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a
-                                                            href="#"
-                                                            :class="displayMode === 'detail' ? 'border-bottom border-secondary active' : ''"
-                                                            @click.prevent="displayMode = 'detail'"
-                                                        >
-                                                            Std detail
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                                <div>
+                                                    <ul>
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                :class="displayMode === 'criterias' ? 'border-bottom border-secondary active' : ''"
+                                                                @click.prevent="displayMode = 'criterias'"
+                                                            >
+                                                                Per criteria
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                :class="displayMode === 'judges' ? 'border-bottom border-secondary active' : ''"
+                                                                @click.prevent="displayMode = 'judges'"
+                                                            >
+                                                                Per judge
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a
+                                                                href="#"
+                                                                :class="displayMode === 'detail' ? 'border-bottom border-secondary active' : ''"
+                                                                @click.prevent="displayMode = 'detail'"
+                                                            >
+                                                                Std detail
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -223,8 +214,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapState } from 'vuex';
 import { JUDGING_TYPE } from '../../shared/models';
 import Leaderboard from '../components/Leaderboard.vue';
+import ModeButton from '../components/ModeButton.vue';
+
+import { Contest } from '../../shared/models';
 
 export type DisplayMode = 'criterias' | 'judges' | 'detail';
 
@@ -233,13 +228,26 @@ export default defineComponent({
 
     components: {
         Leaderboard,
+        ModeButton,
     },
 
     data () {
         return {
             judgingType: JUDGING_TYPE.Mappers,
             displayMode: 'criterias' as DisplayMode,
+            selectedContest: null as Contest | null,
+            activeRound: 1,
         };
+    },
+
+    computed: {
+        ...mapState({
+            contests: (state: any) => state.contests as Contest[],
+        }),
+    },
+
+    created() {
+        this.selectedContest = this.contests[0];
     },
 });
 </script>
@@ -281,73 +289,30 @@ export default defineComponent({
 }
 
 .btn-outline-light {
-    border: 3px solid white;
-}
+    border: 3px solid var(--bs-white);
 
-.btn-mode {
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 24px 24px;
-}
-
-.osu {
-    &.btn-outline-light {
-        background-image: url('../assets/osu-w.png');
-    }
-
-    &.btn-outline-light:hover {
-        background-image: url('../assets/osu-b.png');
-    }
-
-    &.btn-yellow {
-        background-image: url('../assets/osu-b.png');
-    }
-}
-
-.taiko {
-    &.btn-outline-light {
-        background-image: url('../assets/taiko-w.png');
-    }
-
-    &.btn-outline-light:hover {
-        background-image: url('../assets/taiko-b.png');
-    }
-
-    &.btn-yellow {
-        background-image: url('../assets/taiko-b.png');
-    }
-}
-
-.mania {
-    &.btn-outline-light {
-        background-image: url('../assets/mania-w.png');
-    }
-
-    &.btn-outline-light:hover {
-        background-image: url('../assets/mania-b.png');
-    }
-
-    &.btn-yellow {
-        background-image: url('../assets/mania-b.png');
-    }
-}
-
-.catch {
-    &.btn-outline-light {
-        background-image: url('../assets/catch-w.png');
-    }
-
-    &.btn-outline-light:hover {
-        background-image: url('../assets/catch-b.png');
-    }
-
-    &.btn-yellow {
-        background-image: url('../assets/catch-b.png');
+    &:hover, &.active {
+        border: 3px solid var(--bs-yellow);
+        background-color: var(--bs-yellow);
     }
 }
 
 .btn-save {
-    border: 2px dotted #facb5b;
+    border: 3px dotted var(--bs-yellow);
+    font-size: 1rem;
+}
+
+.judging-knob {
+    cursor: pointer;
+
+    transition: rotate 0.15s ease-in-out;
+
+    &.mapper {
+        rotate: 0deg;
+    }
+    &.player {
+        rotate: 60deg;
+    }
 }
 
 .btn-round {
@@ -360,7 +325,8 @@ export default defineComponent({
     font-weight: 600;
 }
 
-.display-mode {
+ul {
+    display: inline-block;
     list-style-type: none;
 
     & li a {
@@ -368,6 +334,7 @@ export default defineComponent({
         text-decoration: none;
         color: white;
         font-size: 1.5rem;
+        transition: color 0.15s ease-in-out;
     }
 
     & li a.active {
