@@ -6,8 +6,27 @@
         >
             <thead>
                 <tr>
-                    <th v-for="header in formattedHeaders" :key="header.key">
-                        {{ header.label }}
+                    <th
+                        v-for="header in formattedHeaders"
+                        :key="header.key"
+                    >
+                        <a
+                            v-if="header.sortable"
+                            href="#"
+                            class="d-flex align-items-center"
+                            @click.prevent="sort(header.key)"
+                        >
+                            {{ header.label }}
+                            <i
+                                v-if="sortKey === header.key"
+                                class="fas ms-1"
+                                :class="getSortIcon()"
+                            />
+                        </a>
+
+                        <span v-else>
+                            {{ header.label }}
+                        </span>
                     </th>
                     <th v-if="$slots.actions">
                         Actions
@@ -16,7 +35,7 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="(item, i) in items"
+                    v-for="(item, i) in sortedItems"
                     :key="'item-' + i"
                     :class="item.rowClasses || ''"
                     @click="$emit('rowClick', item)"
@@ -54,6 +73,7 @@ export interface Field {
     key: string;
     label: string;
     formatter?: ((value: any) => string) | DateFormat;
+    sortable?: boolean;
 }
 
 export default defineComponent({
@@ -78,6 +98,13 @@ export default defineComponent({
         'rowClick',
     ],
 
+    data () {
+        return {
+            sortKey: '',
+            sortAsc: false,
+        };
+    },
+
     computed: {
         formattedHeaders (): Field[] {
             if (this.fields.length) {
@@ -93,6 +120,7 @@ export default defineComponent({
                         key: f.key,
                         label: f.label || f.key,
                         formatter: f.formatter,
+                        sortable: f.sortable,
                     };
                 });
             }
@@ -105,6 +133,22 @@ export default defineComponent({
             }
 
             return [];
+        },
+
+        sortedItems (): any[] {
+            if (!this.sortKey) {
+                this.items;
+            }
+
+            return [...this.items].sort((a, b) => {
+                const valueA = a[this.sortKey];
+                const valueB = b[this.sortKey];
+
+                if (this.sortAsc)
+                    return valueA - valueB;
+
+                return valueB - valueA;
+            });
         },
     },
 
@@ -128,6 +172,23 @@ export default defineComponent({
                     value,
                 };
             });
+        },
+
+        sort (headerKey: string) {
+            if (this.sortKey === headerKey) {
+                this.sortAsc = !this.sortAsc;
+            } else {
+                this.sortAsc = false;
+                this.sortKey = headerKey;
+            }
+        },
+
+        getSortIcon () {
+            if (this.sortAsc) {
+                return 'fa-caret-down';
+            }
+
+            return 'fa-caret-up';
         },
     },
 });

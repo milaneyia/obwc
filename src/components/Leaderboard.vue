@@ -138,6 +138,7 @@ export default defineComponent({
                     ...this.criterias.map(c => ({
                         key: 'criteria-' + c.id,
                         label: c.name,
+                        sortable: true,
                     }))
                 );
             } else {
@@ -145,13 +146,23 @@ export default defineComponent({
                     ...this.judges.map(j => ({
                         key: 'judge-' + j.id,
                         label: j.username,
+                        sortable: true,
                     }))
                 );
             }
 
             fields.push(...[
-                { key: 'rawFinalScore', label: 'Final Score (raw)' },
-                { key: 'standardizedFinalScore', label: 'Final Score (standardized)', formatter: this.getFinalScore },
+                {
+                    key: 'rawFinalScore',
+                    label: 'Final Score (raw)',
+                    sortable: true,
+                },
+                {
+                    key: 'standardizedFinalScore',
+                    label: 'Final Score (standardized)',
+                    formatter: this.getFinalScore,
+                    sortable: true,
+                },
             ]);
 
             return fields;
