@@ -45,9 +45,9 @@
                 v-for="(round, i) in schedule.rounds"
                 :key="i"
                 :title="round.title"
-                card-class="fs-sm border border-yellow mb-2 card-schedule"
-                header-class="text-center bg-yellow text-dark p-0 fw-bold"
-                body-class="d-flex flex-column px-3 py-0"
+                :card-class="['fs-sm', 'border', 'border-yellow', 'mb-2', 'card-schedule']"
+                :header-class="['text-center', 'bg-yellow', 'text-dark', 'p-0', 'fw-bold']"
+                :body-class="['d-flex', 'flex-column', 'px-3', 'py-0']"
             >
                 <div class="d-flex justify-content-between align-items-center border-yellow border-bottom-dashed">
                     <div>MAPPING PHASE</div>
