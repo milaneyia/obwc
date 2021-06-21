@@ -81,6 +81,7 @@ let Round = Round_1 = class Round extends typeorm_1.BaseEntity {
         round.resultsAt = input.resultsAt;
         round.judgeToRounds = input.judgeToRounds;
         round.songs = input.songs;
+        round.downloadLink = input.downloadLink || null;
         return round.save();
     }
     getJudgeType(userId) {
@@ -112,8 +113,12 @@ __decorate([
     __metadata("design:type", Date)
 ], Round.prototype, "resultsAt", void 0);
 __decorate([
-    typeorm_1.Column({ nullable: true }),
-    __metadata("design:type", String)
+    typeorm_1.Column({
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    }),
+    __metadata("design:type", Object)
 ], Round.prototype, "downloadLink", void 0);
 __decorate([
     typeorm_1.ManyToOne(() => Contest_1.Contest, (contest) => contest.rounds, { nullable: false }),
