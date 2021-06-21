@@ -14,6 +14,9 @@
                 :country="score.team.country"
                 :title="score.team.name"
             />
+            <div v-if="score.isEliminated" class="eliminated-tag">
+                <i class="fas fa-times" /> ELIMINATED
+            </div>
         </template>
 
         <template
@@ -176,7 +179,8 @@ export default defineComponent({
                     team: s.team,
                     rawFinalScore: s.rawFinalScore,
                     standardizedFinalScore: s.standardizedFinalScore,
-                    rowClasses: 'row-clickable ' + (s.isEliminated ? 'row-eliminated' : ''),
+                    rowClasses: 'row-clickable',
+                    isEliminated: s.isEliminated,
                 };
 
                 if (this.displayMode === 'criterias') {
@@ -246,5 +250,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 .cursor-default td {
     cursor: default;
+}
+
+.eliminated-tag {
+    margin-left: calc(30px + 0.5rem);
+    font-size: 0.6rem;
+    color: var(--bs-red);
 }
 </style>
