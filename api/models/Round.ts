@@ -45,7 +45,8 @@ export class Round extends BaseEntity {
             .orderBy('submissions.anonymisedAs');
     }
 
-    static findResults(id: number, judgingType: JUDGING_TYPE, scope: ResultsScope): Promise<Round | undefined> {
+    static async findResults(id: number, judgingType: JUDGING_TYPE, scope: ResultsScope): Promise<Round | undefined> {
+        const judges = (await JudgeToRound.find({ roundId: id }));
         const query = this
             .createQueryBuilder('round')
             .leftJoinAndSelect('round.submissions', 'submissions')
@@ -60,6 +61,7 @@ export class Round extends BaseEntity {
             .where('round.id = :id', { id })
             .andWhere('judgeToRounds.judgingTypeId = :judgingTypeId')
             .andWhere('criteria.judgingTypeId = :judgingTypeId')
+            .andWhere('judging.judgeId IN (:...judges)', { judges: judges.map(j => j.userId) })
             .setParameter('judgingTypeId', judgingType);
 
         if (scope === ResultsScope.User) {
