@@ -46,7 +46,10 @@ export class Round extends BaseEntity {
     }
 
     static async findResults(id: number, judgingType: JUDGING_TYPE, scope: ResultsScope): Promise<Round | undefined> {
-        const judges = (await JudgeToRound.find({ roundId: id }));
+        const judges = await JudgeToRound.find({
+            roundId: id,
+            judgingTypeId: judgingType,
+        });
         const query = this
             .createQueryBuilder('round')
             .leftJoinAndSelect('round.submissions', 'submissions')
