@@ -6,7 +6,7 @@
             </div>
             <div class="card-subtitle">
                 Summary of all the judging done, for detailed scoring go to the result page
-                <router-link :to="{ name: 'results', params: { id: $route.params.id } }">
+                <router-link :to="{ name: 'results', query: { round: $route.params.id } }">
                     here
                 </router-link>
             </div>

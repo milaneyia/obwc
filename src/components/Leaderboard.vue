@@ -60,10 +60,8 @@ import Modal from 'bootstrap/js/dist/modal';
 import { defineComponent, PropType } from 'vue';
 import { mapState } from 'vuex';
 import { JudgeCorrel, TeamScore } from '../../api/helpers/results';
-import { Results } from '../../shared/integration';
-import { Contest, Criteria, JUDGING_TYPE, Round, Submission, User } from '../../shared/models';
+import { Criteria, Round, Submission, User } from '../../shared/models';
 import { DisplayMode } from '../pages/Results.vue';
-import { UPDATE_ROUNDS } from '../store/main-types';
 import CountryFlag from './CountryFlag.vue';
 import DataTable, { Field } from './DataTable.vue';
 import JudgingDetail from './JudgingDetail.vue';
@@ -82,26 +80,35 @@ export default defineComponent({
     },
 
     props: {
-        judgingType: {
-            type: Number as PropType<JUDGING_TYPE>,
-            required: true,
-        },
-
         displayMode: {
             type: String as PropType<DisplayMode>,
             required: true,
+        },
+
+        round: {
+            type: Object as PropType<Round | null>,
+            default: () => null,
+        },
+
+        criterias: {
+            type: Array as PropType<Criteria[]>,
+            default: () => [],
+        },
+
+        teamsScores: {
+            type: Array as PropType<TeamScore[]>,
+            default: () => [],
+        },
+
+        judgesCorrel: {
+            type: Array as PropType<JudgeCorrel[]>,
+            default: () => [],
         },
     },
 
     data () {
         return {
             selectedScore: null as TeamScoreFormatted | null,
-
-            round: null as Round | null,
-            criterias: [] as Criteria[],
-            teamsScores: [] as TeamScore[],
-            judgesCorrel: [] as JudgeCorrel[],
-
         };
     },
 
@@ -109,10 +116,6 @@ export default defineComponent({
         ...mapState({
             rounds: (state: any) => state.rounds as Round[],
         }),
-
-        standardContest (): Contest {
-            return this.$store.getters.standardContest;
-        },
 
         scoreDetail (): Submission | undefined {
             if (this.selectedScore) {
@@ -188,26 +191,6 @@ export default defineComponent({
 
                 return item;
             });
-        },
-    },
-
-    watch: {
-        judgingType: {
-            async handler (type) {
-                if (!this.rounds.length) {
-                    await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
-                }
-
-                const roundId = this.$route.params.id || this.rounds[0]?.id;
-
-                const { data } = await this.$http.get<Results>(`/api/rounds/${roundId}/results?type=${type}`);
-                this.round = data.round;
-                this.criterias = data.criterias;
-                this.teamsScores = data.teamsScores;
-                this.judgesCorrel = data.judgesCorrel;
-            },
-
-            immediate: true,
         },
     },
 

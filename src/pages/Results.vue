@@ -59,7 +59,7 @@
                                                         alt="Knob"
                                                         class="judging-knob"
                                                         :class="judgingType == 2 ? 'player' : 'mapper'"
-                                                        @click.prevent="judgingType == 1 ? judgingType = 2 : judgingType = 1"
+                                                        @click.prevent="selectJudgingType()"
                                                     >
                                                 </div>
                                                 <div>
@@ -68,7 +68,7 @@
                                                             <a
                                                                 href="#"
                                                                 :class="judgingType === 1 ? 'active' : ''"
-                                                                @click.prevent="judgingType = 1"
+                                                                @click.prevent="selectJudgingType(1)"
                                                             >
                                                                 mapper
                                                             </a>
@@ -77,7 +77,7 @@
                                                             <a
                                                                 href="#"
                                                                 :class="judgingType === 2 ? 'active' : ''"
-                                                                @click.prevent="judgingType = 2"
+                                                                @click.prevent="selectJudgingType(2)"
                                                             >
                                                                 player
                                                             </a>
@@ -91,26 +91,28 @@
 
                                 <div class="row">
                                     <div class="col-sm">
-                                        <card :title="'ROUND'" :plus="true">
-                                            <a
-                                                v-for="round in rounds"
-                                                :key="round.id"
-                                                class="btn btn-round btn-outline-light mx-1"
-                                                :class="[
-                                                    { active: selectedRound == round},
-                                                    { disabled: !isDatePassed(round.resultsAt) }
-                                                ]"
-                                                @click.prevent="selectedRound = round"
-                                            >
-                                                {{ isDatePassed(round.resultsAt) ? round.id : 'TBA' }}
-                                            </a>
-                                            <a
-                                                class="btn btn-round btn-outline-light mx-1"
-                                                :class="(selectedRound == null) ? 'active' : ''"
-                                                @click.prevent="selectedRound = null"
-                                            >
-                                                ALL
-                                            </a>
+                                        <card title="ROUND" plus>
+                                            <div class="d-flex align-items-center justify-content-center flex-wrap gap-2">
+                                                <a
+                                                    v-for="round in rounds"
+                                                    :key="round.id"
+                                                    class="btn btn-round btn-outline-light"
+                                                    :class="[
+                                                        { active: selectedRound == round},
+                                                        { disabled: !isDatePassed(round.resultsAt) }
+                                                    ]"
+                                                    @click.prevent="selectRound(round)"
+                                                >
+                                                    {{ isDatePassed(round.resultsAt) ? round.id : 'TBA' }}
+                                                </a>
+                                                <a
+                                                    class="btn btn-round btn-outline-light"
+                                                    :class="(selectedRound == null) ? 'active' : ''"
+                                                    @click.prevent="selectRound()"
+                                                >
+                                                    ALL
+                                                </a>
+                                            </div>
                                         </card>
                                     </div>
                                 </div>
@@ -158,7 +160,10 @@
                                 <leaderboard
                                     class="h-100"
                                     :display-mode="displayMode"
-                                    :judging-type="judgingType"
+                                    :round="roundInfo"
+                                    :criterias="criterias"
+                                    :teams-scores="teamsScores"
+                                    :judges-correl="judgesCorrel"
                                 />
                             </div>
                         </div>
@@ -172,12 +177,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { JUDGING_TYPE, User } from '../../shared/models';
+import { Criteria, JUDGING_TYPE, User } from '../../shared/models';
+import { Contest, Round } from '../../shared/models';
+import { Results } from '../../shared/integration';
+import { UPDATE_ROUNDS } from '../store/main-types';
 import Leaderboard from '../components/Leaderboard.vue';
 import ModeButton from '../components/ModeButton.vue';
 import Card from '../components/Card.vue';
-
-import { Contest, Round } from '../../shared/models';
+import { JudgeCorrel, TeamScore } from '../../api/helpers/results';
 
 export type DisplayMode = 'criterias' | 'judges' | 'detail';
 
@@ -192,10 +199,15 @@ export default defineComponent({
 
     data () {
         return {
-            judgingType: JUDGING_TYPE.Mappers,
+            judgingType: null as JUDGING_TYPE | null,
             displayMode: 'criterias' as DisplayMode,
             selectedContest: null as Contest | null,
             selectedRound: null as Round | null,
+
+            roundInfo: null as Round | null,
+            criterias: [] as Criteria[],
+            teamsScores: [] as TeamScore[],
+            judgesCorrel: [] as JudgeCorrel[],
         };
     },
 
@@ -206,17 +218,102 @@ export default defineComponent({
             rounds: (state: any) => state.rounds as Round[],
         }),
 
+        standardContest (): Contest {
+            return this.$store.getters.standardContest;
+        },
+
         downloadLink (): string | undefined {
             return this.selectedRound?.downloadLink;
         },
     },
 
-    created() {
+    async created() {
+        if (!this.rounds.length) {
+            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+        }
+
         this.selectedContest = this.contests[0];
+        const roundId = this.$route.query.round?.toString() || this.rounds[0].id;
+        this.judgingType = this.$route.query.type ?
+            parseInt(this.$route.query.type.toString()) :
+            JUDGING_TYPE.Mappers;
+
+        if (roundId && roundId !== 'all') {
+            this.selectedRound = this.rounds.find(r => r.id == roundId) || null;
+        }
+
+        this.getResults();
     },
 
     methods: {
-        isDatePassed(date: Date | string) {
+        async getResults () {
+            if (this.selectedRound) {
+                const { data } = await this.$http.get<Results>(`/api/rounds/${this.selectedRound.id}/results?type=${this.judgingType}`);
+                this.roundInfo = data.round;
+                this.criterias = data.criterias;
+                this.teamsScores = data.teamsScores;
+                this.judgesCorrel = data.judgesCorrel;
+            } else {
+                let totalTeamsScores: TeamScore[] = [];
+                let totalJudgesCorrel: JudgeCorrel[] = [];
+
+                for (const round of this.rounds) {
+                    const { data } = await this.$http.get<Results>(`/api/rounds/${round.id}/results?type=${this.judgingType}`);
+
+                    this.roundInfo = data.round;
+                    this.criterias = data.criterias;
+
+                    if (!data.teamsScores.length) {
+                        continue;
+                    }
+
+                    for (const score of data.teamsScores) {
+                        if (score.isEliminated) {
+                            continue;
+                        }
+
+                        const i = totalTeamsScores.findIndex(s => s.team.id === score.team.id);
+
+                        if (i === -1) {
+                            totalTeamsScores.push(score);
+                            continue;
+                        }
+
+                        for (const criteriaSum of score.criteriaSum) {
+                            const criteriaIndex = totalTeamsScores[i].criteriaSum.findIndex(c => c.criteriaId === criteriaSum.criteriaId);
+
+                            if (criteriaIndex === -1) {
+                                totalTeamsScores[i].criteriaSum.push(criteriaSum);
+                                continue;
+                            }
+
+                            totalTeamsScores[i].criteriaSum[criteriaIndex].sum += criteriaSum.sum;
+                        }
+
+                        for (const judgingSum of score.judgingSum) {
+                            const judgeIndex = totalTeamsScores[i].judgingSum.findIndex(j => j.judgeId === judgingSum.judgeId);
+
+                            if (judgeIndex === -1) {
+                                totalTeamsScores[i].judgingSum.push(judgingSum);
+                                continue;
+                            }
+
+                            totalTeamsScores[i].judgingSum[judgeIndex].sum += judgingSum.sum;
+                        }
+
+                        totalTeamsScores[i].rawFinalScore += score.rawFinalScore;
+                        totalTeamsScores[i].standardizedFinalScore += score.standardizedFinalScore;
+                    }
+
+                    this.judgesCorrel = data.judgesCorrel;
+                }
+
+                this.teamsScores = totalTeamsScores;
+                this.judgesCorrel = totalJudgesCorrel;
+            }
+        },
+
+        isDatePassed (date: Date | string) {
             if (this.loggedInUser?.isStaff)
                 return true;
 
@@ -226,6 +323,38 @@ export default defineComponent({
             const now = new Date();
 
             return now.valueOf() - date.valueOf() > 0;
+        },
+
+        selectRound (round?: Round) {
+            if (round) {
+                this.selectedRound = round;
+                this.updateQueryUrl({ round: round.id.toString() });
+            } else {
+                this.selectedRound = null;
+                this.updateQueryUrl({ round: 'all' });
+            }
+
+            this.getResults();
+        },
+
+        selectJudgingType (type?: JUDGING_TYPE) {
+            if (!type) {
+                this.judgingType = this.judgingType === JUDGING_TYPE.Mappers ? JUDGING_TYPE.Players : JUDGING_TYPE.Mappers;
+            } else {
+                this.judgingType = type;
+            }
+
+            this.updateQueryUrl({ type: this.judgingType });
+            this.getResults();
+        },
+
+        updateQueryUrl (toUpdate: Record<string, any>) {
+            this.$router.replace({
+                query: {
+                    ...this.$route.query,
+                    ...toUpdate,
+                },
+            });
         },
     },
 });
