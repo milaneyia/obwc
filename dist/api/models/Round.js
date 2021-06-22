@@ -71,8 +71,10 @@ let Round = Round_1 = class Round extends typeorm_1.BaseEntity {
             .where('round.id = :id', { id })
             .andWhere('judgeToRounds.judgingTypeId = :judgingTypeId')
             .andWhere('criteria.judgingTypeId = :judgingTypeId')
-            .andWhere('judging.judgeId IN (:...judges)', { judges: judges.map(j => j.userId) })
             .setParameter('judgingTypeId', judgingType);
+        if (judges.length) {
+            query.andWhere('judging.judgeId IN (:...judges)', { judges: judges.map(j => j.userId) });
+        }
         if (scope === ResultsScope.User) {
             query.andWhere('round.resultsAt <= :now', { now: new Date() });
         }
