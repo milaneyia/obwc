@@ -26,16 +26,11 @@
                         TEAMS
                     </router-link>
                 </li>
-                <!-- <li class="nav-item">
+                <li v-if="isResultsTime" class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'results', params: { id: 1 } }">
                         RESULTS
                     </router-link>
-                </li> -->
-                <!-- <li class="nav-item">
-                    <router-link class="nav-link" to="/info">
-                        STAFF
-                    </router-link>
-                </li> -->
+                </li>
                 <li class="nav-item">
                     <router-link
                         v-if="isValidCaptain"
@@ -177,7 +172,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Contest, User } from '../shared/models';
+import { Contest, Round, User } from '../shared/models';
 import ProfilePopup from './components/ProfilePopup.vue';
 import ToastMessages from './components/ToastMessages.vue';
 
@@ -198,6 +193,7 @@ export default defineComponent({
     computed: {
         ...mapState({
             user: (state: any) => state.loggedInUser as User | null,
+            rounds: (state: any) => state.rounds as Round[],
         }),
 
         standardContest (): Contest | undefined {
@@ -213,6 +209,13 @@ export default defineComponent({
                 return false;
 
             return new Date() >= new Date(this.standardContest.registrationStartedAt) && new Date() < new Date(this.standardContest.registrationEndedAt);
+        },
+
+        isResultsTime (): boolean {
+            if (!this.rounds.length)
+                return false;
+
+            return new Date(this.rounds[0].resultsAt) < new Date();
         },
     },
 });

@@ -1,6 +1,5 @@
 import { createStore } from 'vuex';
-import { Contest } from '../../api/models/Contest';
-import { User, ContestMode, Team, Round } from '../../shared/models';
+import { User, ContestMode, Team, Round, Contest } from '../../shared/models';
 import http from '../http';
 import judgingModule from './judging';
 import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, UPDATE_ROUNDS, UPDATE_TEAMS, SET_INITIALIZED } from './main-types';
