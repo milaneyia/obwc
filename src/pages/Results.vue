@@ -158,12 +158,12 @@
 
                             <div class="col-lg-9">
                                 <leaderboard
-                                    class="h-100"
                                     :display-mode="displayMode"
                                     :round="roundInfo"
                                     :criterias="criterias"
                                     :teams-scores="teamsScores"
                                     :judges-correl="judgesCorrel"
+                                    :is-loading="isLoading"
                                 />
                             </div>
                         </div>
@@ -208,6 +208,8 @@ export default defineComponent({
             criterias: [] as Criteria[],
             teamsScores: [] as TeamScore[],
             judgesCorrel: [] as JudgeCorrel[],
+
+            isLoading: true,
         };
     },
 
@@ -247,6 +249,8 @@ export default defineComponent({
 
     methods: {
         async getResults () {
+            this.isLoading = true;
+
             if (this.selectedRound) {
                 const { data } = await this.$http.get<Results>(`/api/rounds/${this.selectedRound.id}/results?type=${this.judgingType}`);
                 this.roundInfo = data.round;
@@ -311,6 +315,8 @@ export default defineComponent({
                 this.teamsScores = totalTeamsScores;
                 this.judgesCorrel = totalJudgesCorrel;
             }
+
+            this.isLoading = false;
         },
 
         isDatePassed (date: Date | string) {

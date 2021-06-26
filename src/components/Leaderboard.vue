@@ -1,57 +1,68 @@
 <template>
-    <data-table
-        v-bind="$attrs"
-        :fields="fields"
-        :items="items"
-        class="leaderboard"
-        @row-click="openDetailModal"
-    >
-        <template #cell-index="{ index }">
-            {{ index + 1 }}
-        </template>
-        <template #cell-team="{ item: score }">
-            <country-flag
-                :country="score.team.country"
-                :title="score.team.name"
-            />
-            <div v-if="score.isEliminated" class="eliminated-tag">
-                <i class="fas fa-times" /> ELIMINATED
-            </div>
-        </template>
-
-        <template
-            v-if="displayMode === 'detail'"
-            #custom-rows
+    <transition name="component-fade">
+        <div
+            v-if="isLoading"
+            class="d-flex justify-content-center align-items-center w-100 h-100"
         >
-            <tr class="cursor-default">
-                <td />
-                <td>AVG</td>
-                <td v-for="judge in judges" :key="judge.id">
-                    {{ getJudgeAvg(judge.id) }}
-                </td>
-                <td />
-                <td />
-            </tr>
-            <tr class="cursor-default">
-                <td />
-                <td>SD</td>
-                <td v-for="judge in judges" :key="judge.id">
-                    {{ getJudgeSd(judge.id) }}
-                </td>
-                <td />
-                <td />
-            </tr>
-            <tr class="cursor-default">
-                <td />
-                <td>COR</td>
-                <td v-for="judge in judges" :key="judge.id">
-                    {{ getJudgeCorrel(judge.id) }}
-                </td>
-                <td />
-                <td />
-            </tr>
-        </template>
-    </data-table>
+            <div
+                class="spinner-border"
+                style="height: 3rem; width: 3rem;"
+            />
+        </div>
+        <data-table
+            v-else
+            :fields="fields"
+            :items="items"
+            class="leaderboard"
+            @row-click="openDetailModal"
+        >
+            <template #cell-index="{ index }">
+                {{ index + 1 }}
+            </template>
+            <template #cell-team="{ item: score }">
+                <country-flag
+                    :country="score.team.country"
+                    :title="score.team.name"
+                />
+                <div v-if="score.isEliminated" class="eliminated-tag">
+                    <i class="fas fa-times" /> ELIMINATED
+                </div>
+            </template>
+
+            <template
+                v-if="displayMode === 'detail'"
+                #custom-rows
+            >
+                <tr class="cursor-default">
+                    <td />
+                    <td>AVG</td>
+                    <td v-for="judge in judges" :key="judge.id">
+                        {{ getJudgeAvg(judge.id) }}
+                    </td>
+                    <td />
+                    <td />
+                </tr>
+                <tr class="cursor-default">
+                    <td />
+                    <td>SD</td>
+                    <td v-for="judge in judges" :key="judge.id">
+                        {{ getJudgeSd(judge.id) }}
+                    </td>
+                    <td />
+                    <td />
+                </tr>
+                <tr class="cursor-default">
+                    <td />
+                    <td>COR</td>
+                    <td v-for="judge in judges" :key="judge.id">
+                        {{ getJudgeCorrel(judge.id) }}
+                    </td>
+                    <td />
+                    <td />
+                </tr>
+            </template>
+        </data-table>
+    </transition>
 
     <judging-detail
         :submission="scoreDetail"
@@ -106,6 +117,11 @@ export default defineComponent({
         judgesCorrel: {
             type: Array as PropType<JudgeCorrel[]>,
             default: () => [],
+        },
+
+        isLoading: {
+            type: Boolean,
+            default: false,
         },
     },
 
