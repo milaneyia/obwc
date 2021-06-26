@@ -28,6 +28,13 @@
                     <i class="fas fa-times" /> ELIMINATED
                 </div>
             </template>
+            <template
+                v-for="judge in judges"
+                :key="judge.id"
+                #[getSlotName(judge.id)]="{ item: score }"
+            >
+                {{ score['judge-' + judge.id] }} ({{ score['judge-' + judge.id + '-std'] }})
+            </template>
 
             <template
                 v-if="displayMode === 'detail'"
@@ -205,7 +212,8 @@ export default defineComponent({
                     }
                 } else {
                     for (const judge of this.judges) {
-                        item['judge-' + judge.id] = this.getJudgeScore(s, judge.id, this.displayMode === 'detail');
+                        item['judge-' + judge.id] = this.getJudgeScore(s, judge.id);
+                        item['judge-' + judge.id + '-std'] = this.getJudgeStdScore(s, judge.id);
                     }
                 }
 
@@ -215,6 +223,10 @@ export default defineComponent({
     },
 
     methods: {
+        getSlotName (judgeId: number): string {
+            return 'cell-judge-' + judgeId;
+        },
+
         openDetailModal (score: TeamScoreFormatted): void {
             this.selectedScore = score;
             const el = document.getElementById('detailModal')!;
@@ -231,15 +243,15 @@ export default defineComponent({
             return score.criteriaSum.find(c => c.criteriaId === criteriaId)?.sum || 0;
         },
 
-        getJudgeScore (score: TeamScore, judgeId: number, std = false): number | string {
+        getJudgeScore (score: TeamScore, judgeId: number): number {
+            return score.judgingSum.find(j => j.judgeId === judgeId)?.sum || 0;
+        },
+
+        getJudgeStdScore (score: TeamScore, judgeId: number): string {
             const judgeScore = score.judgingSum.find(j => j.judgeId === judgeId);
             const stdScore = judgeScore?.standardized || 0;
 
-            if (std) {
-                return `${judgeScore?.sum || 0} (${stdScore.toFixed(3)})`;
-            }
-
-            return judgeScore?.sum || 0;
+            return stdScore.toFixed(3);
         },
 
         getJudgeAvg (id: number): number | string {
