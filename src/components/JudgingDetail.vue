@@ -26,8 +26,8 @@
                     >
                         <b>{{ judging.judge.username }}</b>
 
-                        <div class="my-1">
-                            <p class="text-light ms-3">
+                        <div v-if="judging.comment" class="my-1">
+                            <p class="border-secondary border-start ps-2 py-1 small ms-3">
                                 <span class="text-preline">
                                     {{ judging.comment }}
                                 </span>
@@ -57,7 +57,7 @@
 
                                 <p
                                     :id="`judgingToCriteria${judgingToCriterias.id}`"
-                                    class="text-light ms-3 collapse"
+                                    class="border-secondary border-start ps-2 py-1 small ms-3 collapse"
                                 >
                                     <span class="text-preline">{{ judgingToCriterias.comment }}</span>
                                 </p>
