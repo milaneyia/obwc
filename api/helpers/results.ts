@@ -1,6 +1,6 @@
 import { Round } from '../models/Round';
 import { Team } from '../models/Team';
-import { JUDGING_TYPE, Team as ITeam } from '../../shared/models';
+import { Team as ITeam } from '../../shared/models';
 
 export interface TeamScore {
     team: ITeam;
@@ -26,7 +26,7 @@ export interface JudgeCorrel {
     correl: number;
 }
 
-export async function calculateScores(round?: Round, judingType?: JUDGING_TYPE): Promise<{ teamsScores: TeamScore[]; judgesCorrel: JudgeCorrel[] }> {
+export async function calculateScores(round?: Round): Promise<{ teamsScores: TeamScore[]; judgesCorrel: JudgeCorrel[] }> {
     const teamsScores: TeamScore[] = [];
     const judgesCorrel: JudgeCorrel[] = [];
 
@@ -183,16 +183,14 @@ export async function calculateScores(round?: Round, judingType?: JUDGING_TYPE):
 
     teamsScores.sort((a, b) => b.standardizedFinalScore - a.standardizedFinalScore);
 
-    if (judingType === JUDGING_TYPE.Mappers) {
-        const countryIds = new Set(teamsScores.map(t => t.team.country.id));
+    const countryIds = new Set(teamsScores.map(t => t.team.country.id));
 
-        // Eliminate teams from countries with more than 1 team
-        for (const countryId of countryIds) {
-            const countryScores = teamsScores.filter(t => t.team.country.id === countryId);
+    // Eliminate teams from countries with more than 1 team
+    for (const countryId of countryIds) {
+        const countryScores = teamsScores.filter(t => t.team.country.id === countryId);
 
-            for (let i = 1; i < countryScores.length; i++) {
-                countryScores[i].isEliminated = true;
-            }
+        for (let i = 1; i < countryScores.length; i++) {
+            countryScores[i].isEliminated = true;
         }
     }
 
