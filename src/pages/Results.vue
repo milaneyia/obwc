@@ -264,8 +264,11 @@ export default defineComponent({
                 for (const round of this.rounds) {
                     const { data } = await this.$http.get<Results>(`/api/rounds/${round.id}/results?type=${this.judgingType}`);
 
-                    this.roundInfo = data.round;
-                    this.criterias = data.criterias;
+                    // TODO: Temporal stuff, detail modal should separate by round
+                    if (round.id === 1) {
+                        this.roundInfo = data.round;
+                        this.criterias = data.criterias;
+                    }
 
                     if (!data.teamsScores.length) {
                         continue;
