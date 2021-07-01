@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, SelectQueryBuilder } from 'typeorm';
 import { Round } from './Round';
+import { Team } from './Team';
 
 @Entity()
 export class Contest extends BaseEntity {
@@ -28,5 +29,8 @@ export class Contest extends BaseEntity {
 
     @OneToMany(() => Round, (round) => round.contest)
     rounds!: Round[];
+
+    @OneToMany(() => Team, (team) => team.contest)
+    teams!: Team[];
 
 }

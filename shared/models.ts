@@ -98,6 +98,7 @@ export interface Team {
     users: User[];
     invitations: User[];
     wasConfirmed: boolean;
+    isEliminated: boolean;
 }
 
 export enum ContestMode {

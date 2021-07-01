@@ -1,6 +1,8 @@
-import { Round } from '../models/Round';
+import { ResultsScope, Round } from '../models/Round';
 import { Team } from '../models/Team';
-import { Team as ITeam } from '../../shared/models';
+import { JUDGING_TYPE, Team as ITeam, User } from '../../shared/models';
+import cache from '../cache';
+import { Criteria } from '../models/judging/Criteria';
 
 export interface TeamScore {
     team: ITeam;
@@ -24,6 +26,14 @@ export interface JudgeCorrel {
     avg: number;
     sd: number;
     correl: number;
+}
+
+export interface RoundResults {
+    criterias: Criteria[],
+    round: Round | undefined,
+    judges: User[] | undefined,
+    teamsScores: TeamScore[],
+    judgesCorrel: JudgeCorrel[],
 }
 
 export async function calculateScores(round?: Round): Promise<{ teamsScores: TeamScore[]; judgesCorrel: JudgeCorrel[] }> {
@@ -195,6 +205,42 @@ export async function calculateScores(round?: Round): Promise<{ teamsScores: Tea
     }
 
     return {
+        teamsScores,
+        judgesCorrel,
+    };
+}
+
+export async function getRoundResults (id: number, judgingType: JUDGING_TYPE, scope: ResultsScope) : Promise<RoundResults>  {
+    const cacheKey = 'results' + id + scope + judgingType;
+    const cached = cache.get(cacheKey);
+
+    if (cached) {
+        return cached as RoundResults;
+    }
+
+    const [round, criterias] = await Promise.all([
+        Round.findResults(id, judgingType, scope),
+        Criteria.find({
+            judgingTypeId: judgingType,
+        }),
+    ]);
+    const judges = round?.judgeToRounds.map(j => j.user);
+    const { teamsScores, judgesCorrel } = await calculateScores(round);
+
+    if (round && new Date(round.resultsAt) < new Date()) {
+        cache.set(cacheKey, {
+            criterias,
+            round,
+            judges,
+            teamsScores,
+            judgesCorrel,
+        });
+    }
+
+    return {
+        criterias,
+        round,
+        judges,
         teamsScores,
         judgesCorrel,
     };
