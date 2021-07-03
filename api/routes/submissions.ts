@@ -58,6 +58,13 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     const oszFile = ctx.request.files?.oszFile as FFile | undefined;
     const information = validator.trim(ctx.request.body.information);
 
+    const checkRound = await Round.currentRound(RoundScope.Results).getOne();
+
+    if (checkRound) {
+        const eliminationStatus = await team.getElimination(checkRound);
+        if (eliminationStatus?.mappingEliminated && eliminationStatus?.playerEliminated) return ctx.status = 401;
+    }
+
     if (!information) throw new Error('Need Information');
 
     let submission = await Submission.findOne({
