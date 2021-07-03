@@ -13,6 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contest = void 0;
 const typeorm_1 = require("typeorm");
 const Round_1 = require("./Round");
+const Team_1 = require("./Team");
 let Contest = Contest_1 = class Contest extends typeorm_1.BaseEntity {
     static open() {
         return Contest_1.createQueryBuilder('contest')
@@ -45,6 +46,10 @@ __decorate([
     typeorm_1.OneToMany(() => Round_1.Round, (round) => round.contest),
     __metadata("design:type", Array)
 ], Contest.prototype, "rounds", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Team_1.Team, (team) => team.contest),
+    __metadata("design:type", Array)
+], Contest.prototype, "teams", void 0);
 Contest = Contest_1 = __decorate([
     typeorm_1.Entity()
 ], Contest);

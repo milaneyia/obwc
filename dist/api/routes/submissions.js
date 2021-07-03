@@ -54,6 +54,9 @@ submissionsRouter.post('/', rounds_1.getCurrentRound(Round_1.RoundScope.Submissi
     const currentRound = ctx.state.currentRound;
     const oszFile = ctx.request.files?.oszFile;
     const information = validator_1.default.trim(ctx.request.body.information);
+    const eliminationStatus = await team.getElimination();
+    if (eliminationStatus?.mappingEliminated && eliminationStatus?.playerEliminated)
+        return ctx.status = 401;
     if (!information)
         throw new Error('Need Information');
     let submission = await Submission_1.Submission.findOne({
@@ -75,5 +78,9 @@ submissionsRouter.post('/', rounds_1.getCurrentRound(Round_1.RoundScope.Submissi
     await drive_1.cleanUpload(oszFile.path);
     const user = ctx.state.user;
     Log_1.Log.createAndSave(`Entry ${ctx.status === 201 ? 'submitted' : 'updated'}: "${team.name}" (round ${currentRound.id}) - by "${user.username}"`, Log_1.LOG_TYPE.User, user.id);
+});
+submissionsRouter.get('/check', async (ctx) => {
+    const team = ctx.state.team;
+    return ctx.body = await team.getElimination();
 });
 exports.default = submissionsRouter;

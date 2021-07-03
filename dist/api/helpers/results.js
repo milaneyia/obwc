@@ -1,7 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.calculateScores = void 0;
+exports.getRoundResults = exports.calculateScores = void 0;
+const Round_1 = require("../models/Round");
 const Team_1 = require("../models/Team");
+const cache_1 = __importDefault(require("../cache"));
+const Criteria_1 = require("../models/judging/Criteria");
 async function calculateScores(round) {
     const teamsScores = [];
     const judgesCorrel = [];
@@ -146,3 +152,37 @@ async function calculateScores(round) {
     };
 }
 exports.calculateScores = calculateScores;
+async function getRoundResults(id, judgingType, scope) {
+    const cacheKey = 'results' + id + scope + judgingType;
+    const cached = cache_1.default.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
+    const [round, criterias] = await Promise.all([
+        Round_1.Round.findResults(id, judgingType, scope),
+        Criteria_1.Criteria.find({
+            judgingTypeId: judgingType,
+        }),
+    ]);
+    if (!round || !criterias)
+        throw new Error('Invalid Round or judging type.');
+    const judges = round?.judgeToRounds.map(j => j.user);
+    const { teamsScores, judgesCorrel } = await calculateScores(round);
+    if (round && new Date(round.resultsAt) < new Date()) {
+        cache_1.default.set(cacheKey, {
+            criterias,
+            round,
+            judges,
+            teamsScores,
+            judgesCorrel,
+        });
+    }
+    return {
+        criterias,
+        round,
+        judges,
+        teamsScores,
+        judgesCorrel,
+    };
+}
+exports.getRoundResults = getRoundResults;

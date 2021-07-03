@@ -11,11 +11,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Team = void 0;
 const typeorm_1 = require("typeorm");
+const models_1 = require("../../shared/models");
+const results_1 = require("../helpers/results");
 const Contest_1 = require("./Contest");
 const Country_1 = require("./Country");
+const Round_1 = require("./Round");
 const Submission_1 = require("./Submission");
 const User_1 = require("./User");
 let Team = class Team extends typeorm_1.BaseEntity {
+    async getElimination() {
+        const mapperResults = await results_1.getRoundResults(1, models_1.JUDGING_TYPE.Mappers, Round_1.ResultsScope.User);
+        const playersResults = await results_1.getRoundResults(1, models_1.JUDGING_TYPE.Players, Round_1.ResultsScope.User);
+        const mappingEliminated = mapperResults.teamsScores.some(ts => ts.team.id === this.id && ts.isEliminated);
+        const playerEliminated = playersResults.teamsScores.some(ts => ts.team.id === this.id && ts.isEliminated);
+        return { mappingEliminated, playerEliminated };
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn(),
@@ -29,10 +39,6 @@ __decorate([
     typeorm_1.Column({ default: false }),
     __metadata("design:type", Boolean)
 ], Team.prototype, "wasConfirmed", void 0);
-__decorate([
-    typeorm_1.ManyToOne(() => Contest_1.Contest, { nullable: false }),
-    __metadata("design:type", Contest_1.Contest)
-], Team.prototype, "contest", void 0);
 __decorate([
     typeorm_1.Column(),
     __metadata("design:type", Number)
@@ -50,6 +56,14 @@ __decorate([
     typeorm_1.JoinColumn(),
     __metadata("design:type", User_1.User)
 ], Team.prototype, "captain", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], Team.prototype, "contestId", void 0);
+__decorate([
+    typeorm_1.ManyToOne(() => Contest_1.Contest, (contest) => contest.teams, { nullable: false }),
+    __metadata("design:type", Contest_1.Contest)
+], Team.prototype, "contest", void 0);
 __decorate([
     typeorm_1.OneToMany(() => User_1.User, (user) => user.team),
     __metadata("design:type", Array)
