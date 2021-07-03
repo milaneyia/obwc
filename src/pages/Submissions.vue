@@ -25,7 +25,7 @@
                         </div>
                     </div>
 
-                    <template v-if="currentRound">
+                    <template v-if="currentRound && !(eliminationDetails.mappingEliminated && eliminationDetails.playerEliminated)">
                         <hr>
 
                         <div class="row mb-3">
@@ -95,7 +95,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Contest, Round, Submission, User } from '../../shared/models';
+import { Contest, EliminationDetails, Round, Submission, User } from '../../shared/models';
 import DataTable, { Field } from '../components/DataTable.vue';
 import TimeString from '../components/TimeString.vue';
 import { DateFormat } from '../formatDate';
@@ -110,6 +110,7 @@ export default defineComponent({
     data () {
         return {
             submissions: [] as Submission[],
+            eliminationDetails: { mappingEliminated: true, playerEliminated: true } as EliminationDetails,
             oszFile: null as File | null,
             information: '',
             isSaving: false,
@@ -147,8 +148,16 @@ export default defineComponent({
 
     methods: {
         async getData (): Promise<void> {
-            const { data: submissions } = await this.$http.get<Submission[]>('/api/submissions');
+            const [
+                { data: submissions },
+                { data: eliminationDetails },
+            ] = await Promise.all([
+                this.$http.get<Submission[]>('/api/submissions'),
+                this.$http.get<EliminationDetails>('/api/submissions/check'),
+            ]);
+
             this.submissions = submissions;
+            this.eliminationDetails = eliminationDetails;
 
             if (!this.rounds.length)  {
                 await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
