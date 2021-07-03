@@ -10,7 +10,7 @@ export interface Judging {
     judge: User;
     submissionId: number;
     submission: Submission;
-    criteria: Criteria;
+    criteria?: Criteria;
     judgingToCriterias: JudgingToCriteria[];
     comment: string;
 }
@@ -65,7 +65,7 @@ export interface Round {
     judgingStartedAt: Date;
     judgingEndedAt: Date;
     resultsAt: Date;
-    downloadLink?: string;
+    downloadLink?: string | null;
     judgeToRounds: JudgeToRound[];
     songs: Song[];
     submissions: Submission[];
