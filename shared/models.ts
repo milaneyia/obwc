@@ -103,8 +103,6 @@ export interface Team {
     users: User[];
     invitations: User[];
     wasConfirmed: boolean;
-
-    getElimination(): Promise<EliminationDetails | undefined>;
 }
 
 export enum ContestMode {

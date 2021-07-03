@@ -58,12 +58,8 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     const oszFile = ctx.request.files?.oszFile as FFile | undefined;
     const information = validator.trim(ctx.request.body.information);
 
-    const checkRound = await Round.currentRound(RoundScope.Results).getOne();
-
-    if (checkRound) {
-        const eliminationStatus = await team.getElimination(checkRound);
-        if (eliminationStatus?.mappingEliminated && eliminationStatus?.playerEliminated) return ctx.status = 401;
-    }
+    const eliminationStatus = await team.getElimination();
+    if (eliminationStatus?.mappingEliminated && eliminationStatus?.playerEliminated) return ctx.status = 401;
 
     if (!information) throw new Error('Need Information');
 
@@ -92,11 +88,10 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     Log.createAndSave(`Entry ${ctx.status === 201 ? 'submitted' : 'updated'}: "${team.name}" (round ${currentRound.id}) - by "${user.username}"`, LOG_TYPE.User, user.id);
 });
 
-submissionsRouter.get('/check', getCurrentRound(RoundScope.Results), async (ctx) => {
+submissionsRouter.get('/check', async (ctx) => {
     const team: Team = ctx.state.team;
-    const currentRound: Round = ctx.state.currentRound;
 
-    return ctx.body = await team.getElimination(currentRound);
+    return ctx.body = await team.getElimination();
 });
 
 export default submissionsRouter;

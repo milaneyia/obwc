@@ -3,7 +3,7 @@ import { EliminationDetails, JUDGING_TYPE } from '../../shared/models';
 import { getRoundResults } from '../helpers/results';
 import { Contest } from './Contest';
 import { Country } from './Country';
-import { ResultsScope, Round } from './Round';
+import { ResultsScope } from './Round';
 import { Submission } from './Submission';
 import { User } from './User';
 
@@ -48,12 +48,12 @@ export class Team extends BaseEntity {
     @OneToMany(() => Submission, (submissions) => submissions.team)
     submissions!: Submission[];
 
-    async getElimination (round: Round): Promise<EliminationDetails | undefined> {
-        const mapperResults = await getRoundResults(round.id, JUDGING_TYPE.Mappers, ResultsScope.User);
-        const playersResults = await getRoundResults(round.id, JUDGING_TYPE.Players, ResultsScope.User);
+    async getElimination (): Promise<EliminationDetails> {
+        const mapperResults = await getRoundResults(1, JUDGING_TYPE.Mappers, ResultsScope.User);
+        const playersResults = await getRoundResults(1, JUDGING_TYPE.Players, ResultsScope.User);
 
-        const mappingEliminated = mapperResults.teamsScores.filter(teams => teams.isEliminated).some(teams => teams.team.id === this.id);
-        const playerEliminated = playersResults.teamsScores.filter(teams => teams.isEliminated).some(teams => teams.team.id === this.id);
+        const mappingEliminated = mapperResults.teamsScores.some(ts => ts.team.id === this.id && ts.isEliminated);
+        const playerEliminated = playersResults.teamsScores.some(ts => ts.team.id === this.id && ts.isEliminated);
 
         return { mappingEliminated, playerEliminated };
     }

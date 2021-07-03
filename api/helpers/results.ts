@@ -1,8 +1,9 @@
 import { ResultsScope, Round } from '../models/Round';
 import { Team } from '../models/Team';
-import { JUDGING_TYPE, Team as ITeam, User } from '../../shared/models';
+import { JUDGING_TYPE, Team as ITeam } from '../../shared/models';
 import cache from '../cache';
 import { Criteria } from '../models/judging/Criteria';
+import { Results } from '../../shared/integration';
 
 export interface TeamScore {
     team: ITeam;
@@ -26,14 +27,6 @@ export interface JudgeCorrel {
     avg: number;
     sd: number;
     correl: number;
-}
-
-export interface RoundResults {
-    criterias: Criteria[],
-    round: Round | undefined,
-    judges: User[] | undefined,
-    teamsScores: TeamScore[],
-    judgesCorrel: JudgeCorrel[],
 }
 
 export async function calculateScores(round?: Round): Promise<{ teamsScores: TeamScore[]; judgesCorrel: JudgeCorrel[] }> {
@@ -210,12 +203,12 @@ export async function calculateScores(round?: Round): Promise<{ teamsScores: Tea
     };
 }
 
-export async function getRoundResults (id: number, judgingType: JUDGING_TYPE, scope: ResultsScope) : Promise<RoundResults>  {
+export async function getRoundResults (id: number, judgingType: JUDGING_TYPE, scope: ResultsScope) : Promise<Results>  {
     const cacheKey = 'results' + id + scope + judgingType;
     const cached = cache.get(cacheKey);
 
     if (cached) {
-        return cached as RoundResults;
+        return cached as Results;
     }
 
     const [round, criterias] = await Promise.all([
@@ -224,6 +217,9 @@ export async function getRoundResults (id: number, judgingType: JUDGING_TYPE, sc
             judgingTypeId: judgingType,
         }),
     ]);
+
+    if (!round || !criterias) throw new Error('Invalid Round or judging type.');
+
     const judges = round?.judgeToRounds.map(j => j.user);
     const { teamsScores, judgesCorrel } = await calculateScores(round);
 
