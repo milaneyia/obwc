@@ -85,4 +85,11 @@ submissionsRouter.post('/', getCurrentRound(RoundScope.Submission), koaBody({
     Log.createAndSave(`Entry ${ctx.status === 201 ? 'submitted' : 'updated'}: "${team.name}" (round ${currentRound.id}) - by "${user.username}"`, LOG_TYPE.User, user.id);
 });
 
+submissionsRouter.get('/check', getCurrentRound(RoundScope.Results), async (ctx) => {
+    const team: Team = ctx.state.team;
+    const currentRound: Round = ctx.state.currentRound;
+
+    return ctx.body = await team.getElimination(currentRound);
+});
+
 export default submissionsRouter;

@@ -89,6 +89,11 @@ export interface User {
     isStaff: boolean;
 }
 
+export interface EliminationDetails {
+    mappingEliminated: boolean,
+    playerEliminated: boolean,
+}
+
 export interface Team {
     id: number;
     country: Country;
@@ -98,7 +103,8 @@ export interface Team {
     users: User[];
     invitations: User[];
     wasConfirmed: boolean;
-    isEliminated: boolean;
+
+    getElimination(): Promise<EliminationDetails | undefined>;
 }
 
 export enum ContestMode {
