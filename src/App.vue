@@ -91,8 +91,8 @@
             </li>
             <template v-else>
                 <li class="nav-item">
+                    <!-- v-if="isRegistrationOpen" -->
                     <a
-                        v-if="isRegistrationOpen"
                         class="nav-link px-2"
                         href="#"
                         @click.prevent="showProfilePopup = !showProfilePopup"
@@ -100,12 +100,13 @@
                         <i v-if="!user.teamId && !user.captainFor" class="fas fa-exclamation-circle text-danger" />
                         {{ user.username }}
                     </a>
-                    <div
+                    <!-- TODO uncomment whenever there's a mode menu -->
+                    <!-- <div
                         v-else
                         class="py-2 px-3 cursor-default"
                     >
                         {{ user.username }}
-                    </div>
+                    </div> -->
                 </li>
                 <li class="nav-item px-2">
                     <a
