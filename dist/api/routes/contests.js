@@ -5,8 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = __importDefault(require("@koa/router"));
 const validator_1 = __importDefault(require("validator"));
+const authentication_1 = require("../middlewares/authentication");
 const Contest_1 = require("../models/Contest");
 const Round_1 = require("../models/Round");
+const Team_1 = require("../models/Team");
 const contestsRouter = new router_1.default();
 contestsRouter.prefix('/api/contests');
 contestsRouter.get('/', async (ctx) => {
@@ -32,5 +34,30 @@ contestsRouter.get('/:id/rounds', async (ctx) => {
         ],
     });
     ctx.body = rounds;
+});
+contestsRouter.get('/:id/teams', async (ctx) => {
+    ctx.body = await Team_1.Team.createQueryBuilder('team')
+        .innerJoinAndSelect('team.captain', 'captain')
+        .innerJoinAndSelect('team.country', 'country')
+        .leftJoinAndSelect('team.users', 'users')
+        .where('team.wasConfirmed = true')
+        .andWhere('team.contestId = :contestId', { contestId: ctx.params.id })
+        .orderBy('country.name', 'ASC')
+        .addOrderBy('team.name', 'ASC')
+        .getMany();
+});
+contestsRouter.get('/:id/teams/mine', authentication_1.authenticate, async (ctx) => {
+    const user = ctx.state.user;
+    ctx.body = await Team_1.Team.findOne({
+        where: {
+            captain: user,
+            contestId: ctx.params.id,
+        },
+        relations: [
+            'contest',
+            'users',
+            'invitations',
+        ],
+    });
 });
 exports.default = contestsRouter;

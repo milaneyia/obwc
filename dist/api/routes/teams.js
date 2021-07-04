@@ -13,29 +13,6 @@ const Contest_1 = require("../models/Contest");
 const Log_1 = require("../models/Log");
 const teamsRouter = new router_1.default();
 teamsRouter.prefix('/api/teams');
-teamsRouter.get('/', async (ctx) => {
-    ctx.body = await Team_1.Team.createQueryBuilder('team')
-        .innerJoinAndSelect('team.captain', 'captain')
-        .innerJoinAndSelect('team.country', 'country')
-        .leftJoinAndSelect('team.users', 'users')
-        .where('team.wasConfirmed = true')
-        .orderBy('country.name', 'ASC')
-        .addOrderBy('team.name', 'ASC')
-        .getMany();
-});
-teamsRouter.get('/mine', authentication_1.authenticate, async (ctx) => {
-    const user = ctx.state.user;
-    ctx.body = await Team_1.Team.findOne({
-        where: {
-            captain: user,
-        },
-        relations: [
-            'contest',
-            'users',
-            'invitations',
-        ],
-    });
-});
 teamsRouter.post('/', authentication_1.authenticate, async (ctx) => {
     const user = ctx.state.user;
     const input = ctx.request.body;
@@ -43,6 +20,7 @@ teamsRouter.post('/', authentication_1.authenticate, async (ctx) => {
     const [currentTeam, contest] = await Promise.all([
         Team_1.Team.findOne({
             captain: user,
+            contestId: input.contest.id,
         }),
         Contest_1.Contest.open()
             .andWhere('id = :id', { id: input.contest.id })
@@ -87,9 +65,11 @@ teamsRouter.post('/', authentication_1.authenticate, async (ctx) => {
         };
     }
     let team = currentTeam;
+    let statusText = 'updated';
     if (!team) {
         ctx.status = 201;
         team = new Team_1.Team();
+        statusText = 'created';
     }
     team.contest = contest;
     team.country = user.country;
@@ -98,7 +78,7 @@ teamsRouter.post('/', authentication_1.authenticate, async (ctx) => {
     team.invitations = users;
     await team.save();
     ctx.body = team;
-    Log_1.Log.createAndSave(`Team created: "${team.name}" for "${user.country.name}"`, Log_1.LOG_TYPE.User, user.id);
+    Log_1.Log.createAndSave(`Team ${statusText}: "${team.name}" for "${user.country.name}"`, Log_1.LOG_TYPE.User, user.id);
 });
 teamsRouter.post('/:id/acceptInvitation', authentication_1.authenticate, async (ctx) => {
     const team = await Team_1.Team.findOneOrFail(ctx.params.id, {

@@ -61,6 +61,7 @@ app.use(contests_2.default.routes());
 app.use(rounds_2.default.routes());
 app.use(submissions_2.default.routes());
 app.use(logs_1.default.routes());
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {
         console.log('Error caught', err);
