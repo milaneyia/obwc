@@ -61,8 +61,13 @@
                             </router-link>
                         </li>
                         <li>
-                            <router-link class="dropdown-item" :to="{ name: 'staff-teams' }">
-                                Teams
+                            <router-link class="dropdown-item" :to="{ name: 'staff-teams', params: { id: standardId } }">
+                                Teams (STD)
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link class="dropdown-item" :to="{ name: 'staff-teams', params: { id: taikoId } }">
+                                Teams (Taiko)
                             </router-link>
                         </li>
                         <li>
@@ -172,7 +177,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { mapState } from 'vuex';
-import { Contest, Round, User } from '../shared/models';
+import { Contest, ContestMode, Round, User } from '../shared/models';
 import ProfilePopup from './components/ProfilePopup.vue';
 import ToastMessages from './components/ToastMessages.vue';
 
@@ -196,8 +201,8 @@ export default defineComponent({
             rounds: (state: any) => state.rounds as Round[],
         }),
 
-        standardContest (): Contest | undefined {
-            return this.$store.getters.standardContest;
+        currentContest (): Contest | undefined {
+            return this.$store.getters.currentContest;
         },
 
         isValidCaptain (): boolean {
@@ -205,10 +210,10 @@ export default defineComponent({
         },
 
         isRegistrationOpen (): boolean {
-            if (!this.standardContest)
+            if (!this.currentContest)
                 return false;
 
-            return new Date() >= new Date(this.standardContest.registrationStartedAt) && new Date() < new Date(this.standardContest.registrationEndedAt);
+            return new Date() >= new Date(this.currentContest.registrationStartedAt) && new Date() < new Date(this.currentContest.registrationEndedAt);
         },
 
         isResultsTime (): boolean {
@@ -216,6 +221,14 @@ export default defineComponent({
                 return false;
 
             return new Date(this.rounds[0].resultsAt) < new Date();
+        },
+
+        standardId (): number {
+            return ContestMode.Standard;
+        },
+
+        taikoId (): number {
+            return ContestMode.Taiko;
         },
     },
 });

@@ -11,32 +11,6 @@ import { Log, LOG_TYPE } from '../models/Log';
 const teamsRouter = new Router();
 teamsRouter.prefix('/api/teams');
 
-teamsRouter.get('/', async (ctx) => {
-    ctx.body = await Team.createQueryBuilder('team')
-        .innerJoinAndSelect('team.captain', 'captain')
-        .innerJoinAndSelect('team.country', 'country')
-        .leftJoinAndSelect('team.users', 'users')
-        .where('team.wasConfirmed = true')
-        .orderBy('country.name', 'ASC')
-        .addOrderBy('team.name', 'ASC')
-        .getMany();
-});
-
-teamsRouter.get('/mine', authenticate, async (ctx) => {
-    const user: User = ctx.state.user;
-
-    ctx.body = await Team.findOne({
-        where: {
-            captain: user,
-        },
-        relations: [
-            'contest',
-            'users',
-            'invitations',
-        ],
-    });
-});
-
 teamsRouter.post('/', authenticate, async (ctx) => {
     const user: User = ctx.state.user;
     const input: CreateTeam = ctx.request.body;
@@ -44,6 +18,7 @@ teamsRouter.post('/', authenticate, async (ctx) => {
     const [currentTeam, contest] = await Promise.all([
         Team.findOne({
             captain: user,
+            contestId: input.contest.id,
         }),
         Contest.open()
             .andWhere('id = :id', { id: input.contest.id })
@@ -96,10 +71,12 @@ teamsRouter.post('/', authenticate, async (ctx) => {
     }
 
     let team = currentTeam;
+    let statusText = 'updated';
 
     if (!team) {
         ctx.status = 201;
         team = new Team();
+        statusText = 'created';
     }
 
     team.contest = contest;
@@ -111,7 +88,7 @@ teamsRouter.post('/', authenticate, async (ctx) => {
 
     ctx.body = team;
 
-    Log.createAndSave(`Team created: "${team.name}" for "${user.country.name}"`, LOG_TYPE.User, user.id);
+    Log.createAndSave(`Team ${statusText}: "${team.name}" for "${user.country.name}"`, LOG_TYPE.User, user.id);
 });
 
 teamsRouter.post('/:id/acceptInvitation', authenticate, async (ctx) => {

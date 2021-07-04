@@ -68,7 +68,7 @@
                                     :contest="contest"
                                     :disabled="!openContests.some(c => c.id === contest.id)"
                                     :selected="selectedContest?.id === contest.id"
-                                    @changeSelected="c => selectedContest = c"
+                                    @changeSelected="selectContest($event)"
                                 />
                             </div>
                         </div>
@@ -166,33 +166,11 @@ export default defineComponent({
     },
 
     async created () {
-        const [{ data: openContests }, { data: users }, { data: team }] = await Promise.all([
-            this.$http.get<Contest[]>('/api/contests/open'),
-            this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
-            this.$http.get<Team | undefined>('/api/teams/mine'),
-        ]);
-
+        const { data: openContests } = await this.$http.get<Contest[]>('/api/contests/open');
         this.openContests = openContests;
 
         if (openContests.length) {
-            this.selectedContest = openContests[0];
-        }
-
-        if (team) {
-            this.name = team.name;
-            this.selectedContest = team.contest;
-            this.selectedUsers = [
-                ...team.invitations,
-                ...team.users.filter(u => !team.invitations.some(i => i.id === u.id)),
-            ];
-            this.acceptedUsers = team.users;
-
-            this.users = [
-                ...users,
-                ...team.users,
-            ];
-        } else {
-            this.users = users;
+            await this.selectContest(openContests[0]);
         }
     },
 
@@ -234,6 +212,31 @@ export default defineComponent({
                     return className + 'catch';
                 case ContestMode.Mania:
                     return className + 'mania';
+            }
+        },
+
+        async selectContest (contest: Contest) {
+            this.selectedContest = contest;
+
+            const [{ data: users }, { data: team }] = await Promise.all([
+                this.$http.get<User[]>('/api/users?country=' + this.user.country.id),
+                this.$http.get<Team | undefined>(`/api/contests/${this.selectedContest.id}/teams/mine`),
+            ]);
+
+            if (team) {
+                this.name = team.name;
+                this.selectedUsers = [
+                    ...team.invitations,
+                    ...team.users.filter(u => !team.invitations.some(i => i.id === u.id)),
+                ];
+                this.acceptedUsers = team.users;
+
+                this.users = [
+                    ...users,
+                    ...team.users,
+                ];
+            } else {
+                this.users = users;
             }
         },
 

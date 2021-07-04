@@ -220,18 +220,18 @@ export default defineComponent({
             rounds: (state: any) => state.rounds as Round[],
         }),
 
-        standardContest (): Contest {
-            return this.$store.getters.standardContest;
+        currentContest (): Contest {
+            return this.$store.getters.currentContest;
         },
 
-        downloadLink (): string | undefined {
+        downloadLink (): string | null | undefined {
             return this.selectedRound?.downloadLink;
         },
     },
 
     async created() {
         if (!this.rounds.length) {
-            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+            await this.$store.dispatch(UPDATE_ROUNDS, this.currentContest.id);
         }
 
         this.selectedContest = this.contests[0];

@@ -101,9 +101,15 @@ export default defineComponent({
         };
     },
 
-    async created () {
-        const { data } = await this.$http.get(`/api/staff/contests/${this.$route.params.id || ContestMode.Standard}/teams`);
-        this.teams = data;
+    created() {
+        this.$watch(
+            () => this.$route.params,
+            async () => {
+                const { data } = await this.$http.get(`/api/staff/contests/${this.$route.params.id || ContestMode.Standard}/teams`);
+                this.teams = data;
+            },
+            { immediate: true }
+        );
     },
 
     methods: {

@@ -2,7 +2,7 @@ import { createStore } from 'vuex';
 import { User, ContestMode, Team, Round, Contest } from '../../shared/models';
 import http from '../http';
 import judgingModule from './judging';
-import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, UPDATE_ROUNDS, UPDATE_TEAMS, SET_INITIALIZED } from './main-types';
+import { SET_INITIAL_DATA, UPDATE_USER, UPDATE_CONTESTS, UPDATE_ROUNDS, UPDATE_TEAMS, SET_INITIALIZED, UPDATE_CONTEST_MODE } from './main-types';
 import toastsModule from './toasts';
 
 function numberToOrdinal (id: number): string {
@@ -32,6 +32,7 @@ export interface Schedule {
 export interface MainState {
     initialized: boolean;
     loggedInUser: User | null;
+    contestMode: ContestMode;
     contests: Contest[];
     rounds: Round[];
     teams: Team[];
@@ -46,6 +47,7 @@ export const store = createStore<MainState>({
     state: {
         initialized: false,
         loggedInUser: null,
+        contestMode: ContestMode.Standard,
         contests: [],
         rounds: [],
         teams: [],
@@ -71,21 +73,27 @@ export const store = createStore<MainState>({
         [UPDATE_TEAMS] (state, teams) {
             state.teams = teams;
         },
+
+        [UPDATE_CONTEST_MODE] (state, mode: ContestMode) {
+            state.contestMode = mode;
+            // TODO uncomment when global mode setting is done ?
+            // localStorage.setItem('contestMode', ContestMode[mode]);
+        },
     },
 
     getters: {
-        standardContest (state): Contest | undefined {
-            return state.contests.find(c => c.id === ContestMode.Standard);
+        currentContest (state): Contest | undefined {
+            return state.contests.find(c => c.id === state.contestMode);
         },
 
         schedule (state, getters): Schedule | undefined {
-            if (!getters.standardContest) {
+            if (!getters.currentContest) {
                 return;
             }
 
             const schedule: Schedule = {
-                announcement: getters.standardContest.announcementAt,
-                registration: [getters.standardContest.registrationStartedAt, getters.standardContest.registrationEndedAt],
+                announcement: getters.currentContest.announcementAt,
+                registration: [getters.currentContest.registrationStartedAt, getters.currentContest.registrationEndedAt],
                 rounds: [],
                 results: null,
             };
@@ -103,7 +111,10 @@ export const store = createStore<MainState>({
         },
 
         currentSubmissionRound (state): Round | undefined {
-            return state.rounds.find(r => new Date() >= new Date(r.submissionsStartedAt) && new Date() < new Date(r.submissionsEndedAt));
+            return state.rounds.find(r =>
+                new Date() >= new Date(r.submissionsStartedAt) &&
+                new Date() < new Date(r.submissionsEndedAt)
+            );
         },
     },
 
@@ -132,9 +143,13 @@ export const store = createStore<MainState>({
             commit(UPDATE_ROUNDS, rounds);
         },
 
-        async [UPDATE_TEAMS] ({ commit }) {
-            const { data: teams } = await http.get<Team[]>('/api/teams');
+        async [UPDATE_TEAMS] ({ commit, state }) {
+            const { data: teams } = await http.get<Team[]>(`/api/contests/${state.contestMode}/teams`);
             commit(UPDATE_TEAMS, teams);
+        },
+
+        [UPDATE_CONTEST_MODE] ({ commit }, mode: ContestMode) {
+            commit(UPDATE_CONTEST_MODE, mode);
         },
     },
 

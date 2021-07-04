@@ -128,8 +128,8 @@ export default defineComponent({
             rounds: (state: any) => state.rounds as Round[],
         }),
 
-        standardContest (): Contest {
-            return this.$store.getters.standardContest;
+        currentContest (): Contest {
+            return this.$store.getters.currentContest;
         },
 
         currentRound (): Round | undefined {
@@ -160,7 +160,7 @@ export default defineComponent({
             this.eliminationDetails = eliminationDetails;
 
             if (!this.rounds.length)  {
-                await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+                await this.$store.dispatch(UPDATE_ROUNDS, this.currentContest.id);
             }
         },
 

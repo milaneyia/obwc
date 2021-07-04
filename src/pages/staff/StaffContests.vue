@@ -59,7 +59,7 @@ export default defineComponent({
                 'name',
                 { key: 'announcementAt', label: 'Announcement Date', formatter: DateFormat.Locale },
                 { key: 'registrationStartedAt', label: 'Registration Start', formatter: DateFormat.Locale },
-                { key: 'registrationEndedAt', label: 'Registration Start', formatter: DateFormat.Locale },
+                { key: 'registrationEndedAt', label: 'Registration End', formatter: DateFormat.Locale },
             ] as Field[],
         };
     },

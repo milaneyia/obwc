@@ -115,8 +115,8 @@ export default defineComponent({
     components: { TimeString, Card },
 
     computed: {
-        standardContest (): Contest {
-            return this.$store.getters.standardContest;
+        currentContest (): Contest {
+            return this.$store.getters.currentContest;
         },
 
         schedule (): Schedule | undefined {
@@ -125,8 +125,8 @@ export default defineComponent({
     },
 
     async created () {
-        if (this.standardContest) {
-            await this.$store.dispatch(UPDATE_ROUNDS, this.standardContest.id);
+        if (this.currentContest) {
+            await this.$store.dispatch(UPDATE_ROUNDS, this.currentContest.id);
         }
     },
 });
