@@ -63,6 +63,7 @@ app.use(staffRoundsRouter.routes());
 app.use(staffSubmissionsRouter.routes());
 app.use(staffLogsRouter.routes());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.on('error', (err, ctx) => {
     if (app.env === 'development') {
         console.log('Error caught', err);
