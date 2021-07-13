@@ -139,7 +139,7 @@ export default defineComponent({
 
         sortedItems (): any[] {
             if (!this.sortKey) {
-                this.items;
+                return this.items;
             }
 
             return [...this.items].sort((a, b) => {
